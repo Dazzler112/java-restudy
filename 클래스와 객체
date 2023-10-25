@@ -1,0 +1,21 @@
+class Planet {  <== 행성을 정의하는 클래스명
+  name,location,distanceFromSun // data/state/fields  (멤버data or 객체의 상태)
+  revolve(), rotate() //action/behavior/method      (클래스에 정의된 메서드 (특정객체에 행할 수 있는 동작(행위)을 나타냄(저 메소드는 공전 ,자전을 나타냄)))
+}
+
+클래스(행성)를 통한 인스턴스
+   인스턴스(변수명)
+Planet earth = new Planet(); 
+Planet venus = new Planet();
+
+둘의 인스턴스는 서로 다르다 (Planet 클래스 안의 data 값이 달라질수 있기 때문에)
+
+
+•Class = 템플릿이다
+•Object = 객체는 그 템플릿의 인스턴스(Instances)
+•Member Data/State/Fields = 객체가 내포할수 있는 테이터 
+•Actions/Methods/Behaviour = 특정 객체에 호출할 수 있는 메서드
+
+
+
+⁛아는내용 이지만 다시 복습해보자는 차원에서 실시
