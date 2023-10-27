@@ -1,0 +1,65 @@
+
+1번클래스 파일 --------------------------------------------------------------
+
+package onlineJavaStudy;
+
+public class MotorBike {
+	//state
+	private int speed; //member variable 객체 고유의것
+	
+	//behaviour
+	//method
+	//inputs - int speed
+	//outputs - void
+	//name - setSpeed
+	void setSpeed(int speed) { //local variable (지역변수)
+		this.speed = speed;
+	}
+	
+	int getSpeed() { 
+		return this.speed; //1.위의 변수를 리턴함
+	}
+	
+	void start() {
+		System.out.println("Bike Started");
+	}
+}
+----------------------------------------------------------------------------
+
+2번클래스 파일 --------------------------------------------------------------
+package onlineJavaStudy;
+
+public class MotorBikeRunner {
+	public static void main(String[] args) {
+		MotorBike ducati = new MotorBike();
+		MotorBike honda = new MotorBike();
+		
+		ducati.start();
+		honda.start();
+		
+		ducati.setSpeed(100);
+		System.out.println(ducati.getSpeed()); //2. 이런식으로 꺼내서 사용
+		honda.setSpeed(80);
+		System.out.println(honda.getSpeed());
+		
+		ducati.setSpeed(20);
+		System.out.println(ducati.getSpeed());
+		honda.setSpeed(0);
+		System.out.println(honda.getSpeed());
+	}
+}
+----------------------------------------------------------------------------
+
+전에는 Setter에 대해서 배우고 
+이번에는 Getter에 대해서 다시한번 복습해보았다
+setter이 값을 설정하는대 사용한다면 getter은 값을 불러오는대 사용한다 볼 수 있겠다
+Encapsulation에서 get/set이 핵심이자 자주사용 그리고 중요한 부분이다.(안전하게 외부로부터 보호하면서 사용할수 있다) 
+그리고 IDE(이클리스나 sts)에서 맨위 탭에서 Source - Generate Getter and Setter 을 눌러서 사용하면 일일이 만들어서 사용할 필요없이
+더 편하게 만들수있다.
+
+캡슐화란 한객체를 다른객체로 보호하는것으로
+외부개체가 직접 객체 내 데이터를 제어하지 못하도록 데이터를 클래스안에 안전하게 가두는 방법
+1.첫과정으론 변수를 직접적으로 값을 설정할수 없게 비공개(private)로 설정
+2.setter로 값을 설정할수 있게 메소드 생성
+3.getter로 값을 불러올수 있게 메소드 생성
+4.다른 클래스에서 접근하여 사용가능
