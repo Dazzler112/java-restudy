@@ -1,0 +1,47 @@
+
+1번클래스파일 ----------------------------------------------------------------------------
+package onlineJavaStudy;
+
+public class MotorBike {
+	//state
+	private int speed; //member variable 객체 고유의것
+	
+	//behaviour
+	//method
+	//inputs - int speed
+	//outputs - void
+	//name - setSpeed
+	void setSpeed(int speed) { //local variable (지역변수)
+		this.speed = speed;
+	}
+	
+	void start() {
+		System.out.println("Bike Started");
+	}
+}
+-----------------------------------------------------------------------------------------
+
+2번클래스파일 ----------------------------------------------------------------------------
+package onlineJavaStudy;
+
+public class MotorBikeRunner {
+	public static void main(String[] args) {
+		MotorBike ducati = new MotorBike();
+		MotorBike honda = new MotorBike();
+		
+		ducati.start();
+		honda.start();
+		
+		ducati.setSpeed(100);
+		honda.setSpeed(80);
+		
+		ducati.setSpeed(20);
+		honda.setSpeed(20);
+	}
+}
+-----------------------------------------------------------------------------------------
+
+기존의 인스턴스 변수에 직접 접근하여 값을 설정해 줬으면 이번에는 
+MotorBike 클래스의 변수의 접근제어자를 private으로 해당클래스 외에 접근못하게 바꿔주고
+캡슐화중 Setter 를 이용하여 값을 직접적으로 넣을수 있게 바꿔주었다.
+값은 설정해 줄수 있지만 가져올수는 없을까? 4번파일로
