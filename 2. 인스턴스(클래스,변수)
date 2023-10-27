@@ -1,0 +1,45 @@
+예시 
+
+클래스파일 1.------------------------------------------------------------------------------------------------------
+package onlineJavaStudy;
+
+public class MotorBike {
+	//state
+	int speed;  // 4. 인스턴스 변수를 선언하여
+	
+	//behaviour
+	
+	void start() {  //2. 스타트 메소드를 생성
+		System.out.println("Bike Started");
+	}
+}
+------------------------------------------------------------------------------------------------------------------
+
+
+클래스파일 2.------------------------------------------------------------------------------------------------------
+package onlineJavaStudy;
+
+public class MotorBikeRunner {
+	public static void main(String[] args) {
+		MotorBike ducati = new MotorBike();  // 1. MotorBike 클래스의 인스턴스를 생성
+		MotorBike honda = new MotorBike();
+		
+		ducati.start();  //3. 생성한 인스턴스의 메소드를 사용
+		honda.start();
+		
+		ducati.speed = 100;  //5.인스턴스 클래스의 변수명을 이용하여 MortorBike의 값을 다르게 초기화 해줄수 있다
+		honda.speed = 80;
+		
+		ducati.speed = 20;
+		honda.speed = 0;
+	}
+}
+------------------------------------------------------------------------------------------------------------------
+
+•메모리에서
+        ducati                    honda
+  ------------------      ------------------
+  speed   |  xxx           speed   |  xxx
+
+ •메모리에선 저렇게 인스턴스 변수값을 다르게 해주면 그값을 메모리에 저장하고 
+ •인스턴스 클래스 변수명에따라 다른 값을 다른 메모리에 저장한다
