@@ -1,0 +1,63 @@
+
+
+클래스 파일 1 -------------------------------------------------------------------------------
+package onlineJavaStudy;
+
+public class MotorBike {
+	//state
+	private int speed;
+
+	void setSpeed(int speed) { //local variable (지역변수)
+		if(speed > 0)
+		this.speed = speed;
+	}
+	
+	int getSpeed() {
+		return this.speed;
+	}
+	
+	public void increseSpeed(int howMuch) { // 2. 메소드를 생성하여 기존의 생성한 코드를 대체할 수 있다 (그럼 기존의 코드는 필요 없으니 주석달아야겠지?)
+		this.speed = this.speed + howMuch;
+	}
+	
+	public void decreseSpeed(int howMuch) { // 2. 메소드를 생성하여 기존의 생성한 코드를 대체할 수 있다 (그럼 기존의 코드는 필요 없으니 주석달아야겠지?)
+		this.speed = this.speed - howMuch;
+	}
+	
+	void start() {
+		System.out.println("Bike Started");
+	}
+}
+
+--------------------------------------------------------------------------------------------
+
+클래스 파일 2 -------------------------------------------------------------------------------
+package onlineJavaStudy;
+
+public class MotorBikeRunner {
+	public static void main(String[] args) {
+		MotorBike ducati = new MotorBike();
+		MotorBike honda = new MotorBike();
+		
+		ducati.start();
+		honda.start();
+		
+		ducati.setSpeed(100);
+		ducati.increseSpeed(100); //  3. 차량명 인스턴스 변수 적은후 증가 메소드 호출후 값을 넣어주면 넣은 값을 사용할 수 있다.
+		honda.increseSpeed(100);  //  3. 차량명 인스턴스 변수 적은후 증가 메소드 호출후 값을 넣어주면 넣은 값을 사용할 수 있다.
+		ducati.decreseSpeed(250); //  3. 차량명 인스턴스 변수 적은후 증가 메소드 호출후 값을 넣어주면 넣은 값을 사용할 수 있다.(이렇게 뒤에 감소 호출하면 -250 된값으로 sysout 됨)
+		honda.decreseSpeed(250);  //  3. 차량명 인스턴스 변수 적은후 증가 메소드 호출후 값을 넣어주면 넣은 값을 사용할 수 있다.(이렇게 뒤에 감소 호출하면 -250 된값으로 sysout 됨)
+		
+//		int ducatiSpeed = ducati.getSpeed();//get ducati speed  // 1.ducati에 +속도 하는걸 만들고 싶다
+//		ducatiSpeed = ducatiSpeed + 100;//increse it by 100     //이런식으로도 할수 있지만 이렇게 안하고 Encapsulation을 해서 사용할 수도 있다.
+//		ducati.setSpeed(ducatiSpeed);//set it to ducati
+		
+//		int hondaSpeed = honda.getSpeed();//get honda speed     // 1.honda에 +속도 하는걸 만들고 싶다
+//		hondaSpeed = hondaSpeed + 100;//increse it by 100       //이런식으로도 할수 있지만 이렇게 안하고 Encapsulation을 해서 사용할 수도 있다.
+//		honda.setSpeed(hondaSpeed);//set it to honda
+
+	}
+}
+--------------------------------------------------------------------------------------------
+
+⁕하지만 if조건에 0보다 작을수 없다고 조건을 걸었음에도 속도가 - 된값을 호출한다 ? 다음파일에 계속..
