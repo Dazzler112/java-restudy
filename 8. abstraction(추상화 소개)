@@ -1,0 +1,98 @@
+
+1번파일
+
+package classMethodEncapsulation;
+
+public class MotorBike {
+	//state
+	private int speed; //member variable 객체 고유의것
+	
+	//behaviour
+	//method
+	//inputs - int speed
+	//outputs - void
+	//name - setSpeed
+	void setSpeed(int speed) { //local variable (지역변수)
+		if(speed > 0)
+		this.speed = speed;
+	}
+	
+	int getSpeed() {
+		return this.speed;
+	}
+	
+	public void increseSpeed(int howMuch) {
+//		this.speed = this.speed + howMuch;
+		setSpeed(this.speed + howMuch);
+	}
+	
+	public void decreseSpeed(int howMuch) {
+//		if(this.speed - howMuch > 0)
+		setSpeed(this.speed - howMuch);
+	}
+	
+	void start() {
+		System.out.println("Bike Started");
+	}
+}
+
+---------------------------------------------------------------------------
+
+2번 파일
+
+package classMethodEncapsulation;
+
+public class MotorBikeRunner {
+	public static void main(String[] args) {
+		MotorBike ducati = new MotorBike();
+		MotorBike honda = new MotorBike();
+		
+		ducati.start();
+		honda.start();
+		
+		ducati.setSpeed(100);
+		 
+		ducati.increseSpeed(100);
+		honda.increseSpeed(100);
+		
+		ducati.decreseSpeed(250);
+		honda.decreseSpeed(250);
+		
+		System.out.println(ducati.getSpeed());
+		System.out.println(honda.getSpeed());
+	}
+}
+---------------------------------------------------------------------------
+
+⁕ 
+추상화의 예를 들면 우리가 오토바이 탈때 오토바이 내부가 어떻게 돌아가는지 알필요 없고
+열쇠 꽃고 / 시동 걸고 끄고 / 기어 올리고 내리고 정도만 알면된다
+엔진내부가 어떻게 작동하는지 굳이 몰라도 된다(하지만 내가 엔진을 수리해야하는 정비공이라면 얘기가 달라지겠지..?)
+특이한 경우가 아닌이상 오토바이 내부의 세세한 것까지 굳이 이해할 필요는 없다
+이처럼 프로그래밍도 마찬가지이다.
+
+자바프로그램을 만들지만 이진법 같은 기계어를 쓰고 있지 않다.
+그러한 세부과정은 이미 추상화 되었기 때문이다 
+순서를 설명하자면 
+자바코드를 입력하면 내부에서 코드가 컴파일되고 바이트 코드를 생성해 JVM에서 실행되기 때문이다
+즉 
+그 모든 과정은 우리에게 압축되어 보이고 이것을 '추상화'라고 부른다.
+
+!추상화는 일상뿐 아니라 특히 객체 지향 프로그래밍에서 중요하다!
+
+honda.increseSpeed(100) 를 입력했을 뿐 실제 어떻게 시행되는지 이해할 필요는 없다.
+increseSpeed 사용자는 이것이나 객체지향 프로그래밍이 어떤 원리로 작동하는지 알필요 없기에 추상화를 잘 활용할 수 있다.
+
+추상화는 캡슐화와 연관이 깊은대 (추상화 캡슐화 비교)
+- 캡슐화는 특정 개체에 속하는 데이터를 숨겨 접근을 차단하고 연산만 허용한다
+- 추상화는 훨씬 포관적인 개념으로, 모든 복잡한 내용을 숨기고
+응용프로그램 인터페이스 유저는 복잡한 세부내용을 전부 알 필요 없다 그냥 사용하면 된다
+매서드를 호출하고 실행된다 생각하면 된다.
++오토바이 엔진이 알아서 작동하리라 생각하는것과 유사하다.
+
+
+생각)
+매번 객체지향 배울때 추상화 추상화 해서 무엇인가 했다
+뭐 가상에 있는것을 실체화한다 뭐 이런식으로 인터넷이든 유튜브 채널이든 똑같은 소리들만 했는대
+지금 내가듣는 인강은 예시를 들고 비교까지 해주면서 알려줘서 더 이해하기 쉬웠던거 같다.
+이러한 기초적인것도 제대로 설명을 못해주는대 1년이상 버티는 개발자들이 몇이나 될까 싶기도 하다.
