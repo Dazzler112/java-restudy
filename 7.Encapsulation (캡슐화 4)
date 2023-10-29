@@ -1,0 +1,65 @@
+클래스파일 1 -----------------------------------------------------------------------------
+package onlineJavaStudy;
+
+public class MotorBike {
+	//state
+	private int speed; //member variable 객체 고유의것
+	
+	//behaviour
+	//method
+	//inputs - int speed
+	//outputs - void
+	//name - setSpeed
+	void setSpeed(int speed) { //local variable (지역변수)
+		if(speed > 0)
+		this.speed = speed;
+	}
+	
+	int getSpeed() {
+		return this.speed;
+	}
+	
+	public void increseSpeed(int howMuch) {
+//    if(this.speed + howMuch >0)        //2.해당 메소드에 조건을 걸어주면 된다.
+//		this.speed = this.speed + howMuch; //3.하지만 위의 setSpeed 메소드와 중복되는 부분이있다..
+		setSpeed(this.speed + howMuch);      //4.setSpeed를 호출하여 메소드 인자부분에 넣어주면 코드 중복을 안하고 사용할 수 있고 간결하게 사용할 수 있다.
+	}
+	
+	public void decreseSpeed(int howMuch) {
+//		if(this.speed - howMuch > 0)       //2.해당 메소드에 조건을 걸어주면 된다.
+//		this.speed = this.speed - howMuch; //3.하지만 위의 setSpeed 메소드와 중복되는 부분이있다..
+		setSpeed(this.speed - howMuch);      //4.setSpeed를 호출하여 메소드 인자부분에 넣어주면 코드 중복을 안하고 사용할 수 있고 간결하게 사용할 수 있다.
+	}
+	
+	void start() {
+		System.out.println("Bike Started");
+	}
+}
+-----------------------------------------------------------------------------------------
+
+클래스파일 2 -----------------------------------------------------------------------------
+package onlineJavaStudy;
+
+public class MotorBikeRunner {
+	public static void main(String[] args) {
+		MotorBike ducati = new MotorBike();
+		MotorBike honda = new MotorBike();
+		
+		ducati.start();
+		honda.start();
+		
+		ducati.setSpeed(100);
+		
+		ducati.increseSpeed(100);
+		honda.increseSpeed(100);
+		
+		ducati.decreseSpeed(250);  //1. if문에 조건을 걸었지만 조건에 걸러지지 않고 -50으로 나온다...
+		honda.decreseSpeed(250);   //1. if문에 조건을 걸었지만 조건에 걸러지지 않고 -150으로 나온다...
+		
+		System.out.println(ducati.getSpeed());
+		System.out.println(honda.getSpeed());
+	}
+}
+-----------------------------------------------------------------------------------------
+
+⁕ 이렇게 어떻게 활용 하느냐에 따라서 무궁무진하게 사용 할 수 있고 코드 중복 없이 간결하게 사용 할 수도 있다.
