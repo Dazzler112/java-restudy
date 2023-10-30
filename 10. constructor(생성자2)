@@ -1,0 +1,89 @@
+
+클래스파일1 ----------------------------------------------------------------------
+package classMethodEncapsulation;
+
+public class MotorBike {
+	//state
+	private int speed; //member variable
+	
+	MotorBike() { //2. 이렇게 default 생성자를 생성해주면 된다.
+		//this.speed = 5; //3. 초기값으로 5가 나오게 하고싶다 이렇게 해도 되지만..
+    this(5);  //4. 아래에서 이미 this.speed = speed;이런식으로 받고있으니 this()로 해줘도 설정 가능하다.
+	}
+	
+	MotorBike(int speed){
+		this.speed = speed;
+	}
+	
+	//behaviour
+	//method
+	//inputs - int speed
+	//outputs - void
+	//name - setSpeed
+	void setSpeed(int speed) { //local variable (지역변수)
+		if(speed > 0)
+		this.speed = speed;
+	}
+	
+	int getSpeed() {
+		return this.speed;
+	}
+	
+	public void increseSpeed(int howMuch) {
+//		this.speed = this.speed + howMuch;
+		setSpeed(this.speed + howMuch);
+	}
+	
+	public void decreseSpeed(int howMuch) {
+//		if(this.speed - howMuch > 0)
+		setSpeed(this.speed - howMuch);
+	}
+	
+	void start() {
+		System.out.println("Bike Started");
+	}
+}
+---------------------------------------------------------------------------------
+
+클래스파일2 ----------------------------------------------------------------------
+package classMethodEncapsulation;
+
+public class MotorBikeRunner {
+	public static void main(String[] args) {
+		MotorBike ducati = new MotorBike(100);
+		MotorBike honda = new MotorBike(200);
+		MotorBike somethingElse = new MotorBike(); // 1.이렇게 빈 default 생성자를 사용하고 싶다.. 근대 컴파일에러나옴 //5. 이제 컴파일 에러없이 잘 컴파일 된다
+		
+		System.out.println(ducati.getSpeed());
+		System.out.println(honda.getSpeed());
+		System.out.println(somethingElse.getSpeed());
+		
+		ducati.start();
+		honda.start();
+		
+//		ducati.setSpeed(100);
+		
+		ducati.increseSpeed(100);
+		honda.increseSpeed(100);
+		
+		ducati.decreseSpeed(250);
+		honda.decreseSpeed(250);
+		
+		System.out.println(ducati.getSpeed());
+		System.out.println(honda.getSpeed());
+	}
+}
+---------------------------------------------------------------------------------
+
+⁕생성자는 클래스 생성할때 default 생성자를 갖고있다 (자바 컴파일이 디폴트생성자를 제공한거다)
+하지만 생성자를 생성하면 기존의 default생성자는 사라진다
+그리고 default생성자를 사용 하려면 별도의 default생성자를 만들어야한다.
+‣즉 우리가 생성자를 만들면 자바컴파일러는 디폴트 생성자를 주지 않는다. 
+
+기억할 것은
+1. new 키워드로 새개체를 만들 때 생성자가 호출되고
+생성자를 직접 만들지 않으면 자바컴파일러가 디폴트 생성자를 제공해준다
+2. MotorBike(int speed){ this.speed = speed;}
+이런 생성자를 제공하는 순간 자바컴파일러는 디폴드 생성자를
+제공하지 않아서 MotorBike(){}같은 인자없는 생성자를 생성해야 한다.
+3. this키워드로 타생성자를 호출시 this키워드롤 한생성자에서 다른생성자를 호출 가능하다.
