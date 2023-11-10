@@ -1,0 +1,100 @@
+
+클래스파일1 ------------------------------------------------------------------------
+파일2번을 활용하여 1번을 작성하시오.
+
+-----------------------------------------------------------------------------------
+
+클래스파일2 ------------------------------------------------------------------------
+
+package bigDecimal;
+
+import java.math.*;
+
+public class SimpleInterestCalculatorRunner {
+	
+	public static void main(String[] args) {
+		SimpleInterestCalculator calculator = new SimpleInterestCalculator("4500.00", "7.5");
+
+		BigDecimal totalValue = calculator.calculateTotalValue(5);  //5 years
+		
+		System.out.println(totalValue);
+	}
+
+}
+-----------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+-----------------------------------------------------------------------------------
+
+
+
+
+
+해답) 클래스파일1
+
+package bigDecimal;
+
+import java.math.*;
+
+public class SimpleInterestCalculator {
+
+	BigDecimal principal;  //1. BigDecimal로 변수를 생성해 줘야한다.
+	BigDecimal interest;   //1. BigDecimal로 변수를 생성해 줘야한다.
+	
+	SimpleInterestCalculator(String principal, String interest){  // 2.BigDecimal이니 반환값은 String이여야 할 것 (String이 아니면 정확도가 떨어지기 때문)
+		this.principal = new BigDecimal(principal);   // 3.생성자 부분에 이것도 BigDecimal로 생성
+		this.interest = new BigDecimal(interest).divide(new BigDecimal(100));   //이자율 구하려면 이자율/100 해줘야함
+	}
+	
+	BigDecimal calculateTotalValue(int noOfYears) {   //4. 메소드를 BigDecimal로 생성해주자
+		
+		//Total Value = principal + principal * interest * noOfYears   //합계 공식
+		
+		BigDecimal noOfYearsBigDecimal = new BigDecimal(noOfYears);  //5.메소드 생성자 부분이 int이니 BigDecimal로 생성
+		BigDecimal totalValue =  principal.add(  //6. 위의 합계 공식대로 넣어준다 BigDecimal은 +,-,*,/ 보단 .add 나 .multiply, .divide등으로 해줘야 연산된다 자세한건 api 보면 나온다 
+				principal.multiply(interest)
+				.multiply(new BigDecimal(noOfYears))
+				);
+		
+		return totalValue;   //7. 마지막 BigDecimal 계산 변수를 리턴해주면 완성
+	}
+}
+
+
+
+
+
+
+
+
+-----------------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------------
+
+
+해답) 클래스파일2
+
+package bigDecimal;
+
+import java.math.*;
+
+public class SimpleInterestCalculatorRunner {
+	
+	public static void main(String[] args) {
+		SimpleInterestCalculator calculator = new SimpleInterestCalculator("4500.00", "7.5");
+
+		BigDecimal totalValue = calculator.calculateTotalValue(5);  //5 years
+		
+		//6187.50000
+		System.out.println(totalValue);
+	}
+
+}
+
+-----------------------------------------------------------------------------------
