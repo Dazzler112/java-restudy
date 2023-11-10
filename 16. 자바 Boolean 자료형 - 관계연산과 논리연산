@@ -1,0 +1,168 @@
+
+boolean isValue = true;
+isValue ==> true
+
+boolean isValue = false;
+isValue ==> false
+
+boolean isValue = false;
+|  Error:
+|  cannot find symbol
+|    symbol:   variable False
+|  boolean isValue = False;
+|                    ^---^
+
+jshell> boolean isValue = True
+|  Error:
+|  cannot find symbol
+|    symbol:   variable True
+|  boolean isValue = True;
+|                    ^--^
+
+boolean은 대소문자를 유의해야 하는데 소문자로 False나 전부 대문자FALSE True 나 TRUE로 하면 안되고 소문자(true/false)로 해야한다
+
+⁂ 중요한점은 boolean의 기본 리터럴 두개는 true와 false이고 대소문자에 민감하다
+boolean의 연산자는 '논리 연산자'라고 하는데 
+논리연산자는 조건에 쓰이기 때문에 매우 중요하다.
+
+조건이 매우 중요한이유는 프로그램에서는 코드의 다양한 파트에 조건과 브랜치가 쓰이기 때문에
+boolean 이 조건의 연산자는 '논리 연산자'라 불리며 true 또는 false값을 갖고 
+두 boolean값을 결합할 수 있다
+예시)
+jshell> int i = 7;
+i ==> 7
+
+jshell> i > 7
+$7 ==> false
+
+jshell> i >= 7
+$8 ==> true
+
+jshell> i < 7
+$9 ==> false
+
+jshell> i <= 7
+$10 ==> true
+
+i > 7 이런 조건을 '관계 연산자'라 부르고 비교할수 있다
+관계 연산자의 결과는 boolean 값으로 나오는데
+
+전에 있었던 관계연산자로 '=='도 있었다
+비교연산자
+jshell> i == 6
+$11 ==> false
+
+jshell> i == 7
+$12 ==> true
+
+jshell> i == 8
+$13 ==> false
+
+= 한개만 쓰면 안되고 i = 7 이런식으로 하면 i에 값을 지정하기 때문이다
+jshell> i = 7
+i ==> 7
+
+
+논리 연산자
+논리연산자는 두 종류 boolean에서 실행된다
+
+- &&
+예시)
+jshell> int i = 17
+i ==> 17
+
+// 15 보다 크고 25 보다 작다를 포함하고 싶다
+jshell> i >= 15
+$16 ==> true
+이런식으로하면 15조건충족이고
+
+jshell> i <= 25
+$17 ==> true
+이런식으로 하면 25조건이 충족이다 그럼 
+15 보다 크고 25 보다 작다를 포함하고 싶다 이식은?
+
+jshell> i >= 15 && i <= 25
+$18 ==> true
+
+&&(앤드앤드)는 두조건 다 참일 때만 결과로 참을 출력한다.
+
+jshell> i = 30 //30으로 바꿔서 다시 실행
+i ==> 30
+
+jshell> i >= 15 && i <= 25
+$20 ==> false
+조건 하나는 맞지만 나머지 조건이 틀리기 때문에 false출력
+
+⁂ &&은 두조건이 맞아야 true를 출력 하나만 맞거나 둘다 틀리면 false를 출력한다
+true && true 
+==> true
+
+true && false 
+==> false
+
+false && true
+==> false
+
+false && false 
+==> false
+
+-or ||
+or연산자 ||로 표시한다
+하나만 참이어도 참으로나온다
+
+false || true
+==> true
+
+true || false
+==> true
+
+true || true
+==> true
+
+false || false
+==> false
+
+⁂or연산자는 두 피연산자가 다 거짓이어야 거짓을 출력한다
+
+-XOR ^
+XOR이 참이려면 피연산자가 서로 상이(달라야)해야한다
+
+jshell> false ^ false
+$23 ==> false
+
+jshell> true ^ true
+$24 ==> false
+
+jshell> true ^ false
+$25 ==> true
+
+jshell> false ^ true
+$26 ==> true
+
+이렇게 서로 피연산자값이 틀려야 true로 출력이 된다.
+
+-not !
+반대값을 출력해준다
+
+예시)
+jshell> !true
+$27 ==> false
+
+jshell> !false
+$28 ==> true
+
+jshell> int x = 6
+x ==> 6
+
+jshell> !(x>7)
+$30 ==> true
+
+
+중요하게 다룬 연산자는 and(&&), or(||), xor(^), not(!) 인데
+논리 연산자이기 때문에 두 피연산자 다 boolean이다
+
+⁂정리
+or는 피연산자 하나만 참이어도 참 두개다 거짓이면 거짓이다
+and는 두 연산자 다참이어야만 참,
+xor는 두연산자가 상이할때 참 (tue 와 false가 하나씩 있어야한다 서로 같으면 xor은 거짓을 출력),
+not은 값을 뒤집어서 참은 거짓이, 거짓이 참이된다.
