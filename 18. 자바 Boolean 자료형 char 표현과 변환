@@ -1,0 +1,78 @@
+
+char - 문자데이터를 표현
+
+생성법
+
+jshell> char ch = a
+|  Error:
+|  cannot find symbol
+|    symbol:   variable a
+|  char ch = a;
+
+jshell> char ch = 'a'
+ch ==> 'a'
+
+jshell> ch
+ch ==> 'a'
+
+캐릭터 생성법은 값에 ''을 표시해 줘야한다
+또한 문자는 하나만 입력할 수 있다
+
+그리고 이 많은 문자는 각각 '유니코드 값'을 가지고있다 (유니코드 값을 알고 싶으면 구글등에 검색)
+
+jshell> char ch2 = '\u0022'  //이렇게 (\u유니코드값)을 해도 사용 가능하다 
+ch2 ==> '"'
+
+jshell> char ch = 65
+ch ==> 'A'
+이렇게 숫자에 값을줄 수도 있다
+
+정수처럼 연산도 가능하다
+jshell> ch++
+$6 ==> 'A'
+
+jshell> ch
+ch ==> 'B'
+
+jshell> ++ch
+$8 ==> 'C'
+
+jshell> ++ch
+$9 ==> 'D'
+
+jshell> ch + 5
+$10 ==> 73  //D의값은 68이여서 73로 연산가능
+
+ch와 정수를 같이 연산하면 답은 늘 정수로 출력됨
+정수는 4바이트 문자는 2바이트로 정수가 더 크기때문
+그래서 상대적으로 큰 정수로 나타난다
+
+jshell> ch
+ch ==> 'D'
+ch만 입력하면 D를 출력하고
+
+jshell> (int)ch
+$12 ==> 68  
+(int)로 문자를 정수로 변환하면 정수값 68을 출력한다
+68은 유니코드 값이자 아스키 값이다.
+
+⁂ D는 68숫자로 대변될 수도있고 일반적으로 정수에 할 수 있는 연산은 문자로도 할 수 있다.
+
+개행문자
+jshell> char ch = '\n'
+ch ==> '\n'
+
+//char ch = '\n'  //밑에 행하나를 추가한다
+
+jshell> System.out.println(ch);
+
+
+//개행이 하나 더 추가된게 보인다.(총 2행이 출력됬음)
+
+jshell> char ch = '\t'
+ch ==> '\t'
+
+jshell> System.out.println(ch);
+
+
+// \t 는 tab문자를 출력함
