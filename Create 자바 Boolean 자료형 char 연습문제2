@@ -1,0 +1,154 @@
+
+-------------------------------------------------------------------------------------------------------
+클래스파일1
+
+package charPractice;
+
+public class MyChar {
+
+	private char ch;
+	
+	public MyChar(char ch) {
+
+		this.ch = ch;
+	}
+
+	public boolean isVowel() {
+		//'a' e i o u or A E I O U
+		if(ch == 'a' || ch == 'e' || 
+				ch == 'i' || ch == 'o' || 
+				ch == 'u' || ch == 'A' || 
+				ch == 'E' || ch == 'I' || 
+				ch == 'O' || ch == 'U') {
+			
+			return true;
+		
+		}
+		return false;
+	}
+	
+}
+-------------------------------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------------------------------
+
+클래스파일2
+
+package charPractice;
+
+public class MyCharRunning {
+
+	public static void main(String[] args) {
+		
+		MyChar myChar = new MyChar('1');
+		
+		System.out.println("isVowel ==> " + myChar.isVowel());
+
+				//'a', 'e', 'i', 'o', 'u' and Capitals
+		System.out.println("isDigit ==> " + myChar.isDigit());    //1.isDigit메소드를 만들어보자
+		System.out.println("isAlpahbet ==> " + myChar.isAlphabet()); //'a' to 'z' or 'A' to 'Z'  //2.isAlphabet메소드를 만들어보자
+		
+//		myChar.isConsonant();
+//		MyChar.printLowerCaseAlphabets();
+//		MyChar.printUpperCaseAlphabets();
+	}
+}
+-------------------------------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+클래스파일1 해답)
+
+
+
+
+
+package charPractice;
+
+public class MyChar {
+
+	private char ch;
+	
+	public MyChar(char ch) {
+
+		this.ch = ch;
+	}
+
+	public boolean isVowel() {
+		//'a' e i o u or A E I O U
+		if(ch == 'a' || ch == 'e' || 
+				ch == 'i' || ch == 'o' || 
+				ch == 'u' || ch == 'A' || 
+				ch == 'E' || ch == 'I' || 
+				ch == 'O' || ch == 'U') {
+			
+			return true;
+		
+		}
+		return false;
+	}
+
+	public boolean isDigit() {
+		if(ch >= 48 && ch <=57) {//between '0' and '9'  //1. if조건의 48 57은 아스키코드 값이다 48은0 57은9 이다
+				
+			return true;
+			
+		}
+		return false;
+	}
+
+	public boolean isAlphabet() {
+		if(ch >= 97 && ch <= 122) { //between'a' and 'z'  //2.if조건의 97 122도 마찬가지로 아스키코드 값이다 97은 a 122는 z이다
+				
+			return true;
+			
+		}
+		
+		if(ch >= 65 && ch <= 90) { //between'A' and 'Z'  //2.if조건의 97 122도 마찬가지로 아스키코드 값이다 65은 A 90는 Z이다
+			
+			return true;
+		} 
+    //이렇게 if를 2개로 해도 되지만 if((ch >= 97 && ch <= 122) || (ch >= 65 && ch <= 90))로 해도 가능하다
+
+
+		return false;
+	}
+	
+}
+
+-------------------------------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------------------------------
+
+클래스파일2 해답)
+
+
+클래스파일2
+
+package charPractice;
+
+public class MyCharRunning {
+
+	public static void main(String[] args) {
+		
+		MyChar myChar = new MyChar('1');
+		
+		System.out.println("isVowel ==> " + myChar.isVowel());
+
+				//'a', 'e', 'i', 'o', 'u' and Capitals
+		System.out.println("isDigit ==> " + myChar.isDigit());    //1.isDigit메소드를 만들어보자
+		System.out.println("isAlpahbet ==> " + myChar.isAlphabet()); //'a' to 'z' or 'A' to 'Z'  //2.isAlphabet메소드를 만들어보자
+		
+//		myChar.isConsonant();
+//		MyChar.printLowerCaseAlphabets();
+//		MyChar.printUpperCaseAlphabets();
+	}
+}
+
+-------------------------------------------------------------------------------------------------------
