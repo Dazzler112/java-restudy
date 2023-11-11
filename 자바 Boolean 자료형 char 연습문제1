@@ -1,0 +1,101 @@
+
+클래스파일1 ---------------------------------------------------------------------------------------
+2번파일을 보고 1번파일을 작성하여 조건을 완성하시오
+--------------------------------------------------------------------------------------------------
+
+클래스파일2---------------------------------------------------------------------------------------
+package charPractice;
+
+public class MyCharRunning {
+
+	public static void main(String[] args) {
+		
+		MyChar mychar = new MyChar('c');
+		
+		System.out.println(mychar.isVowel());
+				//'a', 'e', 'i', 'o', 'u' and Capitals
+//		System.out.println(myChar.isNumber());
+//		System.out.println(myChar.isAlphabet());
+		
+//		MyChar.printLowerCaseAlphabets();
+//		MyChar.printUpperCaseAlphabets();
+	}
+}
+-------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+-------------------------------------------------------------------------------------------
+
+
+
+클래스파일1 해답)
+
+
+
+
+
+
+
+
+
+package charPractice;
+
+public class MyChar {
+
+	private char ch;  //2. 변수도 생성
+	
+	public MyChar(char ch) {  //1.char로 생성자 먼저 생성
+
+		this.ch = ch;
+	}
+
+	public boolean isVowel() {   //3.char로 a e i o u 대문자 까지 포함하여 조건 생성 저 중 하나면 통과로 해야하나 or조건을 사용해야겠지? 
+		//'a' e i o u or A E I O U
+		if(ch == 'a' || ch == 'e' || 
+				ch == 'i' || ch == 'o' || 
+				ch == 'u' || ch == 'A' || 
+				ch == 'E' || ch == 'I' || 
+				ch == 'O' || ch == 'U') {
+			
+			return true;
+		
+		}
+		return false;
+	}
+
+}
+
+
+
+-------------------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------------------
+클래스파일2
+
+package charPractice;
+
+public class MyCharRunning {
+
+	public static void main(String[] args) {
+		
+		MyChar mychar = new MyChar('A');
+		
+		System.out.println(mychar.isVowel());
+				//'a', 'e', 'i', 'o', 'u' and Capitals
+//		System.out.println(myChar.isNumber());
+//		System.out.println(myChar.isAlphabet());
+		
+//		MyChar.printLowerCaseAlphabets();
+//		MyChar.printUpperCaseAlphabets();
+	}
+}
+-------------------------------------------------------------------------------------------
