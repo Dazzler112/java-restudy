@@ -1,0 +1,66 @@
+
+jshell> if(true){
+   ...>     System.out.println("True");
+   ...> }
+True
+//if문은 true일때 로직을 실행
+
+jshell> if(false){
+   ...>     System.out.println("True");
+   ...> }
+//반면에 거짓일 경우 로직을 실행시키지 않는다
+
+jshell> int i = 3
+i ==> 3
+
+jshell> if(i==3){
+   ...>     System.out.println("True");
+   ...> }
+True
+//조건이 맞으니 True를 출력
+
+
+jshell> if(i<2){
+   ...>     System.out.println("True");
+   ...> }
+//조건이 맞지 않으니 Sysout 로직을 실행하지 않음
+
+
+다른예시)
+jshell> if(i<=3 || i>=35){
+   ...>     System.out.println("True");
+   ...> }
+True
+//마찬가지로 논리연산자가 or일경우 하나라도 맞으면 True로직을 출력
+
+jshell> if(i<=3 && i>=35){
+   ...>     System.out.println("True");
+   ...> }
+//&&논리연산자 조건이 안맞으니 로직출력을 안함
+
+
+
+그러면 false일경우 로직 출력을 못하냐? no
+
+jshell> if(i==3){
+   ...>     System.out.println("True");
+   ...> } else{
+   ...>     System.out.println("i is not 3");
+   ...> }
+True
+//else는 if조건이 충족하지 못하면 다음 로직을 출력할 수 있다.
+
+jshell> i = 5
+i ==> 5
+//i값을 5로 바꿔줌
+
+jshell> if(i==3){
+   ...>     System.out.println("True");
+   ...> } else{
+   ...>     System.out.println("i is not 3");
+   ...> }
+i is not 3
+
+//조건만족하지 않으니 else문으로 넘어감 else문 로직을 실행
+
+⁂ if문은 조건이 참일경우 실행 if else는 if문 조건이 참이 아닐경우 로직을 실행한다.
