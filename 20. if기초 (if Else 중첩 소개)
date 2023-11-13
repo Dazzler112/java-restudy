@@ -1,0 +1,41 @@
+
+package basicIfTraining;
+
+public class IfStatementRunner {
+
+	public static void main(String[] args) {
+		int i = 24;
+		//i is 25
+		//i is 24
+		//i is neither 25 or 24
+		
+		
+//		if(i == 25) {
+//			System.out.println("i = 25");
+//		}if(i == 24) {
+//			System.out.println("i = 24");
+//		}
+//		else {
+//			System.out.println("i != 25");
+//		} 24출력하려면 if를 이렇게 쓰면 될까? no if문 둘다 출력된다
+		//그러면 어떻게 써줘야 할까? 
+    // ==> else if 를 사용해주면 된다
+		
+		
+		if (i==25) {
+			System.out.println("i = 25");
+		} else if (i == 24) {
+			System.out.println("i = 24");
+		} else if (i == 23) {
+			System.out.println("i = 23");
+		}
+		else {
+			System.out.println("i != 23 and i != 24 and i != 25");
+		}
+		//nested if 장점은 원하는 만큼 중첩할수 있다는것
+		//단 nested if else는 한 블록만 실행한다
+		//if나 else if 블록중 하나만 실행되며 실행후 제어에서 나간다
+		//nested if else는 상이한 조건 여러개중 하나만 특정 시간에 참이되는 케이스에 쓰기 좋다
+		//지금 예제에서는 == 를 썼지만 >, < 등 온갖 복잡한 조건의 조합을 넣을수 있다.
+	}
+}
