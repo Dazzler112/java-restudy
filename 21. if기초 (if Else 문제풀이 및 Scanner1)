@@ -1,0 +1,42 @@
+------------------------------------------------------------------
+나와야하는 답
+Enter Number1 :
+2
+------------------------------------------------------------------
+
+package basicIfTraining;
+
+public class MenuRunner {
+	
+	public static void main(String[] args) {
+		System.out.println("Enter Number1: ");
+	}
+}
+
+사용자가 직접 값을 넣게끔 어떻게 요구해야 할까?
+어떻게 해야 사용자에게 Number1 입력을 요청할 수 있을까?
+
+1. Syso로 콘솔에 값을 출력하게 만들어야 한다
+2. 숫자값을 받아야 하는대 어떤 방식으로 상호작용을 해야 할까?
+Scanner를 사용하면 직접 콘솔에 입력할 수 있다.
+
+
+
+
+package basicIfTraining;
+
+import java.util.*;
+
+public class MenuRunner {
+	
+	public static void main(String[] args) {
+		//Type obj = new Type(argument);
+		Scanner scanner = new Scanner(System.in);  //1.이렇게 클래스 인스턴스 만들듯이 사용하면 된다 모르겠으면 Java api에 찾아서 보자 argument에 System.in 을 넣어주면
+                                              //콘솔에 값을 넣어줄수 있다.
+		
+		System.out.println("Enter Number1: ");
+		int number1 = scanner.nextInt();    //2.그리고 int에 스캐너를 넣어주고 nextInt()를 넣어주면 정수값을 넣을수 있는 스캐너가 완성된다.
+		System.out.println("The number you entered is - " + number1);
+	}
+}
+//이렇게 콘솔창에 원하는 값을 넣어줄수 있다.
