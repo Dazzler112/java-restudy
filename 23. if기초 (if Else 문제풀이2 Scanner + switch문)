@@ -1,0 +1,160 @@
+
+스위치문 기초
+
+---------------------------------------------------------------------------
+jshell> int i = 5;
+i ==> 5
+//i값이 5
+
+jshell> switch (i) {
+   ...>     case 1 : System.out.println("1");
+   ...>     case 5 : System.out.println("5");
+   ...>     default : System.out.println("default");
+   ...> }
+5
+default
+//5와 default가 출력이 되었다 이유는?
+//스위치문은 해당 값에서 아래까지 전부 출력이된다
+
+---------------------------------------------------------------------------
+
+다른예제
+
+---------------------------------------------------------------------------
+
+jshell> i = 1;
+i ==> 1
+//1로 값을 초기화
+
+jshell> switch (i) {
+   ...>     case 1 : System.out.println("1");
+   ...>     case 5 : System.out.println("5");
+   ...>     default : System.out.println("default");
+   ...> }
+1
+5
+default
+//마찬가지로 1과 그 아래의 case가 전부다 출력된다.
+
+//⁂스위치는 디폴트로 조건에 부합하는 케이스와 그이하 케이스들을 다 실행한다.
+
+//i값이 1이기때문에 케이스 1의 조건에 부합한다 그래서 케이스1부터 이하 default까지 모든 케이스가 실행되는 것이다
+---------------------------------------------------------------------------
+
+//이걸 어떻게 방지할 수 있을까?
+
+---------------------------------------------------------------------------
+
+jshell> switch (i) {
+   ...>     case 1 : System.out.println("1"); break;  //이렇게 case가 끝나는 부분쪽에 break를 넣어주는 것이다.
+   ...>     case 5 : System.out.println("5"); break;
+   ...>     default : System.out.println("default"); break;
+   ...> }
+   
+1  //i의 값이 1 이니 case1만 출력이 됨
+
+//switch문을 사용할때 늘 이점을 기억하길 바람
+
+---------------------------------------------------------------------------
+
+
+다시 예제로
+
+---------------------------------------------------------------------------
+
+package basicIfTraining;
+
+import java.util.*;
+
+public class MenuRunner {
+	
+	public static void main(String[] args) {
+		//Type obj = new Type(argument);
+		Scanner scanner = new Scanner(System.in);
+		
+		System.out.println("Enter Number1: ");
+		int number1 = scanner.nextInt();
+		System.out.println("The number1 you entered is -> " + number1);
+		
+		System.out.println("Enter Number2: ");
+		int number2 = scanner.nextInt();
+		System.out.println("The number2 you entered is -> " + number2);
+		
+		System.out.println("1 - Add");
+		System.out.println("2 - Subtract");
+		System.out.println("3 - Divide");
+		System.out.println("4 - Multiply");
+		
+		System.out.println("Enter Choice: ");
+		int choice = scanner.nextInt();
+
+		System.out.println("Your Choices are");
+		System.out.println("Number1 " + number1);
+		System.out.println("Number1 " + number2);
+		System.out.println("choice " + choice);
+		
+		performOperationUsingSwitch(number1, number2, choice);
+
+	}
+
+
+
+nested If 문 --------------------------------------------------------
+
+private static void performOperationUsingNestedElse
+	(int number1, int number2, int choice) {
+		if(choice == 1) {
+			System.out.println("Result " + (number1 + number2));
+		} else if (choice == 2) {
+			System.out.println("Result " + (number1 - number2));
+		} else if (choice == 3) {
+			System.out.println("Result " + (number1 / number2));
+		} else if (choice == 4) {
+			System.out.println("Result " + (number1 * number2));
+		} else {
+			System.out.println("Invalid Operation");
+		}
+	}
+
+ Switch 문 --------------------------------------------------------
+	
+	private static void performOperationUsingSwitch
+	(int number1, int number2, int choice) {
+		switch (choice) {
+			case 1 : {
+				System.out.println("Result " + (number1 + number2));
+				break;
+				}
+			case 2 : {
+				System.out.println("Result " + (number1 - number2));
+				break;
+			}
+			case 3 : {
+				System.out.println("Result " + (number1 / number2));
+				break;
+			}
+			case 4 : {
+				System.out.println("Result " + (number1 * number2));
+				break;
+			}
+			default : {
+				System.out.println("Invalid Operation"); 
+				break;
+			}
+		}
+	}
+}
+//보는것과 같이 nested if 문보다 스위치문이 훨씬 가독성이 좋다
+ ---------------------------------------------------------------------------
+
+ //혹시 안되면 문법을 검토해 보자
+ switch (choice) { <--- 이부분에는 소괄호에는 변수
+ case1 : <== 이부분에 쌍점과 뒤에 로직이 있어야한다
+ case2 :
+ case3 :
+ default :
+ } <== switch에 중괄호 필수
+
+ ⁂ 정리하면 케이스 - 값 - 쌍점 - 문(쿼리) 순이다
+ 굉장히 단순함 
+ 대부분 쌍점을 잘못쓰거나 중괄호를 안하는 실수를 한다 이점을 유의할 것!
