@@ -1,0 +1,51 @@
+
+package basicIfTraining;
+
+import java.util.*;
+
+public class MenuRunner {
+	
+	public static void main(String[] args) {
+		//Type obj = new Type(argument);
+		Scanner scanner = new Scanner(System.in);
+		
+		System.out.println("Enter Number1: ");
+		int number1 = scanner.nextInt();
+		System.out.println("The number1 you entered is -> " + number1);
+		
+		System.out.println("Enter Number2: ");
+		int number2 = scanner.nextInt();
+		System.out.println("The number2 you entered is -> " + number2);
+		
+		System.out.println("1 - Add");
+		System.out.println("2 - Subtract");
+		System.out.println("3 - Divide");
+		System.out.println("4 - Multiply");
+		
+		System.out.println("Enter Choice: ");
+		int choice = scanner.nextInt();
+
+		System.out.println("Your Choices are");
+		System.out.println("Number1 " + number1);
+		System.out.println("Number1 " + number2);
+		System.out.println("choice " + choice);
+
+//1.이제 nested if 문을 이용하여 해당 버튼을 누르면 출력되게 하면 되겠다
+
+		if(choice == 1) {
+			System.out.println("Result " + (number1 + number2));
+		} else if (choice == 2) {
+			System.out.println("Result " + (number1 - number2));
+		} else if (choice == 3) {
+			System.out.println("Result " + (number1 / number2));
+		} else if (choice == 4) {
+			System.out.println("Result " + (number1 * number2));
+		} else {
+			System.out.println("Invalid Operation");
+		} //2.else로 버튼 외의 숫자를 입력하면 잘못된 연산이라 출력되게함
+
+	}
+}
+
+//하지만 nested if문으로 뭔가 로직이 복잡해졌다 
+//조금더 알아 보기 쉽게 만들수 없을까? switch 문이 알아보기 쉬울거 같다.
