@@ -1,0 +1,137 @@
+
+package switchTraining;
+
+public class SwitchStatementRunner {
+
+	public static void main(String[] args) {
+		puzzle1~6();
+	}
+	
+	private static void puzzle1() {
+		int number = 2;
+		switch (number) {
+			case 1 : {
+				System.out.println(1);
+			} 
+			case 2 : {
+				System.out.println(2);
+			}
+			case 3 : {
+				System.out.println(3);
+			}
+			default : {
+				System.out.println("Default");
+			}
+		}	//다음 출력되는 것은 무엇일까?
+			//2 , 3 , Default임 why?
+			//switch 로직에 break가 없기 때문에 2부터 아래 하위 까지 전부 실행된다.
+	}
+	
+	private static void puzzle2() {
+		int number = 2;
+		switch (number) {
+		case 1: {
+			
+			break;
+		}
+		case 2: {
+				}
+		case 3: {
+			System.out.println("Number is 2 or 3");
+			break;
+		}
+		default:
+			System.out.println("Default");
+			break;
+		}
+		//이것의 출력값은? case2에는 구문이없다
+		//출력은 Number is 2 or 3 인 case 3가 출력되었다
+		//이 경우 fall through현상이 발생한다.
+		//무슨 뜻이냐면 다음 case문의 코드가 실행되게 된다는것이다.
+		//case2에 break가 없고 case3의 값이 number is 2 or 3 그리고 break가있다
+		//그렇기 때문에 switch문에서 분리가 가능하다
+		//switch문에서는 해당 구문의 break문 전에 나오는 모든 코드가 실행된다.
+		//즉 break문이 실행 될 때 또는 마지막 case가 실행된 이후 switch문에서 분리된다.
+	}
+	
+	private static void puzzle3() {
+		int number = 10;
+		switch (number) {
+		case 1: {
+			System.out.println(1);
+			break;
+		}
+		case 2: {
+			System.out.println(2);
+			break;
+				}
+		case 3: {
+			System.out.println(3);
+			break;
+		}
+		default:
+			System.out.println("Default");
+			break;
+		}
+	}
+	//결과값은 Default이다.
+	//생각보다 굉장히 기본적이고 간단한 퍼즐이다
+	//10이라는 값이 어느 case와도 매칭이 되지 않는다
+	//매칭되는게 없기 때문에 디폴트 값으로 실행되고 디폴트값이 출력된다.
+	
+	
+	private static void puzzle4() {
+		int number = 10;
+		switch (number) {
+		default:{
+			System.out.println("Default");
+			break;
+			}
+		case 1: {
+			System.out.println(1);
+			break;
+			}
+		case 2: {
+			System.out.println(2);
+			break;
+				}
+		case 3: {
+			System.out.println(3);
+			break;
+			}
+		}
+	}
+	//nested if 에선 else가 맨위로 올라올수 없지만
+	//스위치문은 상관 없이 첫번째를 디폴트 조건으로 설정 가능하다. 
+	//그 어떤 case문도 매칭되는 바가 없을 때 디폴트 설정이 실행된다 
+	//값이 10일경우 디폴트문이 실행된다.
+	//실제로 Default문에 break를 없에면 다음으로 넘어가게 되는데 그러면 값이 Default와 1(case 1)이 나온다
+	//switch문은 어떤 구문도 디폴트로 설정될 수 있다.
+	
+	
+	private static void puzzle5() {
+		long l = 15;
+		switch (l) {
+		
+		}
+	}
+	//컴파일 에러가 나왔다 왜 그런것일까?
+	//핵심은 "롱 타입에서 switch 불가능, 타입, 스트링에서만 변환 가능 enum변수 허용됨"이라고 나옴
+	//중요한 부분이다 예를 들어 char,int,byte,short등에서만 switch를 사용할 수 있다
+	//long 이나 double에서 switch는 사용할 수 없다. 오류가 발생함
+	//string과 enum 변수에 대해서는 다음에 알아보도록 함
+	
+	
+	private static void puzzle6() {
+		int number = 10;
+		int i = number * 2;
+		switch (number) {
+		case number > 5 : {
+			System.out.println("number > 5");
+		}
+		}
+	}
+	//왜 컴파일에러가 나올까?
+	//case안에는 숫자가 들어가야한다 예를들어 5 이런 값
+	//number > 5 처럼 조건이 올 수 없다. 저러면 유효하지 않은 case가 된다.
+}
