@@ -1,0 +1,100 @@
+
+- 삼항연산자
+삼항 연산자 기본문은 '? : (TERNARY)' 로 사용하는대 이것을 삼항연산자라 부른다
+구문은 굉장히 간단하다.
+condn ? true : false
+
+
+삼항연산 들어가기 전에 간단히 if문으로 확인해보자
+
+jshell> boolean isEven
+isEven ==> false
+//boolean으로 isEven생성
+
+jshell> int i = 5;
+i ==> 5
+//변수로 정수형 타입 i를 생성
+
+jshell> if (i % 2 == 0) {
+   ...>     isEven = true;
+   ...> } else {
+   ...>     isEven = false;
+   ...> }
+
+jshell> isEven
+isEven ==> false
+//조건에 해당 안되니 false
+
+jshell> i = 6;
+i ==> 6
+
+jshell> if (i % 2 == 0) {
+   ...>     isEven = true;
+   ...> } else {
+   ...>     isEven = false;
+   ...> }
+
+jshell> isEven
+isEven ==> true
+//조건에 해당되니 true
+
+//이렇게 간단한 if문을 삼항연산자르 통해서 실행 가능하다
+// isEven = (condn ? valueIfCondnIsTrue : valueIfFalse) 이런식으로 만들면 된다.
+
+jshell> isEven = ( i % 2 == 0 ? true : false)  //구문이 조건이되고 결과값은 true
+isEven ==> true
+
+jshell> i = 6;
+i ==> 6
+
+jshell> isEven = ( i % 2 == 0 ? true : false)
+isEven ==> true
+//i 짝수이니 당연히 true출력
+
+jshell> i = 7;
+i ==> 7
+//7로 초기화
+
+jshell> isEven = ( i % 2 == 0 ? true : false)
+isEven ==> false
+//나머지가 1이남으니 false 출력
+
+
+//조건 연산자는 다른 데이터타입에서도 사용 가능하다
+
+//String출력하고 싶다
+jshell> String even = ( i % 2 == 0 ? "YES" : "NO")
+even ==> "NO"
+//현 i값이 7이기 때문에 "NO"출력
+
+
+jshell> i = 6
+i ==> 6
+
+jshell> String even = ( i % 2 == 0 ? "YES" : "NO")
+even ==> "YES"
+//i값 6이기 때문 "YES" 출력
+
+//중요한건 조건에서 어떤쪽을 사용하든 두개의 조건타입이 동일해야한다
+//즉 TRUE FALSE 한쪽이라도 String으로 썼으면 둘다 String이여야 한다는것
+
+jshell> String even = ( i % 2 == 0 ? "YES" : 4)
+|  Error:
+|  incompatible types: bad type in conditional expression
+|      int cannot be converted to java.lang.String
+|  String even = ( i % 2 == 0 ? "YES" : 4);
+|                                       ^
+//badtype 이처럼 true쪽은 string , false쪽은 정수로 하면 에러가나온다.
+//양쪽에 동일한 데이터 타입을 입력해야 한다.
+
+jshell> String even = ( i % 2 == 0 ? "YES" : "NO")
+even ==> "YES"
+
+//삼항연산자는 간단한 if조건문에서 사용할 수 있다. 코드를 쉽게 만들어준다
+
+//❗ 하지만 삼항연산자를 사용하지 말라고 하는 코딩 기준 규칙이 있다.
+//❗ 그렇기 때문에 삼항 연산자를 사용하기전 자기가 속한 조직의 규범을 알아보고 사용해야 할 것이다. 
+
+//간단한 조건을 다룰때 굉장히 유용한기능이다.
+//간단한 조건문에서 삼항연산자가 중요하다고 할 수 있고 복잡한것에 사용하는것은 추천하지 않음
+//코드를 읽을수 없게 된다 복잡한 코딩을 해야한다면 if문을 사용해보아라
