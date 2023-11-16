@@ -1,0 +1,142 @@
+---------------------------------------------------------------------------------------------------------------------
+예제1)
+
+package switchTraining;
+
+public class SwitchExercisesRunner {
+
+	public static void main(String[] args) {
+    System.out.println(determineNameOfDay(0));
+	}
+  //다음 숫자를 넣어서 숫자에 해당하는 요일을 출력해보시오
+  //ex)0 = sunday , 1 = monday , 2 = tuesday, 3 = wendsday, 4 = thursday, 5 = friday , 6 = saturday
+
+	public static String determineNameOfDay(int dayNumber) {
+    //1. 메소드를 만들고 메소드 안에 스위치문을 만들어서 사용할 수있다.
+    
+		String result = "";
+
+		switch (dayNumber) {
+		case 0: {
+			return "Sunday"; //break를 넣어서 멈추게 할수도 있지만 return을 사용함으로써 흐름이 메소드 밖으로 나간다
+                       // 즉 sunday값이 출력된 후 코드 범위를 벗어난다는 것이다. 굳이 break를 사용하지 않아도 된다는것.
+                       // 한가지 명심해야 한느부분은 메소드에서 무언가 돌려보낼때, 그다음 라인에 있는 코드는 실행되지 않는다.
+                       //‣이말은 즉 코드를 완전히 벗어나기 때문에 break를 사용할 필요가 없이 바로 해당로직을 실행할 수 있다는것.
+		}
+		case 1: {
+			return "Monday";
+		}
+		case 2: {
+			return "Tuesday";
+		}
+		case 3: {
+			return "Wendsday";
+		}
+		case 4: {
+			return "Thursday";
+		}
+		case 5: {
+			return "Friday";
+		}
+		case 6: {
+			return "Saturday";
+		}
+		}
+
+		return "Invalid_day";
+	}
+
+}
+
+---------------------------------------------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------------------------------------------
+
+예제2)
+
+package switchTraining;
+
+public class SwitchExercisesRunner {
+
+	public static void main(String[] args) {
+		System.out.println(isWeekDay(5));
+	}
+
+  //다음 코드를 이용해 주말/일이면 false를 평일이면 true를 출력되게 작성하시오
+
+
+	public static boolean isWeekDay(int dayNumber) {
+  //1.true false를 출력하게 해야하니 boolean으로 메소드 타입 설정
+
+		switch(dayNumber) {
+			case 0 : {
+				return false;  //리턴을 사용해 0,6이면 false 1~5면 true를 출력하게 하면 된다.
+                       //하지만 스위치문을 다르게 사용할 수도 있다.
+			}
+			case 1 : {
+				return true;
+			}
+			case 2 : {
+				return true;
+			}
+			case 3 : {
+				return true;
+			}
+			case 4 : {
+				return true;
+			}
+			case 5 : {
+				return true;
+			}
+			case 6 : {
+				return false;
+			}
+		}
+		return false;
+	}
+}
+
+
+
+-----------------------------------------
+			case 0 : {
+			}
+			case 6 : {
+				return false;  //case를 이런식으로 false true그룹으로 묶어서 fall through 되게 만들어도 되고 
+                      //0을 입력해도 fallthrough 되어서 6이나 5가 출력이됨
+			}
+			case 1 : {
+			}
+			case 2 : {
+			}
+			case 3 : {
+			}
+			case 4 : {
+			}
+			case 5 : {
+				return true;
+			}
+		}
+		return false;
+
+-----------------------------------------
+
+			case 1 : {  //또다른 방법으로 주말/일은 어차피 false를 출력해야하니 0,6case 조건을 안줘도 
+                  //원하는 출력값을 나오게할 수 있다.
+			}
+			case 2 : {
+			}
+			case 3 : {
+			}
+			case 4 : {
+			}
+			case 5 : {
+				return true;
+			}
+		}
+		return false;
+
+
+---------------------------------------------------------------------------------------------------------------------
+
+
