@@ -1,0 +1,136 @@
+
+코딩 예제: 점수를 기준으로 한 A부터 F까지의 학생 학점
+여러분은 제공된 점수를 기준으로 학생의 학점을 계산하여 할당하는 Student 클래스의 기능을 구현하게 됩니다.
+
+학생의 학점은 다음과 같은 기준에 따라 결정됩니다.
+학생의 점수가 0보다 낮거나 100보다 높으면 학점은 ‘X’입니다.
+학생의 점수가 90보다 높거나 90과 같으면 학점은 ‘A’입니다.
+학생의 점수가 80보다 높거나 80과 같지만 90보다 낮으면 학점은 ‘B’입니다.
+학생의 점수가 70보다 높거나 70과 같지만 80보다 낮으면 학점은 ‘C’입니다.
+학생의 점수가 60보다 높거나 60과 같지만 70보다 낮으면 학점은 ‘D’입니다.
+학생의 점수가 50보다 높거나 50과 같지만 60보다 낮으면 학점은 ‘E’입니다.
+학생의 점수가 50보다 낮으면 학점은 ‘F’입니다.
+
+클래스 구조
+
+클래스 Student에는 다음이 포함되어 있습니다.
+타입이 int인 인스턴스 변수 marks.
+int 매개변수를 받아 marks를 초기화하는 생성자.
+제공된 점수를 기준으로 학생의 학점을 나타내는 char를 리턴하는 assignGrade() 메서드.
+여러분이 만들 클래스의 기본 골격은 다음과 같습니다.
+
+------------------------------------------------------------------------------------------------------
+
+예제)
+
+public class Student {
+    private int marks;
+ 
+    public Student(int marks) {
+        // TODO: Assign 'marks' to the instance variable 'this.marks'
+    }
+ 
+    public char assignGrade() {
+        // TODO: Implement the method which assigns the grade based on marks.
+        // If marks are less than 0 or greater than 100, return 'X'
+        // If marks are greater than or equal to 90, return 'A'
+        // If marks are greater than or equal to 80, return 'B'
+        // If marks are greater than or equal to 70, return 'C'
+        // If marks are greater than or equal to 60, return 'D'
+        // If marks are greater than or equal to 50, return 'E'
+        // If marks are less than 50, return 'F'
+    }
+}
+
+//다음 예제를 통해 조건을 완성하시오
+------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------------------------------------------
+
+
+해답)
+
+
+
+
+
+
+
+
+
+
+
+
+----------------------내가 한것-----------------------------
+public class Student {
+    private int marks;
+
+    public Student(int marks) {
+        this.marks = marks;  //1. 클래스의 생성자를 구현 해주고
+    }
+
+    public char assignGrade() {
+        if(marks < 0 || marks > 100){  //1. 순서대로 지침 조건대로 만들어 주면 조건문이 완성되고 테스트에 통과한다.
+            return 'X';
+        }else if (marks >= 90) {
+            return 'A';
+        }else if (marks >= 80 && marks < 90) {
+            return 'B';
+        }else if (marks >= 70 && marks < 80) {
+            return 'C';
+        }else if (marks >= 60 && marks < 70) {
+            return 'D';
+        }else if (marks >= 50 && marks < 60){
+            return 'E';
+        }else {
+            return 'F';
+        }
+    }
+}
+
+
+
+----------------------강사 해답-----------------------------
+
+public class Student {
+    private int marks;
+
+    public Student(int marks) {
+        this.marks = marks; 
+    }
+
+    public char assignGrade() {
+        if(marks < 0 || marks > 100){  
+            return 'X';
+        }
+        if(marks >= 90){  
+            return 'A';
+        }
+        if(marks >= 80){  
+            return 'B';   // 연결된 로직이 아니니 else if 를 사용 안하고 if로 따로 따로 넣어줬다
+        }
+        if(marks >= 70){  
+            return 'C';
+        }
+        if(marks >= 60){  
+            return 'D';
+        }
+        if(marks >= 50){  
+            return 'E';
+        }
+        return 'F';  // 저 if문에 해당안되면 자동으로 맨 아래에 있는 return 'F'; 를 출력 (1-49점)
+    }
+}
+        //else if 사용 안하고 이렇게 연결 되지 않을때 if로만 간결하게 return해서 사용할 수 있을거 같다
+        //그리고 어디에도 해당안될때 맨아래에 return으로 빼준것도 괜찮은 방법인거 같다. 굳이 else 써서 F로 빼줄 필요도 없이
+        //간결하게 F로 뺄수도 있는거 같다.
+------------------------------------------------------------------------------------------------------
