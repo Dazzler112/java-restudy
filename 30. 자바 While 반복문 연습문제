@@ -1,0 +1,65 @@
+
+---------------------------------------------------------------------------------------
+
+클래스파일 1번
+
+package whileLoopTraining;
+
+public class WhileNumberPlayerRunner {
+	public static void main(String[] args) {
+		WhileNumberPlayer player = new WhileNumberPlayer(30);
+
+	//For limit = 30, output would be 1 4 9 16 25
+		player.printSquaresUptoLimit();
+
+  //For limit = 30, output would be 1 8 27
+		player.printCubesUptoLimit();
+	}
+}
+
+//다음 조건을 확인하고 로직을 만드시오
+---------------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------------
+
+클래스파일 2번
+
+package whileLoopTraining;
+
+public class WhileNumberPlayer {
+
+	private int limit;
+	public WhileNumberPlayer(int limit) {
+		
+		this.limit = limit;
+	}
+	
+	//For limit = 30, output would be 1 4 9 16 25
+	public void printSquaresUptoLimit() {//limit 전까지의 제곱 값을 구하기
+		//세제곱 값이 클래스 인스턴스 생성자 값까지 계속 해서 출력할 것임.(얼마나 많이 반복될지 모름)
+		int i = 1;
+//		while(i * i < 30) { //i * i 는 제곱을 뜻함 
+    //그리고 <30 이렇게 하드코딩 하면 안되고 아래 처럼해야함
+		while(i * i < limit) {	
+			System.out.print(i * i + " ");
+			i++;
+		}
+		System.out.println();
+	}
+	
+	//For limit = 30, output would be 1 8 27
+	public void printCubesUptoLimit() { //세제곱 값을 출력하시오
+		
+		int i = 1;
+		while(i * i * i <= limit) { //주의점은 limit전까지 출력할 것인지 limit까지 출력할 것인지 구분하는 부분이다. 
+                                //프로그램 실행할 때 가장 끝 값을 주의해야한다.
+			System.out.println("CubesUptoLimit => " + i * i * i);
+			i++;
+		}
+	}
+	//일반적으로 while loop를 사용할 때는 구문이 얼마나 반복되는지 알 수가없다.
+	//특정 조건(i * i * i <= limit)을 만족할 때까지 계속 실행하게 설정하는것이다. 
+	//예문을 통해 진행해 본 것과 같다.
+}
+
+---------------------------------------------------------------------------------------
