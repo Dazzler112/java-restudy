@@ -1,0 +1,119 @@
+-------------------------------------------------------------------------------
+
+클래스파일 1번
+
+package forLoopTraining;
+
+public class MyNumberRunner {
+	
+	public static void main(String[] args) {
+		//연습문제1번
+		MyNumber number = new MyNumber(6);
+		boolean isPrime =  number.isPrime();
+		System.out.println("isPrime " + isPrime);
+		
+		//연습문제 2번
+		int sum = number.sumUptoN();
+		System.out.println("sum" + sum);
+		
+		int sumOfDivisors = number.sumOfDivisiors();
+		System.out.println("sumOfDivisors" + sumOfDivisors);
+		
+    //연습문제 3번
+		number.printANumberTriangle();
+		//1
+		//1 2
+		//1 2 3
+		//1 2 3 4
+		//1 2 3 4 5
+	}    //숫자가 직각삼각형이 나오도록 출력해 보시오
+}
+
+-------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
+
+클래스파일 2번
+
+package forLoopTraining;
+
+public class MyNumber {
+
+	private int number;
+
+	public MyNumber(int number) {
+		this.number = number;
+	}
+
+	public boolean isPrime() {
+		//소수 2로 나눌수 없는것, -1까지
+		//2 to number -1
+		//How can check if a number is divisible by 2?
+		
+		if(number < 2) {
+			return false;
+		}//일단 if(number < 2) 쓰고 이게 맞다면 false를 출력
+		//소수가 아니라고 표시되도록 모든 프로그램에서 항상 쓰는 함수이다.
+		//이것을 Guard Condition이라고 하는데 메소드 전에 넣는 소스값이 유효한지 확인하는 절차
+		//또 여기 있는 모든 조건을 한 번 확인해서 원하는 특정 값을 얻을 수 있도록,
+		//정확한 함수를 사용하도록 하기 위함임
+		//그래서 여기는 보면 만약 2보다 적은 숫자를 넣을 경우 false값이 나옴
+		
+		for(int i = 2; i <= number-1; i++) {
+			if(number % 2 == 0) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+
+	public int sumUptoN() {
+
+		//1+2+3+....+number
+		int sum = 0;
+		for(int i = 1; i <= number; i++) {
+			sum = sum + i;
+		}
+		
+		return sum;
+	}
+
+	public int sumOfDivisiors() {
+		
+		// 6 except 1, 6 => 2,3
+		// 2+ 3+ 4+ 5
+		
+		int sum = 0;
+		for(int i = 2; i <= number-1; i++) {
+			if(number % i == 0) { //6의 약수를 찾고 맞다면 나눴을때 나머지 값이 0이면 더하기에 포함
+			sum = sum + i;
+			}
+		}
+			
+		return sum;
+	}
+
+//연습문제 3번
+
+	public void printANumberTriangle() {
+		//1
+		//1 2
+		//1 2 3
+		//1 2 3 4
+		//1 2 3 4 5
+		
+		for(int i = 1; i <= number; i++) {
+			for(int j = 1; j <= i; j++) {
+				System.out.print(j + " ");
+			}
+			System.out.println();
+		}  //loop within a loop (2중for문 이라고 말한다)
+       //for문 안의 syso로 순차대로 1234등을 출력하고
+       //밖의 for문으로 라인을 건너 뛴다
+       //for문 코딩문제 풀때 가장 많이나오는 예시중 하나
+	}
+	
+}
+
+-------------------------------------------------------------------------------
