@@ -1,0 +1,38 @@
+
+
+package whileLoopTraining;
+
+import java.util.*;
+
+public class DoWhileRepeatedQuestionRunner {
+
+//다음 사용자가 음수를 입력 할 때 까지 구문을 반복하게 하라
+//입력하게 하려면 어떤걸 사용해야할까?
+
+//Scanner를 사용하면 콘솔창에서 입력할 수 있다.
+//다시말해 0보다 작은 수를 입력하기 전까지 계속 이 작업을 반복 할 것임
+/*예문)
+Enter a number: 5
+Cube is 125
+Enter a number: 3
+Cube is 27
+Enter a number: -1
+Thank You! Have Fun!
+*/
+public static void main(String[] args) {
+
+		Scanner scanner = new Scanner(System.in);
+
+		int number = -1; //number를 -1로 설정
+		do {
+			if (number != -1) {  //-1이 아니면 계속 cube is 반복
+				System.out.println("Cube is " + (number * number * number));
+			}
+			System.out.print("Enter a number: ");
+			number = scanner.nextInt();
+		} while (number >= 0); // 입력값이 -1이하이면 아래 syso 출력 그리고 do while 종료
+		System.out.println("Thank You! Have Fun!");
+	}
+}
+
+//그래도 기초적인 프로그램을 만들어 봤다고 할 수 있다.
