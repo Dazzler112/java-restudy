@@ -1,0 +1,67 @@
+
+jshell> "Test".length();
+$1 ==> 4  //길이가 4인대 여기서 길이가 메서드,'Test'가 인스턴스인데 , 어떤 클래스의 인스턴스일까?
+ //자바에서 글씨는 스트링이라는 클래스에 의해 출력된다
+
+jshell> String str = "Test";
+str ==> "Test"
+//만약 str을 사용해 'Test'를 저장하고 싶을 경우 이렇게 하면된다.
+//String은 Test에 대한 인스턴스를 생성하고 레퍼런스를 str에 저장한다 
+
+//String은 정말 특별하다
+스트링은 BigDecimal처럼 생성자가 필요로 하지 않다.
+jshell> BigDecimal bd = new BigDecimal("1.0");
+bd ==> 1.0
+
+jshell> String str = new String("Test");
+str ==> "Test" 
+이렇게도 할수 있으나 굳이 하지 않아도 된다.
+
+jshell> String str = "Test"; //이렇게만 해도 충분하다!
+str ==> "Test"     //"Test"는 스트링 클래스의 인스턴스이다 이것을 우리는 "스트링 리터럴"이라고 부른다
+
+스트링 숫자는 0에서부터 시작한다 
+jshell> String str = "Test";  //여기서 T는 0번 e가1번 s가2번 t가 3번이다
+
+예를 들어 스트링의 첫 번째 글자를 원할 경우
+jshell> str.charAt(0);
+$6 ==> 'T'  //중요한건 숫자가 0부터 시작한다는 것이다 0,1,2,3 이렇게
+jshell> str.charAt(2);
+$7 ==> 's'
+jshell> str.charAt(3);
+$8 ==> 't'
+
+이제 하나의 문자를 검색하는게 아니라 특정 스트링의 서브스트링을 검색하고 싶을때
+jshell> String biggerString = "This is a lot of text";
+biggerString ==> "This is a lot of text"
+//여기서 is부터 서브스트링을 검색하고 싶다
+jshell> biggerString.substring(5)//5번부터 출력한다는 뜻
+$10 ==> "is a lot of text"  //여기서 스트링의 시작점을 설정했다 하지만 시작과 끝 둘다 설정할 수도 있다.
+
+biggerString ==> "This is a lot of text" //5~12번까지 출력하고 싶다
+biggerString.substring(5,13);  //12번까지 출력이니까 13번까지 넣어주면 된다. //중요한건 앞에 5번은 포함이고 뒤에는 미포함이다 //즉 13번은 substring에 포함되지 않는다
+$11 ==> "is a lot"
+//biggerString 13번이 뭐였지?
+jshell> biggerString.charAt(13);
+$12 ==> ' ' //빈공간이였다
+
+그리고 범위가 넘어버리면 (길이가 4인대 13번 인덱스를 추출하려고 했을때 다음과 같은 멘트를 볼거임)
+jshell> str.charAt(13);
+|  Exception java.lang.StringIndexOutOfBoundsException: String index out of range: 13
+|        at StringLatin1.charAt (StringLatin1.java:48)
+|        at String.charAt (String.java:1515)
+|        at (#13:1)
+
+이렇게 Exception이 발생해 버린다 Exception은 뭔가 잘못했음을 보여주는거다
+
+/*
+정리 
+• 첫 번째로 모든 스트링 리터럴은 클래스 인스턴스라는 사실을 배웠다
+-이것이 특정 클래스의 인스턴스가 되는 유일한 리터럴 타입이라는 것도 배웠다
+• 두 번째 스트링은 다소 특별한 타입으로 생성자 없이도 새로운 인스턴스를 만들수 있다고 배웠다
+String str1 = "SomeString"; 이라고만 해줘도 자바에서 자동으로 객체를 생성해 준다. 
+-스트링만이 가지는 특성이다 
+나아가서 서브스트링 및 charAt이라고 하는 중요 메서드를 배웠고
+마지막에는 Exception이라는 개념에 대해 소개가 되었다
+(Exception은 별게의 파트에서 더 자세히 다룰 예정)
+*/
