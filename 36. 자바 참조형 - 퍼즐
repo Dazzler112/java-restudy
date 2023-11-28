@@ -1,0 +1,153 @@
+
+jshell> Animal nothing; // 이렇게 생성하면 어떻게 될까?
+nothing ==> null  //어떻게 저장이 될까? 
+//아무것도 생성한 것이 없기 때문에 값은 null로 된다
+//null은 간단하게 설명하면 저장경로가 없다는 것이다(비어있다는 말) Null은 내용없음 정도로 생각하면 될듯
+여기서 null은 아무것도 참조로 가지지 않는것을 의미하는데 참조변수이긴 하지만 아무 의미는 없다.
+만약 cat이라는 참조변수를 nothing에 저장하면 어떤 일이 일어날까?
+
+jshell> Animal cat = new Animal(15);
+cat ==> Animal@6d21714c
+
+jshell> nothing = cat;
+nothing ==> Animal@6d21714c //생성된 저장경로가 이것과 동일한것이 보이는가? 
+nothing = cat; 입력할때 cat의 저장경로가 어디였음? 1C다 이정보가 nothing에서도 동일하게 적용된다
+기본적으로 객체에 아무것도 하지 않았고 nothing = cat 입력했을 때 이렇게 변경되었다 (1C / nothing ) cat에 대한 참조변수의 저장 경로가 nothing의 값으로도 복사됐다
+그게 지금 여기서 일어나고 있는 일이다. (    E        null->1C      nothing )
+               Stack                                      Heap
+  location  |  value  |  variable-name            location    |    object  
+     A           5            i                      1A          Animal(12)
+     B                                               1B
+     C           1A          dog                     1C          Animal(15) ->(10)
+     D           1C          cat                     1D
+     E        null->1C      nothing                  1E
+     F                                               1F
+
+      Each method has a Seperate Stack                   Global Shared
+
+
+그러면 jshell> nothing.id = 10; 이라 입력한다면 cat.id의 값은 뭐가 될까?
+$9 ==> 10
+
+jshell> cat.id
+$10 ==> 10 // 10이 된다 왜냐하면 nothing.id를 살펴보면 nothing은 어떤 객체를 가리키냐? 1C를 의미한다.
+그러면 어떻게 되냐? => 1C에 있는 객체의 값이 변경이 된다 =>값을 10으로 변경하였기 때문에 15가아닌 10으로 값이 바뀐다.
+객체안의 값이 10으로 바뀌는 것이다.
+마찬가지로 cat이라는 이름을 가진 변수도 같은 것을 의미하고 있기 때문에 값이 10으로 바뀌게 된다.
+(!!!이해해야 되는 굉장히 중요한 개념이다!!!)
+참조변수를 복사할 때, nothing = cat으로 설정했을 때, 복사 된것은 객체가 저장된 경로이다 그경로가 nothing으로 복사된 것이다!
+만약 dog= nothing이라고 하면 어떻게 되냐?
+
+jshell> Animal dog = new Animal(12);
+dog ==> Animal@77a567e1
+
+jshell> nothing = dog;
+nothing ==> Animal@77a567e1
+
+               Stack                                      Heap
+  location  |  value  |  variable-name            location    |    object  
+     A           5            i                      1A          Animal(12)
+     B                                               1B
+     C           1A          dog                     1C          Animal(10)
+     D           1C          cat                     1D
+     E     null->1C->1A     nothing                  1E
+     F                                               1F
+
+      Each method has a Seperate Stack                   Global Shared
+
+dog가 가지는 메모리 저장 경로가 nothing으로 복사된다 -> nothing.id를 입력하면 값이 뭐가 나올까?
+jshell> nothing.id
+$12 ==> 12  //dog에 해당하는 id, 1A의 값인 12가 출력이 된다
+
+화면 뒤에서 어떤 작업이 이루어지는지 이해하는것이 굉장히 중요하다!
+그래야 여기서 어떤 작업에 발생하는건지 정확하게 알 수 있다!
+
+
+하지만 기본 변수들은 어떨까?
+
+               Stack                                      Heap
+  location  |  value  |  variable-name            location    |    object  
+     A           5            i                      1A          Animal(12)
+     B          5->6          j                      1B
+     C           1A          dog                     1C          Animal(10)
+     D           1C          cat                     1D
+     E     null->1C->1A     nothing                  1E
+     F                                               1F
+
+      Each method has a Seperate Stack                   Global Shared
+만약
+jshell> int j = i;
+j ==> 5
+라고 하면 무슨 일이 일어날까? => j는 5라는 값을 가지게 된다 그러면 j라는 기본 변수는 5라는 값과 함께 생성됨
+jshell> j = 6
+j ==> 6 //j의값을 변경해도 변경되는건 오직 j의 값이다
+기본 변수의 경우 여기에 보이는게 값이다
+jshell> i
+i ==> 5 //i의 값을 출력하면 값은 여전히 5임
+
+하지만 참조 변수의 경우 저장하는 것이 값이 아닌 경로이기 때문에 
+참조 변수를 복사할 때에는 실제 객체가 저장된 경로가 복사되는 것이다
+
+jshell> i==j  //이렇게 하면 어떻게 될까?
+$16 ==> false //i와 j는 다른값을 가지기 때문임
+
+jshell> j = 5; //i의 값을 변경하고
+j ==> 5
+
+jshell> i==j  //다시 해보면?
+$18 ==> true  //true값을 출력함
+
+
+
+그렇다면 참조변수의 경우는 어떨까?
+
+               Stack                                      Heap
+  location  |  value  |  variable-name            location    |    object  
+     A           5            i                      1A          Animal(12)
+     B           6            j                      1B
+     C           1A          dog                     1C          Animal(10)
+     D           1C          cat                     1D
+     E           1C          ref                     1E          Animal(12)
+     F           1E         dog2                     1F
+
+      Each method has a Seperate Stack                   Global Shared
+
+jshell> Animal dog = new Animal(12);
+dog ==> Animal@619a5dff
+
+jshell> Animal cat = new Animal(10);
+cat ==> Animal@7e32c033
+
+jshell> Animal ref = cat;
+ref ==> Animal@7e32c033
+
+그리고 dog2를 생성할 거임
+jshell> Animal dog2 = new Animal(12);
+dog2 ==> Animal@63c12fb0
+
+여기서 ==연산자를 실행해 보겠다 
+jshell> cat == dog
+$24 ==> false   //출력값 false 같은값을 참조하지 않았으니 맞는말
+
+jshell> cat == ref
+$25 ==> true  //두 가지가 정확하게 같은 객체를 나타내고 있기 때문에 맞음(같은객체의 경로를 갖고있음)
+
+jshell> dog == dog2  //이게 조금 흥미로울 것이다
+$26 ==> false  //같은 값을 가지고 있지만, 그것과는 연관이 웞다
+//어떤 걸 참조로 갖는지가 중요하다 여기서 이 두개가 나타내는 객체가 다르므로 dog와 dog2가 일치하지 않는다고 보는것임
+그리고 여기서 Heap에서 나타내는 객체가 다름 각각 다른 객체를 나타내고 있음(1A / Animal(12) , 1E / Animal(12) )
+보면 값은 같지만, Heap에 있는 저장 경로가 1A와 1E로 다르다
+Heap에는 다른 객체로 저장되어 있기 때문이다
+
+중요한 개념은 연산자(==)를 통해 참조 변수를 비교할 때 비교하는것은 값이 아니라 객체이다
+나타내는 객첼가 다르다면 값이 같아도 같은걸로 인식하지 않는다
+또 중요한 것은 == 연산에 대해 기본 변수일 경우 값을 비교한다 , 하지만 참조 변수인 경우 객체가 같은지 비교하게된다.
+
+만약 같은 객체를 나타내지 않고 있다면 false값이 출력된다
+여기서는 참조변수가 어떻게 메모리로 저장되는지 알아봤다
+
+참조변수를 다른 항목에 적용하면 어떻게 되는지, 또 참조변수의 동등성을 어떻게 비교하는지 
+그리고 참조변수에 대해 , 값을 설정하지 않는다면 null값을 가진다는것도 배웠다.
+또 참조변수의 경우 실제 객체가 저장된 경로를 값으로 가진다는 것을 배웠고
+우리가 참조 변수를 비교할 때에도 객체가 같은지 비교하고 == 가 true 값이려면 같은 저장 경로를 가져야 한다는것,
+서로 같은 저장경로를 부여해야 한다는것 참조 변수를 복사할 때 복사되는 내용은 객체가 아닌 저장 경로라는 점까지 알아본 시간이였다
