@@ -1,0 +1,93 @@
+
+jshell> String someString = "This is a lot of text again";
+someString ==> "This is a lot of text again"
+
+예를 들어 'lot'이라는 단어가 이 스트링에 포함되어 있는지 찾는 메서드
+
+jshell> someString.indexOf("lot");
+$2 ==> 10
+
+//출력값이 맞는지 확인해보자
+jshell> someString.charAt(10);
+$3 ==> 'l'
+//맞다
+
+//이번에는 글자를 찾는다고 해보자 (i)
+jshell> someString.indexOf('i'); //같은 메서드 이름을 사용하는데, 이 메서드는 글자도 매개변수로 인정하는 오버로드 메서드이다
+$5 ==> 2   //추출값이 2이다 indexOf도 같은 오버로드 메서드이다 //indexOf를 통해서 스트링이나 서브스트링에 있는 특정글자의 인덱스를 찾을수 있다.
+             ㄴ여기서 i는 두번째 위치하고 있다.
+
+//그렇다면 마지막 에 있는 i의 위치를 알고싶은 경우는 어떻게 할까?
+jshell> someString.lastIndexOf('i');  //lastIndexOf라는것으로 찾을수 있다.(대소문자 주의) ('i')이부분의 글자리터럴,리터럴 스트링은 예외다.
+$6 ==> 25
+
+//이 스트링 안에 'again'이라는 단어가 있는지 알고싶다면 indexOf를 사용해도 되지만 contains을 사용한다.
+jshell> someString.contains("text");   //text라는 단어가 존재하는지 찾고자 할 때 'text'를 값으로 입력하면 된다.
+$7 ==> true   //있다면 true출력
+
+
+//이 String이 특정 스트링으로 시작하는지 여부를 알고 싶을때..
+jshell> someString.startsWith("This");  //This로 시작하는지 입력해보면
+$8 ==> true    //결과값 true
+
+jshell> someString.startsWith("wekrje");  //다른값은
+$9 ==> false    //false
+
+//비슷한 메서드로는 endsWith()가 있다.
+jshell> someString.endsWith("sdofsdsad");
+$10 ==> false
+
+jshell> someString.endsWith("in");
+$11 ==> true
+
+jshell> someString.endsWith("ain");
+$12 ==> true
+
+jshell> someString.endsWith("again");
+$13 ==> true
+
+jshell> someString.endsWith("againsad");
+$14 ==> false
+
+메서드 스트링이 비어있는지 알아보는 메서드 isEmpty()를 통해 확인할수 있다.
+jshell> someString.isEmpty();  
+$15 ==> false   //이렇게 빈공간인지 확인할 수있다.
+
+jshell> "saidjsa".isEmpty();  //이렇게 뭔가 내용이 있으면
+$16 ==> false            //빈것이 아니다.
+
+//만약 비어있다면?
+jshell> "".isEmpty();
+$17 ==> true    //트루다
+
+//스트링 안 내용을 확인할 수 있는 또 한가지 메서드는 Equal이다. //두개의 스트링이 동일한지 찾는것
+jshell> "true".equals("true");  //각각의 값을 넣어주면 된다.
+$18 ==> true
+
+jshell> "value".equals("value");
+$19 ==> true
+
+스트링 변수를 넣을수 있다.
+jshell> String str = "value";
+str ==> "value"
+
+jshell> str.equals("value");
+$21 ==> true  //true값인지 확인할 수 있다.
+//두개의 스트링이 동일한지 비교할때 equal 메서드를 사용할 수 있고.
+
+케이스 걱정 없이 비교하고 싶을 때
+jshell> str.equals("VAlue"); //대소문자가 다르게 인식 된다
+$23 ==> false
+//하지만 이런 것들 상관없이 하고 싶다면?
+jshell> str.equalsIgnoreCase("VAlue"); //equalsIgnoreCase를 사용하면 여전히 true가 나오는것을 볼수가 있다.
+$24 ==> true
+
+/*
+정리
+CharAt을 사용해 모든 글자를 출력해 보기도 했고
+후에는 스트링API가 가지는 다양한 메서드에 대해 알아보고 스트링에 대한 자세한 것을 배웠다
+특정 스트링이 무엇으로 시작하는지, 무엇으로 끝나는지 또 특정 서브스트링이 존재하는지 등 확인할 수 있었고
+스트링 내 콘텐츠를 이용해 다른 스트링과 비교하는 것까지 해봤다
+마지막으론 equals와 equalsIgnoreCase메서드에 대해 배웠다
+스트링 수정에 대한것은 다음파일에...
+*/
