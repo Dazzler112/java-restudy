@@ -1,0 +1,76 @@
+
+String은 값을 변경할 수없다.
+특정 스트링에서 변경된 스트링을 가져오는 방법에 대해 알아보자
+
+jshell> String str = "in28Minutes";
+str ==> "in28Minutes"
+
+jshell> str.concat("is awesome");  //Concat은 스트링을 다른 특정 스트링에 연결시키는 기능이다.
+$2 ==> "in28Minutesis awesome"
+그럼 str을 출력하면 어떻게 될까?
+
+jshell> str
+str ==> "in28Minutes"  //합쳤다고 하더라도 스트링의 내용은 바뀌지 않았다
+str.concat을 사용하더라고 스트링값 자체는 유지된다.
+
+jshell> String anotherString = str.concat(" is awesome");
+anotherString ==> "in28Minutes is awesome"   //anotherString에 이값이 적용되었고
+
+jshell> str
+str ==> "in28Minutes"  //str은 in28Minutes가 나온다
+//즉 스트링을 변경하려고 할 때 우리가 하는 것은 특정 스트링을 변경하는것이 아니라
+//str.concat을 실행하면 새로운 스트링을 만드는것이다
+//원래의 스트링은 영향을 받지않고 그대로 남아 있게 된다 // 여기서도 스트링이 "in28Minutes"로 남아있는걸 확인했지?
+
+jshell> anotherString
+anotherString ==> "in28Minutes is awesome"  //새로운 연결단어가 결합된 새로운 스트링을 만든것이다.
+
+
+jshell> String string2 = anotherString.concat(".");
+string2 ==> "in28Minutes is awesome."  //이렇게 새로운 스트링을 만들더라도
+
+jshell> str       //여전히, 기본스트링은 변하지 않았다.
+str ==> "in28Minutes"
+
+jshell> anotherString
+anotherString ==> "in28Minutes is awesome" //anotherString 또한 처음 설정한 값으로 보인다.
+
+jshell> string2
+string2 ==> "in28Minutes is awesome."  //string2를 출력하면 온점이 있는 값이 출력된다.
+//‣스트링의 이런 특징을 불변성이라고 부른다!
+‣스트링 클래스가 특정 값으로 한 번 생성된 이후에는 그 특정 값은 절대 바꿀 수 없다.
+스트링은 항상 이렇게 유지될 것이다.
+jshell> str      
+str ==> "in28Minutes"  =>이 스트링에 메서드를 실행하면 새로운 스트링이 생성될 뿐이다.
+//기존값은 항상 "in28Minutes"가 된다.
+
+
+스트링 클래스에서 변경된 값을 가질수 있는 메서드에 대해 알아보자
+jshell> String str = "in28minutes is awesome.";
+str ==> "in28minutes is awesome."
+
+//텍스트 전체를 대문자로 만들고 싶을 때 어떻게 하면 될까?
+UpperCase라고 하는 기능이 있다
+jshell> str.toUpperCase(); 
+$2 ==> "IN28MINUTES IS AWESOME."
+
+//그럼 소문자로 만드려면?
+그 기능은 LowerCase이다
+jshell> str.toLowerCase();
+$3 ==> "in28minutes is awesome."
+
+//그러면 스트링 시작 혹은 끝에 있는 간격을 없애고 싶은 경우는 어떻게 해야할까?
+jshell> String str2 = "  in28Minutes is awesome.   ";
+str2 ==> "  in28Minutes is awesome.   "  //이 간격을 없애고 싶다...
+
+//trim은 앞뒤 간격을 없애주는 기능이다.
+jshell> str2.trim();
+$5 ==> "in28Minutes is awesome."  
+
+/*
+정리
+스트링 클래스가 변할 수 없다는 사실을 배웠고
+클래스 인스턴스는 메모리에 생성된 이후에 어떤 방식으로도 콘텐츠가 변경될 수 없었다
+외에도 스트링과 관련된 연산,ex)UpperCase,LowerCase도 배웠고
+trim 그리고 concatenate처럼 기존 스트링에 수정사항을 더해 새로운 스트링을 만드는 방법도 배웠다
+*/
