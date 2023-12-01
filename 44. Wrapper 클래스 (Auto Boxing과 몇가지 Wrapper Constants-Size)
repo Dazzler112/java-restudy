@@ -1,0 +1,43 @@
+
+오토박싱이란?
+
+jshell> Integer seven = Integer.valueOf(7);
+seven ==> 7
+//근대 이건 너무 길다 
+이렇게도 할 수 있는데 말이다.
+jshell> Integer seven = 7;
+seven ==> 7
+
+//여기서 오토박싱이 등장한다!
+
+//너가 jshell> Integer seven = 7; 이렇게 입력하면 자바 백그라운드에서는 여기 Integer.valueOf부분을 실행하고
+인스턴스를 생성해서 이 부분에 레퍼런스를 넣어준다.
+!이게 자바의 오토박싱 기능이다.!
+
+jshell> Integer sevenAgain = 7;
+sevenAgain ==> 7
+jshell> seven == sevenAgain
+$3 ==> true
+//같은 변수를 참조하고 있기 때문에 값이 같다 (==)통해 확인해 보면 이처럼 true값이 나오는것을 확인할 수있다.
+오토박싱은 valueOf를 사용하고 이미 존재하는 래퍼 클래스 객체는 반복 사용되고 여기서도 같은 값이 seven 과 sevenAgain에
+적용 되어 있다. 
+❗오토박싱은 매우 중요한 개념❗이다 차후 단계에는 이개념을 이용하여 컬렉션이 기본값을 추가하는 방법에 대해 배울것이다.
+이런 기능은 'syntactic sugar'로 불린다.
+
+
+마지막으로 래퍼클래스가 갖는 다양한 불변성들에 대해 알아보자
+각각의 래퍼클래스에서 알아보자.
+
+jshell> Integer.MAX_VALUE
+$4 ==> 2147483647
+
+jshell> Integer.MIN_VALUE
+$5 ==> -2147483648
+//사이즈는?
+jshell> Integer.SIZE
+$6 ==> 32
+
+바이트로도 출력가능하다
+jshell> Integer.BYTES
+$7 ==> 4
+이런 불변성들은 모든 래퍼 클래스에 존재한다.
