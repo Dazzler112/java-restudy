@@ -1,0 +1,55 @@
+
+Wrapper클래스 생성법
+jshell> int i = 5
+i ==> 5  //기존방법
+
+jshell> Integer integer = new Integer(5);  //Wrapper클래스로 생성
+integer ==> 5  //정수값이 5로 생성되었음
+
+jshell> Integer integer1 = new Integer(5);
+integer1 ==> 5
+
+integer와 integer1의 변수가 생성되었다.
+이건 정수를 생성하는 방법중 하나이다
+
+외에도 valueOf를 사용해서 만드는 방법도 있다
+jshell> Integer integer = Integer.valueOf(5);
+integer ==> 5
+래퍼 클래스는 스태틱 메소드, valueOf를 가지고 있는데, valueOf(5)라고 하고 integer1도 valueOf를 사용할 수 있다.
+jshell> Integer integer1 = Integer.valueOf(5);
+integer1 ==> 5
+
+//⁂ 래퍼 클래스를 만드는 두 가지 방법이었다 생성자를 이용해 바로 만들거나 
+  사전 정의된 valueOf() 메소드를 사용하거나 
+각각의 래퍼 클래스는 모두 이 스태틱 메소드(valueOf())를 가지고 있다.
+
+정수 생성자를 보면 이걸로도 스트링 값을 담을 수 있다.
+jshell> Integer integer1 = new Integer("5234");
+integer1 ==> 5234  //값으로 스트링을 넣을수 있다.
+
+//그렇다면 래퍼클래스 만드는 방법이 이렇게 두 가지라면 어떤걸 이용해야 할까??
+둘중 어떤게 더 좋은방법이지?? 결정을 내리려면 조금 더 알아봐야 한다.
+
+jshell> Integer i1 = new Integer(5);
+i1 ==> 5
+jshell> Integer i2 = new Integer(5);
+i2 ==> 5
+
+이번엔 valueOf로 생성
+jshell> Integer i3 = Integer.valueOf(5);
+i3 ==> 5
+jshell> Integer i4 = Integer.valueOf(5);
+i4 ==> 5
+그다음 이퀄(==)을 이용해보자
+이퀄은 값을 비교하는게 아니라 저장장소를 비교하는 거라고 배웠었지?
+jshell> i1 == i2
+$12 ==> false   //거짓
+
+jshell> i3 == i4
+$13 ==> true   //i3 i4는 true가 나왔다
+
+스트링 클래스와 동일하게 모든 래퍼클래스 또한 불변성을 가진다.
+그말은 여기에 값이 지정된 이후 변경될 수 없다는 뜻이다.
+
+//⁂생성자를 사용해야 할 경우는 새로운 것을 만들때 생성자가 적합 하겠고
+값을 그대로 가져와야 할 경우는 valueOf를 이용하여 Heap에 꺼내 쓰는게 나을것이다.
