@@ -1,0 +1,100 @@
+
+LocalDate 먼제 알아보자
+
+jshell> LocalDate today = LocalDate.now();
+today ==> 2023-12-02
+
+//Jsell을 다시 시작할 때 마다 jshell> import java.time.* 임포트 해줘야 한다. 그래야 time관련 사용 가능
+
+LocalDate를 통해 날짜정보를 얻을 수 있는 방법은 다양하다.
+오늘의 값이 출력된 이후에 관련해서 더 많은 정보를 알아볼 수 있다.
+
+해당 메소드를 알아보자 
+먼저 특정 연도를 찾아보자
+jshell> today.getYear();
+$6 ==> 2023
+
+jshell> today.getDayOfWeek();  //getDayOfWeek를 이용해 오늘 요일 출력
+$7 ==> SATURDAY
+
+jshell> today.getDayOfMonth();  //12월 2일이여서 (2일)
+$8 ==> 2
+
+jshell> today.getDayOfYear();  (1년 365일중 336일이라는뜻)
+$9 ==> 336
+
+특정 날짜에 대한 정보를 출력할 수 있는 다양한 메소드가 존재한다
+
+jshell> today.getMonth();  //해당 월
+$10 ==> DECEMBER
+//숫자로 출력되길 원할경우 설정을 변경하면 숫자가 출력된다.
+jshell> today.getMonthValue();
+$11 ==> 12
+특정 날짜에 대한 자세한 정보를 출력할 수 있는 몇가지 API 메소드에 대해 알아봤다
+
+조금더 일반적ㅇ니 정보가 필요한 경우는 ?
+예를들어 올해가 윤년인지, 특정 연도에 며칠이 있는지, 특정 월에 며칠이 있는지와 같은것
+자바8의 날짜 및 시간 API는 이 모든 정보를 굉장히 쉽게 제공할 수 있다.
+jshell> today.isLeapYear(); //올해가 윤년인가?
+$12 ==> false  //거짓
+jshell> today.lengthOfYear(); //현재 연도에 얼마나 많은 날이 있는지?
+$13 ==> 365
+jshell> today.lengthOfMonth(); //특정달에 몇일이나 있는지(ex 2월경우 28일이나 29일 같은거)
+$14 ==> 31
+
+이 메소드는 우리가 있는 연도 그리고 월의 정보를 제공한다.
+날짜 API는 날짜,월,연도에 특정수를 더하는 데에도 사용된다.
+
+jshell> today.plusDays(100); //앞으로 100일후 며칠인지?
+$15 ==> 2024-03-11
+동일한 방법으로 몇 달 후도 계산이 가능하다
+jshell> today.plusMonths(100); //100개월 후는 몇년 몇월 며칠인가?
+$16 ==> 2032-04-02
+jshell> today.plusYears(100); //100년 후는?
+$17 ==> 2123-12-02
+
+뺴는것도 가능하다
+jshell> today.minusDays(100);
+$18 ==> 2023-08-24
+jshell> today.minusYears(100);
+$19 ==> 1923-12-02
+
+//❗ 중요한것은 이렇게 다른 값을 출력한다고 해서 오늘 날짜의 값이 변경되는것은 아니다! ❗
+'LocalDateTime'은 불변성을 가진다
+즉 today.minusYears(100)이런 과정에서 우리는 새로운 변수를 생성한다는 것이다.
+오늘 날짜 자체에 영향을 받지않는다. 가령 today.minusYears(100)은 새로운 변수인 것이다.
+
+jshell> LocalDate hundredYearsBefore =  today.minusYears(100); //지금부터 100년전을 출력하면
+hundredYearsBefore ==> 1923-12-02
+
+jshell> today  //오늘 날짜의 값은 변하지 않는다.
+today ==> 2023-12-02
+
+hundredYearsBefore ==> 1923-12-02 ==> 새로운 변수가 생성되면서 실행되는 것이다.
+//또 하나의 불변성 클래스였다 , 이 모든 메소드는 새로운 값으로 새 인스턴스를 생성하게 된다.
+
+흥미로운 점은 이것과 굉장히 유사한 API가 LocalDateTime에도 있다는 점이다.
+
+jshell> LocalDateTime now = LocalDateTime.now();
+now ==> 2023-12-02T17:40:15.440426700  //생성해 보면 굉장히 유사한 메소드인 걸 볼 수 있다.
+
+jshell> now.plus
+plus(          plusDays(      plusHours(     plusMinutes(   plusMonths(    plusNanos(     plusSeconds(   plusWeeks(
+plusYears(
+//허나 LocalDateTime은 Date와 다르게 초,시간,분등을 더하는 작업도 가능하다.
+
+//⁉ 정리하면 LocalDateTime은 LocalDate가 가지는 옵션 모두 동일하게 제공하고 여기서 추가로
+시간,분,초,나노세컨드도 다룰수 있다. 15.440426700이부분이 나노세컨드이다.
+
+LocalDateTime이 제공하는 정보에 대해 알아봤고 날짜를 더하는 것과 비슷하게 정보도 얻을수 있다.
+jshell> now.get
+get(              getChronology()   getClass()        getDayOfMonth()   getDayOfWeek()    getDayOfYear()
+getHour()         getLong(          getMinute()       getMonth()        getMonthValue()   getNano()
+getSecond()       getYear()
+
+
+/*
+❗ 최종 정리 ❗
+LocalDate클래스와 관련된 중요한 메소드를 알아보는 시간을 가졌고 어떻게 활용하는지도 배웠다
+LocalDateTime이 가지는 메소드도 몇가지 살펴보았다.
+*/
