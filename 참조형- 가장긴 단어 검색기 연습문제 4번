@@ -1,0 +1,158 @@
+
+코딩 예제: 가장 긴 단어 검색기
+findLongestWord메서드가 포함된 미완성인 StringMagic클래스가 제공되어 있습니다. 
+여러분의 과제는 그 메서드를 완성하는 것입니다.
+
+메서드는 주어진 문장에서 가장 긴 단어를 찾아야 합니다. 
+문장을 문자열로 받아 가장 긴 단어를 문자열 출력값으로서 리턴해야 합니다.
+
+문장이 비어 있을 경우, 메서드는 빈 문자열을 리턴해야 합니다.
+
+다음은 메서드의 시그니처입니다.
+public String findLongestWord(String sentence)
+예 1: "A quick brown fox jumps over the lazy dog"라는 문장을 보면 "quick"이 길이가 5로서 가장 긴 단어입니다.
+예 2: "Java is an object oriented programming language"라는 문장에서는 함수가 "programming"을 리턴해야 합니다.
+
+
+참고
+문장이 비어 있거나 맨 앞 또는 맨 뒤에 공백이 있는 엣지 케이스를 꼭 처리하시기 바랍니다.
+
+
+행운을 빕니다!
+
+
+//기본 뼈대
+public class StringMagic {
+
+    /**
+     * This method finds the longest word in a given sentence.
+     *
+     * @param sentence The sentence to find the longest word in.
+     * @return The longest word in the sentence. If sentence is empty, return an empty string.
+     */
+    public String findLongestWord(String sentence) {
+      
+    }
+}
+//기본 코드로 다음 코드를 완성하시오
+
+
+
+
+
+
+
+
+
+
+
+
+--------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+힌트
+
+
+
+
+
+
+
+
+
+
+힌트 1: 먼저 문자열이 비어 있는 엣지 케이스를 처리합니다. 문장이 비어 있으면 가장 긴 단어도 역시 빈 문자열입니다. 
+String 클래스의 isEmpty() 메서드를 사용하여 검사할 수 있습니다.
+
+힌트 2: 공백(“ “)을 구분 문자로 하여 split() 함수를 써서 문장을 단어 배열로 분할합니다.
+
+힌트 3: 2개의 변수를 초기화합니다. 하나는 가장 긴 단어를 담는 변수이고 다른 하나는 그것의 길이를 담습니다. 
+최초에 여러분은 가장 긴 단어를 빈 문자열로, 길이를 0으로 설정할 수 있습니다.
+
+힌트 4: 단어 배열을 반복합니다. 각각의 단어에 대해 그것의 길이가 현재의 가장 긴 단어보다 긴지 검사합니다. 
+만일 그렇다면 가장 긴 단어와 그 길이를 업데이트합니다.
+
+힌트 5: 반복을 마칠 때, 발견된 가장 긴 단어를 리턴합니다. 
+단어가 발견되지 않으면(즉 문장이 비어 있거나 공백만 포함된 경우) 빈 문자열일 것입니다.
+
+--------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+해답
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+public class StringMagic {
+
+    public String findLongestWord(String sentence) {
+        //1.처음 시작은 역시나 에지케이스
+        if( sentence == null || sentence.equals("") ) {
+            return "";
+        } 
+
+        String[] words = sentence.split(" "); //공백을 배열로 만든다
+
+        int maxLength = 0; //0으로 초기화 하고 문자열도 갖을것이다.
+        String longestWord = "";
+        //이제 할 일은 단어 점 길이가 최대 길이보다 큰 경우
+        for(String word: words) {
+            if( word.length() > maxLength ) {  //특정단어의 길이를 알려준다 하지만 가장 긴 단어를 알고싶다 //따라서 임시변수를 만들어야한다.
+                maxLength = word.length();
+                longestWord = word; //가장 긴단어는 현재 단어가 된다
+            }
+        }
+        return longestWord;
+    }
+}
+
+--------------------------------------------------------------------------------------------------
