@@ -1,0 +1,46 @@
+
+jshell> class Person {
+   ...> }
+|  created class Person
+아무 값도 넣지 않고 생성해주자
+이 클래스의 배열을 만들겠다
+
+jshell> Person[] persons = new Person[5];
+persons ==> Person[5] { null, null, null, null, null }
+//정수 배열을 생성한 방법과 유사하지? 디폴트 값은 'null'이다. 
+
+각각의 값을 개별적으로 설정할 수도 있다.
+
+jshell> persons[1] = new Person();
+$3 ==> Person@7a4f0f29
+생성자와 다른 모든 게 있었다면 더 괜찮은 타입이 됐겠지만 여기서도 값을 넣으면 된다.
+
+persons값을 출력해보면 어떻게 출력이 될까?
+jshell> persons
+persons ==> Person[5] { null, Person@7a4f0f29, null, null, null }
+//어떤값이 들어있을까? 두번째 값만 객체 참조 값으로 나온다. 다른 값은 모두 null이다
+
+이것과 비슷하게 새로운 persons를 생성해서 값을 다 지정할 수 있다.
+
+jshell> persons[0] = new Person();
+$5 ==> Person@7591083d
+
+jshell> persons
+persons ==> Person[5] { Person@7591083d, Person@7a4f0f29, null, null, null }
+
+
+더 간단하게 처리하는 방법은 이렇다.
+jshell> Person[] person2 = {new Person(), new Person()};
+person2 ==> Person[2] { Person@6d21714c, Person@108c4c35 }
+//두 개의 값을 가진 배열이 만들어졌다
+모든 타입에 동일하게 적용된다.
+생성자가 있으면 값을 바로 지정하고 해당 클래스의 값을 생성할 수 있다.
+그 다음 값을 바로 배열에 넣을 수 있다.
+
+이 처럼 스트링 배열도 생성할 수 있다
+일단 코드를 이렇게 입력해 보겠다.
+jshell> String[] textValue = {"Apple", "Ball", "Cat"};
+textValue ==> String[3] { "Apple", "Ball", "Cat" }
+//이처럼 배열에 문자를 넣을 수 있다. 
+//스트링은 단축키가 있기 때문에 new String을 사용하지 않아도 된다. 값을 바로 입력하는 방법이 있다.
+// "Apple", "Ball", "Cat"이러한 리터럴에 대한 객체는 자바가 자동으로 생성해 줄 것이다.
