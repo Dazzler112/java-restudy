@@ -1,0 +1,68 @@
+
+------------------------------------------------------
+
+클래스 파일 1번
+
+package arraysTraining;
+
+import java.math.*;
+
+public class Student {
+
+	private String name;
+	private int[] marks;
+	
+  //하지만 누군가 이 Student클래스를 만든다 했을 때 사용자에게 가변 인수를 사용할 유연성을 주고 싶다.
+	
+	public Student(String name, int... marks) { //해당 부분을 가변인수로 바꿔준다('...') 
+                                ㄴ>//가변인수가 해당 메소드에서 오는 마지막 argument여야 한다
+		
+		this.name = name;
+		this.marks = marks;
+	}
+
+	public int getNumberOfMarks() {
+		
+		return marks.length;
+	}
+}
+
+
+------------------------------------------------------
+
+
+------------------------------------------------------
+
+클래스 파일 2번
+
+package arraysTraining;
+
+import java.math.*;
+
+public class StudentRunner {
+	
+	public static void main(String[] args) {
+		
+		int[] marks = {97,99,100};
+		
+		Student student = new Student("Ranga", 97,98,100); //Student,1,2모든 코드가 다 컴파일 된다.
+		
+		Student student1 = new Student("Adam", 97,98);
+		
+		Student student2 = new Student("Eve", 97,98,91,98);
+
+	}
+}
+
+------------------------------------------------------
+
+
+
+jshell> void print(int... value, String name){
+   ...> }
+|  Error:
+|  varargs parameter must be the last parameter
+|  void print(int... value, String name){
+|             ^----------^
+//가변인수는 이렇게 나올수 없다. 실제로 실행해보면 가변 ㅇ니수가 마지막 매개변수여야 한다고 나오는게 보인다.
+// ❗ 기억해야 하는 부분중 하나이다 가변 인수는 항상 메소드의 마지막에 와야한다는것이다 ❗ 
