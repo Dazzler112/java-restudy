@@ -1,0 +1,127 @@
+
+배열을 한 번 생성한 후에 크기를 직접적으로 늘리거나 줄일 수 없다는 점에 대해 알아봤고
+여기에 대해서 자바가 요소를 추가하거나 지울 수 있는 ArrayList라는 방법을 제공하는것 까지 알아 봤다.
+
+여기선 ArrayList의 기능과 관련된 내용을 배우겠다 
+ArrayList에 대한 자세한 사항은 컬렉션에 대해 이야기할 때 다루도록 해보자
+
+지금은 ArrayList에 대한 기본을 공부하고 이것을 이용해서 구성 요소를 추가하고 지우는 방법정도를 알아보자
+
+ArrayList 인스턴스를 어떻게 만들까? 생각해 보자
+jshell> ArrayList arrayList = new ArrayList();
+arrayList ==> []
+
+//이제 이 안에서 요소를 추가하거나 지울 수 있다
+
+jshell> arrayList.add("Apple");
+|  Warning:
+|  unchecked call to add(E) as a member of the raw type java.util.ArrayList
+|  arrayList.add("Apple");
+|  ^--------------------^
+$12 ==> true
+//더해지긴 했는데 경고가 나왔다. 경고문에 대해 조금있다 다시 보자
+
+몇개 요소를 더 추가해 보자
+jshell> arrayList.add("Cat")
+|  Warning:
+|  unchecked call to add(E) as a member of the raw type java.util.ArrayList
+|  arrayList.add("Cat")
+|  ^------------------^
+$13 ==> true
+jshell> arrayList.add("Bat")
+|  Warning:
+|  unchecked call to add(E) as a member of the raw type java.util.ArrayList
+|  arrayList.add("Bat")
+|  ^------------------^
+$15 ==> true
+
+jshell> arrayList
+arrayList ==> [Apple, Cat, Bat]
+//추가한 요소가 잘 적용된 것을 확인할 수 있다.
+
+//요소를 삭제하고 싶으면 '.remove'를 이용하면 된다.
+
+jshell> arrayList.remove("Cat");
+$17 ==> true //정상적으로 삭제되었다는 뜻이고 
+
+ArrayList를 출력해보면
+
+jshell> arrayList
+arrayList ==> [Apple, Bat]
+//Apple과 Bat만 남아있는 걸 확인할 수 있다.
+ArrayList를 사용해서 값을 직접적으로 추가하거나 삭제하는 것이 가능하다
+
+이제 경고 문구에 대해 살펴보자 
+여기서 우리가 ArrayList에 대해 선언할 때
+이게(jshell> ArrayList arrayList = new ArrayList();) 어떤 타입의 값을 담을 건지 정의하지 않았다.
+
+ArrayList에는 스트링을 넣을 수도 있고, 단순히 숫자를 넣을 수도 있다.
+jshell> arrayList.add(1);
+|  Warning:
+|  unchecked call to add(E) as a member of the raw type java.util.ArrayList
+|  arrayList.add(1);
+|  ^--------------^
+$19 ==> true
+
+출력해보면 어떻게 나올까?
+jshell> arrayList
+arrayList ==> [Apple, Bat, 1]
+
+스트링과 숫자가 섞여 있다.
+사실 [Apple, Bat, 1] 이렇게 나오면 좋은 예는 아니다
+값을 리스트로 표현할 때는 모두 같은타입으로 하는게 좋다
+
+그래서 값을 넣기 전에 어떤 타입인지 명시하는게 좋다.
+스트링만 포함하는 ArrayList를 만든다고 하면 
+
+//타입을 정의하고, 뒤에도 같이 스트링으로 입력한다.
+jshell> ArrayList<String> items = new ArrayList<String>(); //스트링만 저장하고자 한다면 이렇게 선언하면 된다. 자바 5에서 소개한 기능이다.//<>는 제너릭이라고 하는데 어떤 걸 지정하는 기능이다
+items ==> [] //이 ArrayList는 스트링만 값으로 포함할 것이다.
+
+여기서 요소를 추가하고 싶을 때는 동일하게 'add'를 이용하면 된다.
+jshell> items.add("Apple");
+$22 ==> true //정상으로 적용한다
+
+근대 여기서 숫자를 지정하면?
+
+jshell> items.add(1);
+|  Error:
+|  incompatible types: int cannot be converted to java.lang.String
+|  items.add(1);
+|
+//추가되지 않는걸 볼 수 있다.
+타입을 선언했기 때문에 더 이상 정수를 입력할 수 없고 스트링만 입력이 된다.
+
+'Bat','Cat'은 스트링이기 때문에 입력할 수 있다.
+jshell> items.add("Bat");
+$23 ==> true
+
+jshell> items.add("Cat");
+$24 ==> true
+
+jshell> items
+items ==> [Apple, Bat, Cat]
+//추가된 내역을 확인할 수 있고
+지울 수도 있다.
+
+jshell> items.remove("Cat");
+$26 ==> true
+
+jshell> items
+items ==> [Apple, Bat]
+//이렇게 지울수 있고
+
+//인덱스로도 지울수 있다
+jshell> items.remove(0);
+$28 ==> "Apple"
+
+jshell> items
+items ==> [Bat]
+//지워졌고 출력해보면 Bat 하나만 남아있는 걸 확인할 수 있다.
+
+/*
+정리
+ArrayList에 대해 간략하게 알아봤다.
+기능을 이용해 배열에서 요소를 쉽게 추가, 삭제하는 걸 배우고
+그 외에도 많은 긴으이 있다는 점을 알게 됐다
+*/
