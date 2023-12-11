@@ -1,0 +1,120 @@
+
+package arraysTraining;
+
+import java.math.*;
+import java.util.*;
+
+public class Student {
+
+	private String name; //네임을 받는 string
+		private ArrayList<Integer> marks = new ArrayList<Integer>(); //먼저 marks 변수를 ArrayList로 바꿔준다 숫자를 넣을거기 때문에 정수타입으로 바꾸겠다
+	
+	public Student(String name, int... marks) {
+
+		this.name = name;
+//		this.marks = marks; 이부분도 수정해 줘야한다
+		for(int mark : marks) {
+			
+			this.marks.add(mark);
+		}
+	}
+
+	public int getNumberOfMarks() {
+		
+//		return marks.length; //배열에서는 length라고 하는 attribute가 있고 property도 있다
+		//ArrayList에서 원하는건 메소드의 사이즈를 아는것이다.
+		return marks.size(); //이렇게 고쳐줘야 한다.
+	}
+
+	public int getTotalSumOfMarks() {
+		int sum = 0;           
+		for(int mark : marks) {
+			sum += mark;   
+		}  
+		
+		return sum;
+	}
+
+	public int getMaximumMark() { 
+		
+//		int maximum = Integer.MIN_VALUE; 
+//		for(int mark : marks) {
+//			if(mark>maximum){
+//			
+//				maximum = mark;
+//			}
+//		}
+//		return maximum;
+
+컬렉션은 별도의 파트로 다룰 예정인데 여기에는 매우 많은 유틸리티 메소드가 포함되어 있다 
+한가지 예로 들면 'max'라는게 있다  아래처럼 Collections을 입력하고 max를 입력하면 최댓값이 출력된다.
+		return Collections.max(marks); 
+	}	
+
+
+	public int getMinimumMark() {
+
+//		int minimum = Integer.MAX_VALUE; 
+//		for(int mark : marks) {
+//			if(mark < minimum) {
+//				minimum = mark;
+//			}
+//		}
+//		return minimum;
+
+마찬가지로 컬렉션 입력 후 min 입력 시 최솟값이 출력된다.
+		return Collections.min(marks);
+//이렇게 컬렉션 클래스를 통해 값을 출력할 수 있다.
+	}
+
+	public BigDecimal getAverageMarks() {
+		// 평균을 구하기 위해서는
+		//sum(합계)을 구하고
+		//total(전체수)를 구한다음 나누면 된다 이게 일반적인 평균 구하는 방식이다
+		//완전한 함수를 여기에 적용해도 되고 더 좋은건 이미 여기 있는 걸 사용하는 것이다.
+		int sum = getTotalSumOfMarks();
+		int number = getNumberOfMarks();
+		
+		//메소드를 입력했다면 돌려받을 값에 대한 코드를 이렇게 입력한다.
+	//	return new BigDecimal(sum / number); //하지만 소숫점이 출력되지 않는다 왜 그럴까?
+							 //합을 개수로 나눈다는게 정수 연산을 한다는 말이다 합도 숫자이고 개수도 숫자이다.
+							 //그래서 숫자 간의 연산으로 본다. 간단하게 아는 방법은 이렇다.
+	//	return new BigDecimal(sum).divide(new BigDecimal(number));//이 특정 값을 가장 정확하게 구하는 방법은 이것이다. 
+		//하지만 exception이 뜬다 왜그럴까? 값은 98.66666... 무한으로 나온다 즉 정확히 정의할 수 없다는 것이다 그냥 불가능이다. 소수점이 무한으로 붙는 상황이다 그래서 예외라 표시되는 것이다
+		//이문제를 해결할 수 있는 방법은 'Precision(정확도)'모드 또는 'Rounding(반올림)'모드를 사용하는 것이다.
+		//이런 상황일 때, 어느 소수점 자리까지 원하는지 정확하게 정해줘야 한다.
+		//여기서 소수점 3자리까지 나타내 보자 98.666 까지만 나오게 할 것이다. 666은 반올림해서 98.667이 된다.
+		//만약 정확도를 3으로 준다면 이경우 98.667이 된다. 하지만 'Precision(정확도)'값만 주는 건 충분하지 않다.
+		//98.6665 를 예로 들어보면 정확도를 3으로 줬다면 소수점 세 자리까지 보여줘야 한다는 건데 이 경우 소수점수가 667이 될까 666이 될까?
+		//자바API가 6665가 666이 될지 667로 반올림할지 어떻게 알까? 이럴 때 사용하는게 반올림모드이다. //즉 올림을 할지 내림을 할지 정해줘야 한다.
+		return new BigDecimal(sum).divide(new BigDecimal(number), 3, RoundingMode.UP); //나누는 값의 합을 내는것 만큼이나 정확도를 명시하는것이 중요하다
+	}
+
+	public String toString() {  //1.student객체의 정확한 콘텐츠를 출력하는 것이다. 자바에서는 'toString'메소드를 통해 이작업을 수행할 수 있다.
+		return name + marks;  //지금 하는건 퍼블릭toString()을 이용해 이름을 출력하려고 하고 sysout을 이용해 출력해 값을 출력하면 이름이 나오고 marks까지 하면 marks까지 출력이 된다.
+	}
+	
+	public void addNewMark(int i) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void removeMarkAtIndex(int i) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+}
+
+
+------------------------------------------------------
+Runner 클래스 파일
+
+System.out.println(student);
+
+==> 실행해 보면 arraysTraining.Student@5594a1b5 이런식의 HashCode로 나온다...  //1
+------------------------------------------------------
+
+배열대신 ArrayList를 이용하기 위해 Student클래스를 refactor하는 방법을 배웠다
+다음은 마크를 삭제하고 추가할 수 있는 메소드를 사용해 보겠다.
