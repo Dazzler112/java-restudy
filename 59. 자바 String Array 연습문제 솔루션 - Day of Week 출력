@@ -1,0 +1,31 @@
+package arraysTraining;
+
+public class StringRunner {
+	
+	public static void main(String[] args) {
+		
+		String[] daysOfWeek = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};      
+		//요일이라는 배열 안에 값을 집어넣음
+		
+		//두번째 예문은 이중에 가장 길이가 긴 요일을 찾는것임 길이는 어떻게 찾았지?
+		//스트링에 있는 length메소드를 이용할 수 있다. 그럼 배열은 어떻게 구했더라? length attribute를 이용하면 되었다
+		//하지만 배열 길이는 찾을 필요가 없다.
+		//그냥 배열에 반복문 설정을 통해 알 수 있다.
+
+		String dayWithMostCharacters = "";//요일을 저장해 줌 //값은 빈값으로 초기화 해보겠다 
+		
+		for(String day : daysOfWeek) {
+			if(day.length() > dayWithMostCharacters.length()) {
+				dayWithMostCharacters = day;
+			}
+		}
+		//결과물 출력
+		System.out.println("Day with Most number of characters : " + dayWithMostCharacters);
+		
+		
+		//이제 요일을 역순으로 출력하려면 동일한 메소드로 가능할까? 쉽게하는 방법이 있다.
+		for(int i = daysOfWeek.length-1; i >= 0; i--) {
+			System.out.println(daysOfWeek[i]);
+		}
+	}
+}
