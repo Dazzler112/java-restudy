@@ -1,0 +1,67 @@
+
+package arraysTraining;
+
+import java.math.*;
+
+public class StudentRunner {
+	
+	public static void main(String[] args) {
+
+		Student student = new Student("Ranga", 97,98,100);
+
+		
+		int number = student.getNumberOfMarks();
+		System.out.println("number of marks : " + number);
+		
+		int sum = student.getTotalSumOfMarks(); 
+		System.out.println("sum of marks : " + sum);
+		
+		int maximumMark = student.getMaximumMark();
+		System.out.println("maximum of marks : " + maximumMark);
+		
+		int minimumMark = student.getMinimumMark();
+		System.out.println("minumum of marks : " + minimumMark);
+		
+		BigDecimal average = student.getAverageMarks();
+		System.out.println("average : " + average);
+		
+		student.addNewMark(35); //배열 생성한 이후에 새롱누 마크를 추가하고 싶은경우,또 마크를 삭제하고 싶을 경우 
+								//마크를 생성하고 보니 특정학생이 해당 과목을 드랍했다고 가정해보자(100점 받은 값을 지운다고 해보자)
+								//하지만 배열에서 이 같은 작업을 수행하는 것은 쉽지 않다 왜냐하면 배열이 한 번 생성되고 나면 크기가 정해지는 것이다, 
+								//가령 처음 생성한 배열 요소가 5였다면 이 요소는 변경할 수 없다. 
+		
+		student.removeMarkAtIndex(5);
+	}
+}
+
+-----------------------------------------------------------
+예를 들어보자
+
+jshell> int[] mark = {12,34,45}; //정수 배열을 만들어 봄
+mark ==> int[3] { 12, 34, 45 }
+
+//이 배열에 다른 요소를 하나 더 추가하고 싶다면 유일한 방법은?
+//배열 자체를 새로 만드는 것이다!
+//요소는  { 12, 34, 45 } 여기서 복사해 오고
+
+새로운 마크 배열을 생성할 것이다 위에서 하나가 더 추가 된다는 표시를 할 것이다.
+jshell> int[] newMarks = new int[mark.length+1]; //새로운 정수 배열을 만든것인데 한개 요소를 추가할 것이라 적은 것이다.
+newMarks ==> int[4] { 0, 0, 0, 0 } // 이제 요소가 4개가 되었다
+
+//이제 요소 자리에 위에({ 12, 34, 45 })있는 값을 복사해 오고 마지막값은 새로운 값({ 0, 0, 0, 0<--이부분 })으로 설정하면 된다.
+
+요소를 지우는 경우도 마찬가지다 새로운 배열을 만드는데
+요소 하나를 지운 배열로 만드는 것이다 (어찌되었든 배열을 하나 더 만드는 것임)
+jshell> int[] newMarksWithOneDeleted = new int[mark.length-1]; 
+newMarksWithOneDeleted ==> int[2] { 0, 0 }
+
+/*
+정리
+배열에서 요소를 추가하거나 삭제하는 유일한 방법에 대해 알아봤다
+배열에서 요소를 더하거나 삭제하는건 배열을 한 번 생성 했다면 이후에
+요소의 개수를 변경할 방법은 없다
+크기를 변경하고 싶으면 새로운 배열을 만들고 기존 요소를 복사해 가는 방법밖에 없다
+자바에 ArrayList라고 하는게 있는데 이게 조금 도움이 될 수도 있다.
+(ArrayList에 대한 소개는 다음에 알아보도록 하자)
+배열의 길이를 직접 늘이거나 줄일 수 없다는 문제에 대해 이해하는 시간을 가졌길 바란다.
+*/
