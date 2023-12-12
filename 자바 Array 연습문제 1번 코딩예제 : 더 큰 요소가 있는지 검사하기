@@ -1,0 +1,200 @@
+
+코딩 예제: 더 큰 요소가 있는지 검사하기
+이번 예제에서 여러분은 ArrayMagic 클래스에서 doesHaveElementGreaterThan() 메서드를 구현해야 합니다.
+
+이 메서드는 정수 배열과 숫자를 입력값으로 받고 
+만일 주어진 숫자보다 큰 요소가 배열 안에 있으면 true를 리턴합니다.
+
+그런 요소가 없으면 false를 리턴할 것입니다.
+
+여러분이 구현해야 할 메서드의 시그니처는 다음과 같습니다.
+public boolean doesHaveElementGreaterThan(int[] array, int number)
+
+
+지침
+
+1. 여러분의 과제는 주어진 배열을 반복하고 각각의 요소가 주어진 숫자보다 큰지 검사하는 것입니다.
+2. 주어진 숫자보다 큰 요소를 찾으면 여러분은 즉시 true를 리턴해야 합니다.
+3. 배열 전체를 반복했지만 주어진 숫자보다 큰 요소를 찾지 못했으면 false를 리턴해야 합니다.
+4. 입력된 배열이 비어 있으면 여러분의 메서드는 false를 리턴해야 합니다.
+
+Java에 관한 참고사항
+
+Java에서는 for-each 반복문을 사용하여 배열 또는 컬렉션 요소들을 반복합니다. 
+for-each 반복문의 장점은 버그가 발생할 가능성이 사라지고 코드의 가독성이 높아진다는 점입니다. 
+다음은 일반적인 형태의 for-each 반복문입니다.
+
+for (type var : array) 
+{
+    // code block to be executed
+}
+
+예시
+
+그럼 이 메서드가 어떻게 작동하는지 알아보기 위해 예를 살펴볼까요?
+
+예1:
+int[] array = {1, 2, 3, 4, 5};
+int number = 3;
+여기서 여러분의 메서드는 true를 리턴해야 합니다.
+
+예2:
+int[] array = {1, 2, 3};
+int number = 4;
+이 경우에 여러분의 메서드는 false를 리턴해야 합니다.
+
+다음은 기본 뼈대입니다.
+
+public class ArrayMagic {
+    
+    /**
+     * This method determines whether there's an element greater than a given number in an array.
+     *
+     * @param array The array to search through.
+     * @param number The number to compare with the array elements.
+     * @return True if there's an element greater than the given number in the array, false otherwise.
+     */
+    public boolean doesHaveElementGreaterThan(int[] array, int number) {
+
+    }
+}
+
+다음 코드를 이용하여 완성하시오
+
+
+
+
+
+
+
+
+
+--------------------------------------------------------------
+
+
+
+
+
+
+
+힌트)
+
+
+
+
+
+
+
+
+
+
+
+
+힌트 1: 먼저 입력된 배열이 비어 있는지 검사합니다. 
+만일 비어 있다면 여러분은 즉시 false를 리턴할 수 있습니다.
+힌트 2: for-each 반복문을 사용하여 배열을 반복합니다. 
+여러분은 그냥 각각의 요소와 주어진 숫자를 비교하려고 하기 때문에 인덱스는 신경 쓸 필요가 없습니다.
+힌트 3: for-each 반복문에서 현재의 요소가 주어진 숫자보다 큰지 검사합니다. 
+만일 그렇다면 true를 리턴합니다.
+힌트 4: 주어진 숫자보다 큰 요소를 찾지 못하고 반복문이 완료되면 false를 리턴합니다.
+
+이 문제의 핵심은 여러분이 주어진 숫자보다 큰 요소를 발견한 즉시
+반복문(과 메서드)에서 나갈 수 있다는 사실을 이해하는 것임을 기억하십시오.
+
+--------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+해답
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+public class ArrayMagic {
+    
+    /**
+     * This method determines whether there's an element greater than a given number in an array.
+     *
+     * @param array The array to search through.
+     * @param number The number to compare with the array elements.
+     * @return True if there's an element greater than the given number in the array, false otherwise.
+     */
+    public boolean doesHaveElementGreaterThan(int[] array, int number) {
+          //배열 도트 길이가 0과 같으면 어떻게 해야 할까? (에지케이스)
+          if(array.length == 0) {
+              return false;
+          }    
+          //그렇지 않으면 배열의 요소를 반복해야 한다.
+          for(int value : array) {
+              if(value > number) { //값이 숫자보다 크다고 한다면? 계속해서 다른요소를 확인해야 할까?// NO!
+                     return ture;   //배열에 주어진 숫자보다 큰 요소가 있다는 것을 알고 있다. //따라서 다른 요소 전혀 살펴볼 필요가 없다.
+              }        ㄴ>바로 참이라고 말할 수 있다. //이 특정 배열에 주어진 숫자보다 큰 요소가 하나 이상 있을 것이므로 다시 반환 하겠다.
+          }//마지막으로 해야 할 일은 무엇일까?
+          
+           //이 코드 줄로 넘어와 실행이 20줄로 넘어간다 가정해보자 이는 전체 배열을 반복했지만 주어진 숫자보다 큰 요소를 하나도 찾지 못했음을 의미한다.
+          return false;  //따라서 거짓을 반환함
+    }
+}
+//하지만 여기에서도 에지 조건이 명시적으로 주어질 필요가 없다는 것이다.
+//왜냐하면 길이가 0이면 이 루프는 한번도 실행되지 않기 때문이다.
+//배열 도트 길이가 0이면 이 특정 항목은 한 번도 실행되지 않는다.//따라서 거짓을 반환하게 된다. //따라서 실행되지 않는다.
+그래서 이부분을 제거하거나 주석을 달고 테스트 실행한다고 말할 수 있다.
+
+
+아래와 같이 변경!
+
+      |
+      V
+
+public class ArrayMagic {
+
+    public boolean doesHaveElementGreaterThan(int[] array, int number) {
+         //에지케이스를 없엤다
+          for(int value : array) {
+              if(value > number) {
+                     return ture; 
+              }       
+          }
+          
+         return false;  
+    }
+
+--------------------------------------------------------------
