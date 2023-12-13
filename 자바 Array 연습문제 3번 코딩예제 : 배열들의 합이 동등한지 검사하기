@@ -1,0 +1,213 @@
+
+코딩 예제: 배열들의 합이 동등한지 검사하기
+BiArray 클래스 안에 2개의 정수 배열이 제공되어 있습니다.
+여러분의 과제는 그 두 배열들의 합계를 비교하여 같은지 판정하는 메서드를 작성하는 것입니다.
+여러분은 또한 배열의 요소들의 합을 계산하는 메서드도 작성해야 합니다.
+
+지침
+
+BiArray클래스 안에서 다음 메서드들을 완성하십시오.
+
+1. calculateSum(int[] array): 이 메서드는 제공된 배열에 있는 요소들의 합을 계산하여 리턴해야 합니다.
+   for-each 반복문을 사용하여 배열의 모든 요소를 반복하고 그것들을 변수 sum에 추가하십시오. 
+   반복이 완료되면 sum을 리턴합니다.
+
+2. areSumsEqual(): 이 메서드는 array1의 합과 array2의 합을 비교하여 
+   그것들이 같으면 true를 리턴하고 그렇지 않으면 false를 리턴합니다. 
+  calculateSum(int[] array) 메서드를 사용하여 array1의 합과 array2의 합을 구하십시오.
+
+예시
+
+예 1:
+가령 array1이 [1, 2]이고 array2가 [4, -2, 1]라고 해봅니다. 
+sum1은 3이고 sum2도 3입니다. 메서드는 true를 리턴해야 합니다.
+
+예 2:
+가령 array1이 [5, 10, 15]이고 array2가 [1, 9, 20]이라고 해봅니다. 
+sum1은 30이고 sum2도 30입니다. 메서드는 true를 리턴해야 합니다.
+
+예 3:
+가령 array1이[-1, -1, -1]이고 array2가 [-2, 1]라고 해봅니다. 
+sum1은 -3이고 sum2는 -1입니다. 메서드는 false를 리턴해야 합니다.
+
+
+
+
+
+
+
+
+해당 코드는 기본 뼈대이다
+
+public class BiArray {
+
+    private int[] array1;
+    private int[] array2;
+
+    public BiArray(int[] array1, int[] array2) {
+        this.array1 = array1;
+        this.array2 = array2;
+    }
+
+    public boolean areSumsEqual() {
+
+        int sum1 = calculateSum(array1);
+        int sum2 = calculateSum(array2);
+
+        // TODO: Write the code to compare the sums of the arrays and return the result.
+    }
+
+    private int calculateSum(int[] array) {
+        
+        // TODO: Write the code to calculate the sum of the array.
+      
+    }
+}
+
+
+해당 코드를 이용하여 로직을 완성해 보시오.
+
+-------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+힌트)
+
+
+
+
+
+
+
+
+
+
+
+
+간단한 힌트를 몇 개 드리겠습니다.
+
+1. 문제 이해하기: 2개의 정수 배열이 제공되어 있고 우리는 두 배열에 있는 요소들의 합이 같은지 알아내야 합니다.
+
+2. 메서드 시그니처: calculateSum(int[] array)와 areSumsEqual()이 무슨 역할을 하는지 이해하십시오. 
+   전자는 한 배열에 있는 모든 요소의 합을 계산하고 후자는 두 배열의 합들이 같은지 검사합니다.
+
+3. 배열 반복하기: 합을 계산하기 위해 향상된 for 반복문 for(int num : array)를 사용하여 배열을 반복하십시오.
+
+4. 계속 요소 추가하기: 반복하는 중에 각각의 요소를 변수 sum에 추가하십시오.
+
+5. 합계 리턴하기: calculateSum() 메서드를 사용하면 모든 요소의 최종 합계가 리턴됩니다.
+
+6. 합계 비교하기: calculateSum()메서드를 사용하여 
+   array1과 array2의 합계를 areSumsEqual()에서 받으십시오. 
+   그것들이 같으면 true를 리턴하고 그렇지 않으면 false를 리턴하십시오.
+
+-------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+해답)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//이번 문제는 쉽고 빠르게 풀어야 한다.
+
+public class BiArray {
+
+    private int[] array1;
+    private int[] array2;
+
+    public BiArray(int[] array1, int[] array2) {
+        this.array1 = array1;
+        this.array2 = array2;
+    }
+
+    public boolean areSumsEqual() { //비교부분만 담당
+
+        int sum1 = calculateSum(array1);
+        int sum2 = calculateSum(array2);
+
+        //이 메서드는 배열1과 2의 합을 비교하여 같으면 참을 반환하고, 그렇지 않으면 거짓을 반환해야 한다.
+        boolean areSumsEqual = sum1 == sum2;//따라서 실제로 부울 변수 또는 합이 같음을 만들 수 있으며, 합이 같다고 가정해 보자.
+
+        return areSumsEqual; //이것이 기본적으로 우리가 사용하는 조건
+        //연산자를 사용하여 다시 반환하거나 실제로 더 정확하고 싶다면 실제로 변수 자체를 제거 할 수 있다.
+                    | (다른방식)
+                    V
+        ==>그래서 실제로 이 로직을 가져와서 여기에 직접 넣을 수 있다.
+        return sum1 == sum2;
+    }
+
+    private int calculateSum(int[] array) { //계산 하는것만 담당
+
+      int sum = 0;  //합계라는 정수 변수를 생성하고 for문 생성해서 돌려주자
+      for(int element : array) {
+          sum += element;
+      }
+      return sum;
+    }
+}
+
+
+//하지만 중요한 것은 여기서 로직을 어떻게 구성하느냐 이다.
+우리가 하는 일은 두 배열의 합이 같은지 확인하는 것이다.
+그래서 합계를 계산하는 메서드를 만들고 첫 번째 배열을 입력으로 전달한다.
+결과값으로 합계를 얻고, 두번째 배열을 결과값으로 전달하고 합계를 얻는다.
+
+각각 메서드( public BiArray(int[] array1, int[] array2) ,  public boolean areSumsEqual(),  private int calculateSum(int[] array) ) 
+에 명확한 책임이 있음을 알 수 있다.
+private int calculateSum 이 메서드는 합계를 계산하는 것만 담당하고
+public boolean areSumsEqual() 이메서드는 비교를 수행하는 것만 담당한다.
+보다시피 이런 종류의 코드는 가독성이 매우 뛰어나고 이해하기도 쉽다.
+-------------------------------------------------------------------------
