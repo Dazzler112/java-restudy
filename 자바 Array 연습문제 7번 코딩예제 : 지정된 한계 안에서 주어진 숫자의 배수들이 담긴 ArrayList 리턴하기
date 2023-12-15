@@ -1,0 +1,189 @@
+
+코딩 예제: 지정된 한계 안에서 주어진 숫자의 배수들이 담긴 ArrayList 리턴하기
+
+여러분에게는 일부 완성된 NumberMagic 클래스가 제공되어 있습니다.
+그 클래스에는 지정된 한계 안에서 주어진 숫자의 배수들로 된 리스트를 리턴하는 
+determineMultiples(int number, int limit) 메서드가 포함되어 있습니다.
+
+여러분의 과제는 그 메서드의 구현을 완료하는 것입니다.
+
+메서드의 시그니처는 다음과 같습니다.
+
+1 | public List<Integer> determineMultiples(int number, int limit)
+
+입력
+• 메서드는 정수 인수 2개를 받습니다.
+1. number : 배수를 구할 숫자
+2. limit : 배수의 상방 한계
+
+출력
+•메서드는 limit 미만에서 주어진 number의 모든 배수가 포함된 List<Integer>를 리턴해야 합니다.
+•만일 number또는 limit가 0보다 작거나 같다면 메서드는 빈 리스트를 리턴해야 합니다.
+
+
+
+예시
+
+예 1
+number를 3으로, limit를 20으로 넣습니다. 리턴된 리스트는 [3, 6, 9, 12, 15, 18]이어야 합니다.
+예 2
+number를 5로, limit를 1로 넣습니다. 메서드는 빈 리스트 []를 리턴해야 합니다.
+
+
+
+다음은 기본 로직입니다.
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class NumberMagic {
+    /**
+     * This method generates a list of multiples of a given number less than a specified limit.
+     * 
+     * @param number the number to find multiples of
+     * @param limit the upper bound for the multiples
+     * @return a List of multiples of the number less than the limit
+     */
+    public List<Integer> determineMultiples(int number, int limit) {
+
+        // TODO: Write your code here
+    }
+}
+
+
+다음 코드를 이용해 코드를 완성하시오.
+
+
+
+
+
+
+
+
+
+
+
+-----------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+힌트)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+다음은 문제 해결을 위한 간단한 몇 가지 힌트입니다.
+
+힌트 1: 먼저 엣지 케이스부터 처리합니다.
+       만일 주어진 number또는 limit가 0보다 작거나 같으면 
+       여러분은 즉시 빈 리스트를 리턴해야 합니다.
+힌트 2: 주어진 숫자의 배수들을 저장하기 위해, 비어 있는 ArrayList를 초기화합니다.
+힌트 3: 1에서 시작하여 i * number가 limit보다 작은 한 계속 반복되는 반복문을 만듭니다.
+힌트 4: 반복문 안에서 각 배수i * number)를 배수 리스트에 추가합니다.
+힌트 5: 반복이 완료되면 배수 리스트를 리턴합니다.
+
+-----------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-----------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+해답)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class NumberMagic {
+   
+    public List<Integer> determineMultiples(int number, int limit) {
+      우선 빈배열 목록을 초기화해보자
+        List<Integer> multiples = new ArrayList<>();
+      그다음 에지케이스를 만들어보자(0보다 작거나 같으면 빈 리스트를 반환)
+      if( number <=0 || limit <= 0 ) {
+          return multiples;
+      }
+      특정 한도보다 작은 배수의 목록을 생성해보자 (for문 while문 둘다 사용 가능하다)
+      for(int i = 1; number * i < limit; i++) {  //i가 한계보다 작을 동안 카운터 초기화
+                multiples.add(number * i); //배수로 계산하여 넣어줘야 한다 (i) 만 넣으면 배수로 들어가지 않고실제 i만 들어감 예)i로 사용할 경우 number5 이고 limit21일경우 [5,10,15,20] 이 들어가야 하지만 [1,2,3,4]가 들어가 진다..
+      }
+          return multiples;
+    }
+}
+
+주어진 한도까지 숫자의 배수가 있는 목록을 만들었다. 
+-----------------------------------------------------------------------------
