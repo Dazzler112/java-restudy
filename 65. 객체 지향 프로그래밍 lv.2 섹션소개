@@ -1,0 +1,35 @@
+
+지난 파일들은 객체가 상태(state)와 행동(behaviour)을 가진다는 사실에 관해 배웠었다.
+사실 지금까지 다뤘던 객체는 정말 간단한 상태를 가지고 있었다.
+상태를  나타내는 몇가지 변수들을 가지고 있거나 생동을 나타내는 몇가지 메소드를 가지고 있는게 다였다.
+본 파트에는 한 단계 더 나아가서 상태를 나타내는 더 다양한 변수들을 배워볼 것이고,
+행동에 대해서도 알아볼 텐대 행동(behaviour)을 나타낼 수 있는 메소드가 어떤 게 있을지 알아보겠다.
+또 객체 구성 관계라는 중요한 개념에 대해  알아볼 것이다.
+우리가  생성하는 클래스는  다른 클래스의 인스턴스를 포함할  수 있다 ,
+
+public class CheckingAccount{
+• Customer  customer > Name,Address
+• int id
+• BigDecimal balance
+• Data dateCreated 
+• private ArrayList transactions
+    |type,date,amount,balance,description;
+• BigDecimal overDraftLimit;    
+• boolean withdraw(BigDecimal amount)
+• void deposit(BigDecimal amount)
+• void currencyExchange(BigDecimal amount, String from, String to)
+• void payBill(String billType, String to, BigDecimal amount)
+}
+여기 보면 Checking Account클래스 안에는 Customer이라는 또 다른 클래스가 있는걸 확인할 수 있다
+객체 구성 관계를 살펴보면서 상태와 행동에 대해서도 더 알바보자
+
+이후에는 객체 지향 프로그램과 관련된 중요개념에 대해 함께 살펴보도록 하자
+상속에 대해 기본 개념을 포함해 왜 필요한지 알아본 후 연습문제도 풀어보도록 하자
+
+추상 클래스에 관해서도 다뤄볼 것이다
+추상 클래스가 왜 필요한지, 또 추상 클래스를 사용하는 실사용자에 대해서도 알아보자
+또, 인터페이스에 관해서 공부해보자 인터페이스는 굉장히 중요한 개념인데 종종 추상 클래스와 혼동하는 경우가 있다.
+인터페이스에 대해 알아보고 추상 클래스와 어떻게 다른지 살펴보자
+그리고 파트의 마지막 주제는 다형성(polymorphism)인대 이부분에 관해 다룰 주제가 굉장히 방대하다
+
+다음 파일부터 시작해보도록 하자
