@@ -1,0 +1,178 @@
+클래스는 단순한 템플릿이다. 
+이 템플릿을 바탕으로 객체를 생성한다 예를 들어 
+'ducati'는 Motorbike의 인스턴스이다 'honda' 또한 Motorbike의 인스턴스이다.
+이런 인스턴스를 우리는 객체라 부른다 
+
+MoortorBike 클래스는 'speed'라고 하는 멤버 변수를 가지고 있다(private int speed;)
+ducati는 이것에 대한 값을 가질 수 있다. (MotorBike ducati = new MotorBike(100);) 가령 값이 100이라 한다면
+honnda는 다른 값을 가질 수 있다. (MotorBike honda = new MotorBike(200);)
+이런 걸 우리는 객체의 상태라고 부른다
+private int speed; //member variable 지금 여기 상태를 나타내느 단 하나의 멤버 변수를 가지고 있는데 실제로는 하나의 개체가 여러개의 변수를 가질 수 있다.
+객체의 상태는 해당 시점에서 객체가 가지는 멤버 변수에 대한 값을 의미한다 //state
+
+중요한 점은 상태는  계속 변한다는 점이다 최초 속도는 200이였지만 이후 속도가 증가(honda.increseSpeed(100);) 하기도 했고 줄어들기(honda.decreseSpeed(250);)도 한 것을 확인할 수 있다.
+상태 변화는 사용하는 메소드에 의해 노출되게 된다.
+
+여기 MotorBike클래스 예로 들면 값을 추출하기 위해 사용했던 몇가지 메소드를 통해 객체에 대한 상태 및 상태 변화가 노출되어 있다
+-------------------------------
+//behaviour
+	void setSpeed(int speed) { //local variable (지역변수)
+		if(speed > 0)
+		this.speed = speed;
+	}
+	
+	int getSpeed() {
+		return this.speed;
+	}
+	
+	public void increseSpeed(int howMuch) {
+//		this.speed = this.speed + howMuch;
+		setSpeed(this.speed + howMuch);
+	}
+	
+	public void decreseSpeed(int howMuch) {
+//		if(this.speed - howMuch > 0)
+		setSpeed(this.speed - howMuch);
+	}
+	
+	void start() {
+		System.out.println("Bike Started");
+	}
+}
+-------------------------------
+이런 메소드를 객체의 행동이라고 한다.
+
+
+클래스파일1 ----------------------------------------------------------------------
+package classMethodEncapsulation;
+
+public class MotorBike {
+	//state
+	private int speed; //member variable
+
+//constructors
+	MotorBike() { 
+    this(5);  
+	}
+	
+	MotorBike(int speed){
+		this.speed = speed;
+	}
+	
+	//behaviour
+	void setSpeed(int speed) { //local variable (지역변수)
+		if(speed > 0)
+		this.speed = speed;
+	}
+	
+	int getSpeed() {
+		return this.speed;
+	}
+	
+	public void increseSpeed(int howMuch) {
+//		this.speed = this.speed + howMuch;
+		setSpeed(this.speed + howMuch);
+	}
+	
+	public void decreseSpeed(int howMuch) {
+//		if(this.speed - howMuch > 0)
+		setSpeed(this.speed - howMuch);
+	}
+	
+	void start() {
+		System.out.println("Bike Started");
+	}
+}
+---------------------------------------------------------------------------------
+
+클래스파일2 ----------------------------------------------------------------------
+package classMethodEncapsulation;
+
+public class MotorBikeRunner {
+	public static void main(String[] args) {
+		MotorBike ducati = new MotorBike(100);
+		MotorBike honda = new MotorBike(200);
+		MotorBike somethingElse = new MotorBike(); 
+		
+		System.out.println(ducati.getSpeed());
+		System.out.println(honda.getSpeed());
+		System.out.println(somethingElse.getSpeed());
+		
+		ducati.start();
+		honda.start();
+		
+		ducati.increseSpeed(100);
+		honda.increseSpeed(100);
+		
+		ducati.decreseSpeed(250);
+		honda.decreseSpeed(250);
+		
+		System.out.println(ducati.getSpeed());
+		System.out.println(honda.getSpeed());
+	}
+}
+---------------------------------------------------------------------------------
+
+정리하면 객체는 멤버변수의 값으로 정의되는 '상태'라는 개념을 가지고 있고,
+해당 객체의 인스턴스를 통해 노출되는 '행동'이라는 개념 또한 가지고 있다.
+
+일반적으로 클래스를 설계할 때, 우리는 크게 세 가지를 고민해 봐야 한다
+
+• 첫 번째, 상태가 어떠한지
+	//state
+	private int speed; //member variable
+현재 시점에서 어떤 변숫값을 가졌는지 예문에서는 이게 MotorBike의 상태겠지? 'speed'라는 변수가 있다.
+그 외에도 다양한 변수들을 통해 MotorBike클래스의 상태가 정의될 수 있다.
+
+• 두 번째로 고려해야 하는 사항은 어떤 생성자를 가지는지 이다.
+//constructors
+	MotorBike() { 
+    this(5);  
+	}
+예문으로 보면 누군가 MotorBike 인스턴스를 직접 만든다고 하면 속도 5를 직접 적용할 수도 있지만
+초깃값을 미리 설정해 둘 수도 있다는 것이다
+	MotorBike(int speed){
+		this.speed = speed;
+	}
+생성자 관련해서 다음 파일에 몇가지 옵션과 함께 더 알아보자
+
+• 세 번째 고려해야 할 점은 행동(behaviour)이다
+--------------------
+	//behaviour
+	void setSpeed(int speed) { //local variable (지역변수)
+		if(speed > 0)
+		this.speed = speed;
+	}
+	
+	int getSpeed() {
+		return this.speed;
+	}
+	
+	public void increseSpeed(int howMuch) {
+//		this.speed = this.speed + howMuch;
+		setSpeed(this.speed + howMuch);
+	}
+	
+	public void decreseSpeed(int howMuch) {
+//		if(this.speed - howMuch > 0)
+		setSpeed(this.speed - howMuch);
+	}
+	
+	void start() {
+		System.out.println("Bike Started");
+	}
+}
+--------------------
+객체를 통해 실행하고자 하는 메소드가 어떤게 있을지에 대한것이다
+다음 단계에선 객체에 더 많은 상태와 행동을 추가해 볼 것이다
+
+
+/*
+정리)
+이번 파일에는 클래스,객체,상태,행동과 같은 중요한 개념에 대해 알아 보았다
+나아가 어떤 특정 객체에 대해 말할 때 고려해 볼 수도 있는 세 가지 단계에 대해 알아봤는데
+상태가 어떠한지,
+생성자가 무엇인지,
+사용된 메소드가 무엇이 있는지,
+이런것이 있었다 다음 파일엔 이런 내용을 바탕으로 간단한 클래스를 새로 만들어 보자
+*/
