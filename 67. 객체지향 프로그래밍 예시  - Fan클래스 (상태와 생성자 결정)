@@ -1,0 +1,103 @@
+
+직전 파일에 클래스를 만들 때 질문해야 하는 중요한 점들에 대해 배웠다
+
+-첫째 상태는 어떠한가 였었다
+ 이 말은, 어떤 멤버 변수들이 있는지 묻는거였다
+-둘째, 특정 객체의 생성을 어떻게 구성하고 싶은가? 였다
+ 어떤 생성자를 사용할 건지에 대한 질문으로 보면 된다.
+-셋째로, 어떤 행동(behavior)을 실행할 건지 질문을 해야 한다.
+ 메소드를 묻는것이다 예시로 봐보자
+
+• State(Member Variables)
+ ‣ make; (제품)
+ ‣ radius; (지름)
+ ‣ color; (색)
+ ‣ isOn; (작동여부(on/off)
+ ‣ speed; (속도)
+• Constructors
+ ‣ Fan(String make, bouble radius, String color)
+• Behavior (Member Methods)
+ ‣ void switchOn()
+ ‣ void switchOff()
+ ‣ void changeSpeed()
+ ‣ String toString() using String format method
+천장형 선풍기이다 이 Fan이라는 클래스의 상태를 나타내느 요소는 어떤 게 있을까?
+클래스의 메소드 생성을 어떻게 구성하고 싶은지 생각해 볼 수 있겠고 어떤 행동을 가지는지 고려해 볼 수 있다.
+이 클래스에서 어떤 것들을 실행하고 싶은지에 대해서도 생각해 볼 수 있겠다.
+
+위의 예시를 보면 어떤 방향으로 생각할 수 있는지 몇가지 적어놨다.
+이것들에 따라 어떤 생성자가 있으면 좋을지, 어떤 메소드를 실행하면 도리지 등을 고민해 보자.
+
+
+
+
+
+---------------------------------------------------------------
+Fan 클래스 파일
+
+package objectOrientedProgramming2;
+
+public class Fan {
+	
+	//state  //상태를 나타내는 변수
+	 private String make; 
+	 private double radius;
+	 private String color;
+	 private boolean isOn;
+	 private byte speed;  //0 to 5 
+
+	 //creation  //생성자 결정 해야하는대 허떠한 변수를 생성자로 생성할까? 결정할 때 고려해야하는것
+	 			 //이 객체에 없으면 안 되는 게 어떤 건지 이다.
+	 			 //make는 꼭 필요할 것이다 어떤 제품인지 알아야 하기 때문이니 radius(지름)도 상당히 중효한 부분이다 날개는 꼭 있어야 하는 부분이기 때문이다
+	 			 //그렇다면 색상은 어떨까? 맞다 이부분도 꼭 필요한 부분이라 생각한다.
+	 			 //선풍기가 켜져있는지 여부는 사실 그렇게 중요하지 않고 속도는 어느 숫자든 올 수 있으니 제작하는 데 있어 속도도 크게 중요한 사항이 아니다.
+	 //그러면 내가 원하는 생성자는 최소한 여기 세가지 항목에 대해서 값을 출력할 수 있어야 한다, 우리가 Fan이라는 객체를 만들 때 FanRunner에는 아무것도 명시된 것이 없다.
+	 //지금은 make, radius,color중 어느 하나의 조건도 없이 생성할 수 있는데 여기서 이제 설정할 건, public Fan이라는 생성자를 만든 건데 String make,double radius, String color를 입력값으로 넣을 것이다.
+	 public Fan(String make, double radius, String color) {//이렇게 하면 누가 Fan이라는 객체를 생성하든 이 세가지 값은 꼭 입력이 될 것이다.
+		 this.make = make;
+		 this.radius = radius;
+		 this.color = color;
+	 }//초기 상태가 설정 되었지만 Runner에선 컴파일 오류가 뜰 것이다. 디폴트 생성자가 존재하지않기 때문이다 생성자를 만드는 즉시
+	 //자바에서 자동으로 디폴트 생성자를 만들지 않기 때문에 해당 값을 줘야 한다.
+	 
+	 //자, 상태 변수/생성자를 만들었다 현재 객체에 대한 상태를 출력해 보려고 한다
+	 //현재 시점에서 Fan이라는 객체가 가지는 상태는 어떤것이 있는지 출력하는 것이다.
+	 
+	 //print the state
+	 public String toString() {
+		 return String.format("make - %s,  radius - %f, color - %s, isOn - %b, speed - %d",
+		 				make, radius, color, isOn, speed);
+		 //toString메소드를 통해 객체의 상태 전체를 확인할 수 있다.
+		 //구문만 잘 매칭 시킨다면 toString값이 자동으로 출력될 것이다.
+	 }
+}
+
+---------------------------------------------------------------
+
+
+---------------------------------------------------------------
+FanRunner 클래스 파일
+
+package objectOrientedProgramming2;
+
+public class FanRunner {
+	
+	public static void main(String[] args) {
+		Fan fan = new Fan("Manufacturer 1", 0.34567, "GREEN"); //초기 값을 넣어줌
+		
+		System.out.println(fan); //출력갑 => make - Manufacturer 1,  radius - 0.345670, color - GREEN, isOn - false, speed - 0
+		//⁂ 그래서 클래스 인스턴스를 만들 때는, 디폴트 값을 받는 것이다. isOn과 speed의 경우 디폴트값을 false, 0으로 받았다
+
+	}
+}
+
+---------------------------------------------------------------
+
+/*
+정리)
+이것이 Fan객체 생성시 가지는 상태이다.
+이번에 살펴본 건 Fan객체의 상태를 말할 때 나타내고 싶은 변수는 어떤 것이 있는지 생각해보고 
+어떤 생성자를 설정할지 살펴보았다
+
+다음은 객체Fan에 대해 어떤 메소드를 허용할지를 알아보자
+*/
