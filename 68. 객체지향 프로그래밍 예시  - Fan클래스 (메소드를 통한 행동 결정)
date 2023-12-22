@@ -1,0 +1,113 @@
+
+오늘은 행동(behavior)에 초점을 맞춰서 해보겠다.
+
+----------------------------------------------------------------------
+Fan 클래스파일
+
+package objectOrientedProgramming2;
+
+public class Fan {
+	
+	
+	//state  //상태를 나타내는 변수
+	//한번 만들고 나면 변경이 될 만한 변수들이 있을까? 생산지가 변하거나, 지름이 변하거나,색상이 변할까?
+	//No! 그렇지 않다 만든 이후에 변화가 없다고 봐야하는 값이다.
+	 private String make; 
+	 private double radius;
+	 private String color;
+	 //하지만 아래 두개는 바뀔 수 있다. 켜져있는지 여부와 속도는 바뀔수 있다.
+	 private boolean isOn;
+	 private byte speed;  //0 to 5 
+
+	 //creation  
+	 public Fan(String make, double radius, String color) {//이렇게 하면 누가 Fan이라는 객체를 생성하든 이 세가지 값은 꼭 입력이 될 것이다.
+		 this.make = make;
+		 this.radius = radius;
+		 this.color = color;
+	 }
+	 
+	 //이 두가지에 대한 행동을 노출할 수 있다.
+	 //여기서 한번 시작해 보자 (꼭 그래야 하는건 아니지만 전형적인 순서이다)
+	 //isOn변수를 수정하기 위한 변수를 만들자
+	 
+	 //isOn
+//	 public void isOn(boolean isOn) { //public void메소드를 사용하여 고객이 값을 입력하도록 할 수 있다.
+//		 this.isOn = isOn; //이 상황은 어떤가? 이게 작동하는 방식은, 가령FanRunner클래스로....
+//	 }
+	 
+	 //이렇게 할 수도 있고, 아니면 사용자 입장에서 생각해 보면 좋다.
+	 public void switchOn() {
+		 this.isOn = true;
+		 setSpeed((byte)5);//선풍기 킬때도 디폴트 값을 설정할 수도 있다. 디폴트를 5라 해보자
+	 }
+	 public void switchOff() {
+		 this.isOn = false;
+		 setSpeed((byte) 0); //꺼졌을때 속도를 0으로 해야겠다.. (byte)는 타입캐스트 byte로 만들기 위해서
+	 }
+	 //사용자 입장에서 보면 이렇게 적힌 구문이 훨씬 사용하기 좋겠다 그래서, 행동에 대해 생각해 볼 때는 너의 API를 사용하게 될 이용자의 입장에서 한번 생각해 봐라!
+	 //❗것이 계속해서 고민해야 할 사항 중 하나이다 언제나 사용자 입장에서 고민해야 한다.❗
+	 //사용자가 너의 객체에서 예상하고 기대하는 행동이 어떤 것일지 고민해야 한다.
+	 
+	 //또 다른 변경 가능 변수는 속도이다. 간단한 메소드를 사용하면 된다.
+	 public void setSpeed(byte speed) {
+		 this.speed = speed;
+	 }
+	 
+	 
+	 
+	 //print the state
+	 public String toString() {
+		 return String.format("make - %s,  radius - %f, color - %s, isOn - %b, speed - %d",
+		 				make, radius, color, isOn, speed);
+	 }
+}
+
+----------------------------------------------------------------------
+
+----------------------------------------------------------------------
+FanRunner 클래스파일
+
+package objectOrientedProgramming2;
+
+public class FanRunner {
+	
+	public static void main(String[] args) {
+		Fan fan = new Fan("Manufacturer 1", 0.34567, "GREEN");
+		//객체에 대해 허용하고 싶은 행동이 어떤게 있을까?
+		
+		//fan.isOn(true);//이것을 사용한다면 이것이 상태가 되겠지? 
+		//출력해 보면 isOn의 값은 false 거나 true거나 둘 중의 하나일 것이다.
+		
+		fan.switchOn();
+		System.out.println(fan);
+		
+		fan.setSpeed((byte)3); //속도를 5로 셋팅 하지만 문제는 꺼질때도 속도가 5로 셋팅되어 있다. 행동에 대해 다시 고민해 봐야 한다.
+		//그냥 isOn이라고 하는것 보다 switchOn이 더 직관적이다. 
+		//고객이 이해하기 더 쉬운 API라 볼 수 있다.
+		System.out.println(fan); //출력갑 => make - Manufacturer 1,  radius - 0.345670, color - GREEN, isOn - false, speed - 0
+		
+		fan.switchOff();
+		System.out.println(fan);
+
+	}
+}
+
+----------------------------------------------------------------------
+
+
+		
+/*
+정리)
+여기서 우리는 선풍기로 할수 있는 행동이 어떤게 있는지 생각해 봤다 
+그 행동과 그에 따르는 로직을 이곳에 적용해 보았다
+Fan이란 객체와 관련된 모든 로직을 Fan클래스 자체에 넣었다 그래서 switchOn메소드가 
+단순히 전원이 켜진걸 나타내는 것이 아니라 속도를 설정하고 
+반대로 switchOff때는 자동으로 전원 값을 false로 바꾸고 속도를 0으로 변경하게 했다
+중요한 점은 이것들이 단순히 getters,setters가 아니라 
+사람들이 객체에 대해 생각할 때 전형적으로 연관지어 생각하는 부분은 getter와 setter인데 
+그렇게 연관 짓는것은 좋지 않다.
+항상 사용자가 객체에 대해 어떻게 생각할지, 어떤 메소드가 너의 객체를 사용하기 쉽게 할지 생각해야 한다.
+마지막 부분에서 클래스를 설계하는데 있어서 배운 부분들을 실제로 적용해 보는것이다. 상태에 대해 생각해야 하고
+어떤 생성자를 만들지 생각해야하고 또 어떤 행동을 허용해야 할지 고민해 봐야한다 
+그리고 그 생각한 과정을 Fan클래스에 적용해 봤다
+*/
