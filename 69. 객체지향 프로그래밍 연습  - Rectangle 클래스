@@ -1,0 +1,115 @@
+
+-------------------------------------------------------------------------
+
+RectangleRunner 클래스 파일
+
+package objectOrientedProgramming2;
+
+public class RectangleRunner {
+
+	public static void main(String[] args) {
+		Rectangle rectangle = new Rectangle(12, 23);
+		System.out.println(rectangle);
+		// 출력 => length - 12 width - 23 area - 276 perimeter - 70 
+		
+		rectangle.setWidth(25);
+		System.out.println(rectangle);
+		// 출력 => length - 12 width - 25 area - 300 perimeter - 74
+		
+	}
+}
+
+-------------------------------------------------------------------------
+
+
+-------------------------------------------------------------------------
+
+Rectangle 클래스 파일
+
+package objectOrientedProgramming2;
+
+public class Rectangle {
+	//첫 쨰로 결정해야 할 것은 상태였다
+	//사각형에서 중요한 조건이 뭐지?
+	
+	//state
+	private int length;
+	private int width;
+	
+	
+	//사각형에 길이와 넓이는 필수 요소이므로 사용하고 싶은 생성자는 다음과 같다.
+	//creation
+	public Rectangle(int length, int width) {
+		this.length = length;
+		this.width = width;
+	}
+	//길이와 넓이가 있고 이것에 대한 생성자가 있다. 사각형의 상태에 대해 생각해 봤고 사각형을 만드는 것에대해서도 생각해 봤다.
+
+
+	
+	
+	//일반적으로 할 수 있을 만한 것 중에는
+	//사각형의 현재 상태가 있겠다.
+	//operations
+		
+	//또 무엇이 있을까? 직사각형에 어떤 오퍼레이션을 작용시킬 수 있을까?
+	//쉽게 생각하면 길이나 넓이를 변경할 수도 있다. 
+	
+	//그러니 길이와 넓이에 대해 getters 와 setters를 적용할 수 있다.
+	public int getLength() {
+		return length;
+	}
+	
+	
+	public void setLength(int length) {
+		this.length = length;
+	}
+	
+	
+	public int getWidth() {
+		return width;
+	}
+	
+	
+	public void setWidth(int width) {
+		this.width = width;
+	}
+	
+	//허용할 수 있는 오퍼레이션이 또 있을까?
+	//면적을 구할 수 있겠다
+	
+	public int area() {
+		return length * width;
+	}
+	//사각형의 둘레도 있겠다
+	public int perimeter () {
+		return 2 * (length + width);
+	}
+	public String toString() { //toString 메소드를 입력해서 현재 상태 값을 받을 수 있다.
+		return String.format("length - %d width - %d area - %d perimeter - %d ", 
+							length, width , area() , perimeter());
+	}
+
+}
+
+-------------------------------------------------------------------------
+
+
+/*
+정리)
+짧은 예시를 통해 사각형에 대해 공부해 봤다
+사각형의 상태를 어떻게 나타낼 수 있는지
+사각형의 형상을 어떻게 나타낼 수 있는지
+어떤 기능을 허용하는지도 배웠다
+항상 사용자의 입장에서 생각하자 
+너의 API를 사용하는 유저가 객체에 대해 원하는 메소드를 설정하고
+사용자의 입장에서 사용하기 쉬운 메소드를 만들어 보자
+
+❗ 이것이 객체 구성의 핵심이다 ❗ 
+객체를 사옹할 남의 관점에서 왜 생각해야 하는지 의문이 들지도 모르지만
+좋은 디자인은 늘 외부적 시각에서 나온다 다른 사람이 사용하는 상황을 생각해 보고(Thinking Outsid In)
+어떻게 사용하고 싶어 할지 고민해 봐야한다
+사용자의 관점이 되어 생각해 보는 것이 클래스를 만들 때 가장 중요하다
+
+다음 파일에는 조금 더 복잡한 객체를 만들어 보겠다.
+*/
