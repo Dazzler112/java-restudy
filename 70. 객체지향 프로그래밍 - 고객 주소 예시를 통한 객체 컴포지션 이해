@@ -1,0 +1,160 @@
+
+우리는 지금까지 예제에서 단순한 값을 가진 객체를 봐 왔다
+예를들면 
+   private String make; 
+	 private double radius;
+	 private String color;
+	 private boolean isOn;
+	 private byte speed;
+string,double,boolean,byte등이 있었다 이렇게 간단한 객체의 상태를 나타냈다
+하지만 이보다 복잡한 개체도 있다.
+객체 안에 또 다른 객체를 가질 수 있다.
+이것을 객체 구성 관계(Object Composition)이라 부른다 
+지금부터 이 관계에 대해 집중하며 좀 더 복잡한 예제를 다뤄보겠다
+
+
+--------------------------------------------------------------------------------
+
+CustomerRunner 클래스파일
+
+package objectOrientedProgramming2;
+
+public class CustomerRunner {
+	
+	public static void main(String[] args) {
+		
+		Address homeAddress = new Address("line 1","Seoul","123"); //주소 객체를 추가하는 법
+		Customer customer = new Customer("Byul",homeAddress);
+		
+		//회사 주소를 추가하고 싶은 경우
+		Address workAddress = new Address("line 1 for work","Seoul","12311");
+		customer.setWorkAddress(workAddress); //또다른 인스턴스를 설정해 객체를 만들면 된다.
+		
+		System.out.println(customer);
+	}
+}
+
+--------------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------------
+
+Customer 클래스파일
+
+package objectOrientedProgramming2;
+
+public class Customer {
+
+	//state
+	private String name;
+	private Address homeAddress; //여기서 개체 구성 관계를 성정하고 Customer클래스 안에 주소라는 또다른 클래스르 설정 할 것임.
+	//고객에는 주소값이 포함되어 있다 이게 바로 객체 구성 관계이다 Customer클래스는 주소 클래스의 인스턴스에 대해 참조 역할을 하는것이다.
+	//클래스를 디자인할 때 중요한것 중 하나가 다른 객체의 관계를 살펴보는 것이다 //지금 같은 경우는 고객이 주소를 포함한다.
+	
+	private Address workAddress;
+	//조금더 복잡하게 생각해 본다면 고객은 회사 주소를 가지고 있을 수도 있다
+	
+	//이게 객체의 상태를 나타낸다 Customer라는 객체의 상태를 나타내는 것으론 이름,집주소,회사주소가 있다
+	
+	
+	//Customer 객체에 애기할 때 세부 내용을 조금 더 생각해 봐야 한다.
+	//만약 필수 요소라면 생성자에 포함하지만 아니라면 포함하지 않을 것이다
+	//필수라고 가정하고 만들자
+	
+	//creating
+	public Customer(String name, Address homeAddress) {
+		this.name = name;
+		this.homeAddress = homeAddress;
+	}
+
+	
+	//어떤 행동이 필요하며 고개그이 관점에서 볼 때 어떤게 필요한지 살펴 볼 것이다.
+	//getter,setter를 만들어 볼 것이다.
+	
+	//이제 고객 객체를 만들 때 이름, 집 주소 사용이 가능하다
+	//operations
+	public Address getHomeAddress() {
+		return homeAddress;
+	}
+	
+	public void setHomeAddress(Address homeAddress) { //주소가 바뀐다면 setHomeAd를 통해 변경할 수 있고
+		this.homeAddress = homeAddress;
+	}
+	
+	public Address getWorkAddress() {
+		return workAddress;
+	}
+	
+	public void setWorkAddress(Address workAddress) { //회사 주소를 추가하고 싶으면 setWorkAd를 통해 추가할 수 있다.
+		this.workAddress = workAddress;
+	} 
+	
+	public String toString() {
+		return String.format("name - [%s] home address - [%s] work address - [%s])", 
+							name, homeAddress, workAddress);
+	}
+}
+
+--------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------------------------------------------------
+
+Address 클래스파일
+
+
+package objectOrientedProgramming2;
+
+public class Address {//간단한 주소를 넣어 줄 것이다.
+	
+	private String line1;
+	private String city;
+	private String zip;
+	
+	//이제 주소를 어떻게 생성하느냐를 생각해야 한다
+	//간단하게 생각하기 위해 모든 항목이 필수사항이라 가정하여 보자
+	
+	//클래스에 대해 얘기할 때 중요하고 필수적인 부분이 어떤건지 생각한다
+	//만약 필수 사앙이 아닐 경우 그것에 대해서 setters를 생성하면 되겠다 
+	//이번 예시는 모든게 중요사항이라 가정
+	
+	//creation
+	public Address(String line1, String city, String zip) {//세가지 필드 모두 생성자에 사용한다
+		super();
+		this.line1 = line1;
+		this.city = city;
+		this.zip = zip;
+	}
+	//주소 수정을 허용할지 말지 대해서도 고민해 봐야 하는데 수정을 못하도록 설정 하겠다
+	//만약 누군가 주소를 업데이트 하길 원한다면 새로운 주소 객체를 생성해서 고객 객체로 가져오는 방법이 있다.
+	
+	public String toString() {
+		return line1 + " " + city + " " + zip;
+	}
+	
+}
+
+--------------------------------------------------------------------------------
+
+
+/*
+
+정리)
+이것이 객체 관계 구성이였다 여기서 설정한건 비교적 간단한 객체 구성 관계였다
+주소 객체를 만들고 고객에 맞춰 설정했으며 회사주소 객체를 만들어서 역시 고객에 맞춰 설정했다
+본 객체 구성 관계와 관련한 모든 강의에서 기억해야할 ✅중요한 부분은
+❗ 객체 중심 디자인이다 ❗
+클래스를 먼저 결정하고 그다음 각 클래스가 어떻게 구성될지 계획하는 것이다.
+여기서 우린 고객이 
+두 가지 주소 인스턴스(private Address homeAddress;, private Address workAddress;) 를 가졌는데 
+이런 것을 객체 구성 관계라고 했다
+객체 생성자를 무엇으로 할지 결정해야 했고 그 이후에 연관된 행동이 무엇일지 생각해 봤다
+이 단계 이전에 객체 지향 프로그래밍에 대한 이해가 선행되어야 했다
+그래서 간단한 클래스,오퍼레이션에 대해 알아봤고
+이제 객체 구성 관계를 살펴보고 있다.
+더 복잡한 객체로 넘어가기 전에 다음파일에 간단한 예문 하나 더 보고 넘어가겠다
+
+*/
