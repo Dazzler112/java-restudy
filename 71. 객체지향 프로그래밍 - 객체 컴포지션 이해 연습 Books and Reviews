@@ -1,0 +1,117 @@
+
+이번 예시로는 책을 예시로 해보겠다
+책에는 번호, 이름, 작가가 있다
+작가는 작가(author) 자체로 객체가 될 수 있지만 쉽게 가보도록 하자
+작가 관련해서는 스트링("Ranga")으로 이름만 저장한다고 하고 책에 대한 리뷰도 저장하겠다
+
+예시--------------------------------------------
+Book > id, name ,author
+ | Reviews > id, description, rating //각각 리뷰는 id,설명, 점수가 있다
+
+이것이 예제에 원하는 코드이다 
+책에대한 id, 책 이름, 작가 이름을 적고, 리뷰를 작성할 수 있게끔 해주면 
+Book book = 
+    new Book(132, "Object Oriented Programming with Java",
+              "Ranga");
+book.addReview(
+      new Review(10, "Great Book", 5));
+book.addReview(
+      new Review(101, "Awesome" , 5);
+
+System.out.println(book);
+--------------------------------------------
+한권의 책에 리뷰가 여러건 작성이 된다 AddReview메소드를 활용해서 책리뷰를 작성하도록 할 수 있겠다
+마지막 syso를 통해 값을 출력했을 때 객체관련 요소와 함께 리뷰가 출력되어야 한다
+
+---------------------------------------------------------------------
+
+Book 클래스 파일
+
+package objectOrientedProgramming2;
+
+import java.util.*;
+
+public class Book {
+	private int id;
+	private String name;
+	private String author;
+	
+	private ArrayList<Review> reviews = new ArrayList<>();//1-1 책과 리뷰의 관계는 일대 다 관계이다
+	//하나의 책에 여러 리뷰가 딸려있다. 리뷰를 ArrayList로 보관 할 것이다.
+	
+	//Book 클래스 생성자를 보면 굉장히 간단하다
+	public Book(int id, String name, String author) {
+		
+		this.id = id;
+		this.name = name;
+		this.author = author;
+	}
+	//흥미로운 부분은 리뷰 부분이다
+	//리뷰는 하나 이상 들어갈 수 있기 때문에  1-1
+	//addReview 메소드는 리뷰를 작성하는 칸이다
+	//리뷰를 저장해서 ArrayList에 추가하는 역할을 한다 Review클래스는 간단하다
+	public void addReview(Review review) {
+		this.reviews.add(review);
+	}
+	
+	public String toString() {
+		return String.format("id = %d name = %s author = %s Reviews = [%s]", id , name, author, reviews);
+	}
+}
+
+---------------------------------------------------------------------
+
+---------------------------------------------------------------------
+
+Review 클래스 파일
+
+package objectOrientedProgramming2;
+
+public class Review {
+
+	//id, 리뷰점수, 설명란이 있고 이값을 각 자리로 세팅하는 생성자가 있다.
+	private int id;
+	private String description;
+	private int rating;
+	
+	public Review(int id, String description, int rating) {
+		
+		this.id = id;
+		this.description = description;
+		this.rating = rating;
+	}
+	//각각의 클래스에서 간단한 toString 메소드가 있는데 값들을 연결시켜 다시 돌려주는 역할을 한다.
+	public String toString() {
+		return id+ " " + description + " " + rating;
+	}
+	
+}
+
+---------------------------------------------------------------------
+
+
+---------------------------------------------------------------------
+
+BookRunner 클래스 파일
+
+package objectOrientedProgramming2;
+
+public class BookRunner {
+	
+	public static void main(String[] args) {
+		
+		Book book = new Book(132, "Object Oriented Programming with Java","Ranga");
+		
+		book.addReview(new Review(10, "Great Book", 5));
+		book.addReview( new Review(101, "Awesome" , 5));
+	
+		System.out.println(book);
+		
+		//실행 할 경우 모든 요소가 잘 보이는 것을 확인할 수 있다.
+    //출력 ==>  id = 132 name = Object Oriented Programming with Java author = Ranga 
+                Reviews = [[10 Great Book 5, 101 Awesome 5]]
+	}
+}
+
+
+---------------------------------------------------------------------
