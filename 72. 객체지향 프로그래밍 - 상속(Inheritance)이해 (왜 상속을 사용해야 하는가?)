@@ -1,0 +1,146 @@
+
+상속(Inheritance)의 이해
+
+--------------------------------------------------------------
+
+Person 클래스 파일
+
+
+package level2Inheritance;
+
+public class Person {
+
+	private String name;//사람의 이름이 있다고 치자
+	private String email;
+	private String phoneNumber;
+	
+	//getter,setter도 생성
+	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+	
+	//간단한 Person클래스가 완성됐다 이제 Student라 하는 클래스를 만들어 보자
+}
+
+--------------------------------------------------------------
+
+
+
+--------------------------------------------------------------
+
+Student 클래스파일
+
+
+package level2Inheritance;
+
+//Student 클래스는 Person 클래스보다 조금더 자세한 정보를 담고 싶다...
+//방법중 하나는 Person 클래스를 복사, 붙여넣은 후 이름을 Student로 변경하는 것이다
+//그러면 Student클래스가 생성될 것이고 여기는 Person과 동일한 세부내용을 가질 것이다.
+//클래스 자체를 복사해 왔기 때문에 보여지는 코드는 Person클래스와 완벽하게 동일하다 
+//get,setter또한 동일한 코드로 들어가 있다.
+//새로 생성한 필드에 대한 getter,setter도 생성할 수 있다.
+//하지만 두 클래스를 보면 중복되는 내용이 꽤 많다
+//Person클래스에서 이름, 이메일, 전화번호가 있었다면 Student클래스에도 메소드와 필드는 동일할 것이다.
+//Student클래스는 대학정보 및 학년 입력칸이 있고 추가 정보에 대한 getter,setter가 있다
+//이 두클래스 사이에 같은 코드가 많기 때문에 많은 부분의 코드를 복사 사용하고 있다.
+//즉 private String name; private String email; private String phoneNumber; 이 코드는 똑같을 것이고
+//6개 메소드는 Person클래스와 Student클래스에 동일하게 들어가 있다.
+
+//사실 복제는 그리 좋지 않다 왜냐면 나중에 이메일을 바꾼다고 해 보자
+//called-email이라는 객체를 만들어 보자 그러면 두개의 클래스 모두 수정해야 한다.
+//예를들어 그냥 이름을 넣는게 아니라 성,중간이름, 이름 이렇게 나눈다 해보자
+//이런 변화가 생길 때도 Student클래스 및 Person 클래스 모두 수정해 줘야 하는데 이렇게 유지하기 쉽지 않다.
+
+//여기서 상속이라는 개념이 등장한다
+//상속은 Person클래스에 있는 코드를 Student클래스에서 다시 사용하게 해 주지만 
+//가져가고 싶은 것만 고를수 있다. 
+//다시 말해 Person클래스 내용을 가지고 몇가지 변경사항 및 메소드를 추가해서 student를 만든다 했을때 상속이 가능하게 해준다.
+
+public class Student extends Person{ //person에 있는 기능, 요소, 멤버 변수등을 가져오고 싶다...
+	                   //ㄴ> 'extend'라는 키워드를 이용해서 Person 클래스를 가져올 수 있다.
+			//그리고 별도의 활동도 할 수 있다.
+	private String collegeName;
+	private int year;
+	
+	public String getCollegeName() {
+		return collegeName;
+	}
+	public void setCollegeName(String collegeName) {
+		this.collegeName = collegeName;
+	}
+	public int getYear() {
+		return year;
+	}
+	public void setYear(int year) {
+		this.year = year;
+	}
+	
+}
+
+--------------------------------------------------------------
+
+
+
+
+--------------------------------------------------------------
+
+StudentRunner 클래스 파일
+
+
+package level2Inheritance;
+
+public class StudentRunner {
+
+	public static void main(String[] args) {
+		
+		Student student = new Student();
+		student.setName("Ranga");   //student.을 타이핑하면 Person클래스의 메소드 까지 나오는게 보일것이다. 
+		//  ㄴ> 1-1 Ranga라는 이름을 가져왔다.
+		student.setEmail("in28minutes@gmail.com");
+		//이 모든 것을 student클래스 내부에서 할 수 있다 Student클래스 안에서 별도로 설정한 메소드 이메일 또는 이름이 없는데도 말이다
+		
+		//Person클래스를 확장하면서 Person클래스 있는 모든 것을 상속하는 것이다.
+	}
+}
+
+//이렇게 Student클래스가 Person클래스의 내용을 가져오는 관계에서
+//Person클래스를 슈퍼클래스라 부르고 Student클래스를 서브클래스라 부르고
+//이 행위를 상속이라 부른다.
+//상속에서는 서브클래스가 슈퍼클래스를 확장하며 서브클래스는 슈퍼클래스의 모든 기능을 가지게 된다.
+//할 수 있는 방법은 student를 입력하는 것이다
+//이름을 가져와 보자 1-1
+
+--------------------------------------------------------------
+
+
+
+/*
+정리)
+이번 학습에는 상속에 대한 기본적인 개념을 설명했다
+상속에서 Person클래스를 확장해 Student클래스를 만들수 있었다
+이때 Person클래스는 슈퍼클래스 Student클래스는 서브클래스이다
+그럼 슈퍼클래스의 세부사항뿐 아니라 Student에 있는 정보도 다 가지고 있게 된다.
+상속은 다른 클래스에서 이미 사용중인 코드를 재사용할때 굉장히 유용한 방법이다
+하지만 상속 관계가 항상 좋지만은 않다
+상속은 IS A 관계라고 한다
+public class Student extends Person{    'Student IS A Person' 이라 적혀 있지?
+그래서 Person 내용을 Student클래스로 가져온 것이다
+어떤 곳에는 너가 원하는 코드가 있었겠지만
+하지만 만약 두개의 클래스 사이에 IS A 관계가 없을 경우 상속은 추천하지 않는다.
+*/
