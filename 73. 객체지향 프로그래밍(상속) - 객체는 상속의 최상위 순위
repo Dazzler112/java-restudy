@@ -1,0 +1,91 @@
+
+이번 학습에서 상속에 있어 가장 중요한 개념중 하나에 대해 알아보자
+아무것도 확장하지 않는 클래스도 사실 객체를 확장하고 있다.
+무슨말일까? 예제를 살펴보자
+
+
+여기 Person클래스 파일이 있다 클래스에 이름,메일,전화번호가 있다.
+메소드로는 getter,setter 메소드 총 6개가 있다.
+---------------------------------------------------------------------
+
+Person 클래스파일
+
+
+
+package level2Inheritance;
+
+public class Person extends Object{ //보이지 않지만 디폴트로 Object를 extends하고있음
+
+	private String name;
+	private String email;
+	private String phoneNumber;
+	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+	
+}
+
+//그러면 인스턴스를 생성하여 보자
+---------------------------------------------------------------------
+
+
+---------------------------------------------------------------------
+
+StudentRunner 클래스 파일
+
+
+package level2Inheritance;
+
+public class StudentRunner {
+
+	public static void main(String[] args) {
+		
+		Student student = new Student();
+		student.setName("Ranga");
+		student.setEmail("in28minutes@gmail.com");
+		
+		Person person = new Person();
+		String value = person.toString();  //person.을 타이핑하면 get,setter메소드 뿐 아니라 notify,hashcode등 다양한 메소드가 나온다 어디서 오는 것일까?
+		System.out.println(value);
+		System.out.println(person);
+		//이건 자바의 기능중 하나인데 만약 너가 실제로 아무것도 확장하지 않은 경우에 자바 모든 클래스가 객체를 확장한다
+		// public class Person extends Object{ <= 이것이 현재 상황이다
+		//자바에는 클래스라는 객체가 있는데 public class Person extends Object{의 Objcet를 [ctrl]을 누른 상태로 클릭하면 Objcet.class가 나온다
+		/**
+		 * Class {@code Object} is the root of the class hierarchy.
+		 * Every class has {@code Object} as a superclass. All objects,
+		 * including arrays, implement the methods of this class.
+		 *
+		 * @see     java.lang.Class
+		 * @since   1.0
+		 */ //==>안에 나오는 객체가 클래스 체계의 근본이다 
+		//모든 다른 클래스가 다른 객체나 클래스로부터 상속을 해야만 한다는 말이다
+		//보다 시피 배열을 포함한 모든 객체는 클래스 메소드를 적용한다
+		//안에 각종 hashcode toString등 다양한 메소드들이 있다
+	}
+---------------------------------------------------------------------
+
+
+
+/*
+정리)
+지금 중요한 것은 클래스가 다른 클래스에서 아무것도 extend하지 않는다면
+디폴트 값으로 객체의 값을 확장하는 것이 자동으로 설정된다
+다음 학습에선 상속의 중요기능 메소드 오버라이딩을 알아보도록 하자
+*/
