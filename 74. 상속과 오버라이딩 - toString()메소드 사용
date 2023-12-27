@@ -1,0 +1,77 @@
+
+지난 학습에선 모든 클래스가 기본적으로 객체 클래스의 연장선임을 배웠다
+모든 클래스는 객체 클래스의 하위 클래스입니다.
+특정 사항을 명시하지 않는다면 객체 클래스를 연장하는 것이다.
+
+public class Person extends Object{
+이중 객체(Object)안을 들여다 볼 것이다.
+
+그 메소드중 toString메소드를 살펴볼 것이다.
+
+/**
+     * Returns a string representation of the object.
+     * @apiNote
+     * In general, the
+     * {@code toString} method returns a string that
+     * "textually represents" this object. The result should
+     * be a concise but informative representation that is easy for a
+     * person to read.
+     * It is recommended that all subclasses override this method.
+     * The string output is not necessarily stable over time or across
+     * JVM invocations.
+     * @implSpec
+     * The {@code toString} method for class {@code Object}
+     * returns a string consisting of the name of the class of which the
+     * object is an instance, the at-sign character `{@code @}', and
+     * the unsigned hexadecimal representation of the hash code of the
+     * object. In other words, this method returns a string equal to the
+     * value of:
+     * <blockquote>
+     * <pre>
+     * getClass().getName() + '@' + Integer.toHexString(hashCode())
+     * </pre></blockquote>
+     *
+     * @return  a string representation of the object.
+     */
+    public String toString() {
+        return getClass().getName() + "@" + Integer.toHexString(hashCode());
+    }
+
+이러한 메소드 코드 때문에 우리가 StudentRunner를 실행할 경우
+level2Inheritance.Person@49e4cb85
+level2Inheritance.Person@49e4cb85
+이런식으로 출력되는 것 이였다
+
+Person@49e4cb85 대신 Person#49e4cb85으로 출력하고 싶다
+
+그러면
+Object의 toString메소드의
+public String toString() {
+        return getClass().getName() + "@" + Integer.toHexString(hashCode());
+    }
+이부분을 복사해서 Person클래스에 넣어주고 #을 넣어주면 되겠다 원하면 해당 내용 다 지우고 필드 변수를 넣어도 가능하다
+
+출력시 
+level2Inheritance.Person#49e4cb85
+level2Inheritance.Person#49e4cb85
+@에서 #으로 바뀐것을 볼수가 있다
+
+우리는 Person클래스에 객체클래스에 의해 제공되는 적용을 덮어씌운 것이다.
+다시 Person클래스에 toString코드를 지워주면 
+
+level2Inheritance.Person@49e4cb85
+level2Inheritance.Person@49e4cb85
+다시 원래 Object클래스의 메소드가 출력이 된다.
+
+이 하위 클래스에서 상위클래스에서 제공하는 적용법을 덮어씌울 수 있다 
+상위클래스는 저거용법을 제공하는 것이고 하위클래스에서 그것을 덮어씌우고 싶다면
+같은 메소드를 하위 클래스 내에 적용 시켜 다른값을 출력하게 할 수 있다. toString메소드를 덮어 씌워 보았지?
+
+우리는 객체가 toString메소드를 가지고 있고 Person이란 클래스가 객체 클래스를 연장시키기 때문에 
+이 특정 메소드를 위한 새적용법을 만들어 덮어씌우기를 할 줄 알게 되었다
+그중 하나는 다른 클래스에서 상속을 받으면 그 클래스의 모든 특성들도 같이 상속받는다는 것이다.
+안에 있는 멤버 변수 다 포함해서 말이다 
+그리고 overriding 즉 덮어쓰기가 무엇인지 배웠다
+
+❗ 덮어쓰기(Overriding)는 너가 상위클래스에서 제공되는 적용법을 덮어 쓰고 싶을 때 사용하는 것이다 ❗
+하위 클래스 안에서 우리는 특정 메소드의 또 다른 적용법을 제공할 수 있다
