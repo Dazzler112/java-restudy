@@ -1,0 +1,248 @@
+
+저번 학습에선 상속에 대해 알아봤다 어떻게 상위 클래스에서 상속을 받는지 
+어떻게 특정 상위 클래스 메소드를 호출하는지, 어떻게 덮어씌우는지
+
+이번 단계에는 생성자와 생성자가 상위 클래스와 어떻게 상호작용하는지 알아보자
+
+
+----------------------------------------------------------------------------
+
+Person 클래스파일
+
+
+package level2Inheritance;
+
+public class Person extends Object{
+
+	private String name;
+	private String email;
+	private String phoneNumber;
+	
+	//생성자가 없으니 생성자를 생성하자
+	//Person이 생성되면 필수적으로 이름을 입력하게 만들고 싶다고 하자
+	//setName은 지우겠다 이 set을 쓰고 싶지 않기에
+	//여기서 사람은 이름을 담은 생성자를 가지게 된 것이다
+//	public Person(String name) {
+//		super();
+//		this.name = name;
+//	}
+	
+	//첫째로 개방형을 이해해보자 단순한 생성자를 만들어보자
+	//그리고 Employee에 가서 생성자를 만들어 보자 Employee 클래스파일로 ...
+//	public Person() {
+//		System.out.println("Person Constructor"); //이것을 다시 인자를 String name으로 바꿔 보자
+//	}
+	
+	public Person(String name) { //이상황에선 어떤 일이 벌어질까? Employee Student에 컴파일 오류가 있던것을 봤지? //Eployee클래스로..
+		System.out.println("Person Constructor");
+		this.name = name;
+	}
+	public Person () { //이렇게 하면 두클래스의 컴파일 오류들이 사라졌다 //하지만 이름(name)없이 Person클래스가 만들어지는 것을 방지하고 싶다
+					   //그렇다면 할 일은 Student클래스나 Employee클래스 만들 때 이름을 필수로 하게 하는것이다.. Employee로...
+		System.out.println("Person Constructor");
+	}	
+	
+	public String getName() {
+		return name;
+	}
+//	public void setName(String name) { //setName은 사용하지 않겠다
+//		this.name = name;
+//	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	 public String toString() { 
+		return name + "#" + email + "#" + phoneNumber; 
+	}
+}
+
+
+----------------------------------------------------------------------------
+
+
+
+----------------------------------------------------------------------------
+
+Employee 클래스 파일
+
+
+package level2Inheritance;
+
+import java.math.*;
+
+public class Employee extends Person{
+            // ㄴ> 여기서 컴파일 에러가 발생하는 이유는 함축적인 상위 생성자 Person()이 기본 생성자로 정의되어 있지 않아서임
+	private String title;
+	private String employer;
+	private char employeeGrade;
+	private BigDecimal slary;
+	
+	//간단하게 Employee 생성자를 생성 그리고 이걸 StudentRunner에 실행시켜 보자
+	//지금 당장 이해하긴 힘들수도 있다 
+	//왜 Person 생성자 먼저 출력되고 그다음 Employee 생성자가 출력되는지 
+	//이것의 작동방식은, Employee생성자를 호출하자마자 여기서 Employee생성자를 부른다 
+	//그러면 Employee생성자는 함축적으로 super를 호출하게 된다.
+	//해서 생성자 부르자 마자 super메소드 호출이 함축적으로 이루어진다는 것이다
+//	public Employee() {
+//		//super();   <== super을 호출하게됨.. //직접호출하면 상관없다 하지만 직접하지 않으면 자바컴파일러는 자동으로 이 상위 클래스를 추가하게 된다 그래서, 상위 클래스 생성자가 호출됨 자동으로
+//		         //꼭 기억하자 하위 클래스에서 생성자를 만들 때 마다 첫번째 줄에는 자동으로 상위 생성자가 발동되는 것을 
+//		         //이것이 가장먼저 Person 생성자가 보이는 이유다 , 호출이 Employee에 오고 super메소드가 호출되고 그다음 Employee생성자가 출력된다
+//				 //이게 우리가 출력값에서 볼수있는 것이다, Person 생성자와 Employee 생성자가 출력되는 것이
+//		         //❗ 언제나 하위 클래스에서 객체를 만들 때 상위 클래스생성자는 자동으로 내가 호출하지 않아도 호출되는 것이다 super()을 안적어도 말이다 ❗ 다시 Person클래스로....
+//		System.out.println("Employee Constructor");
+//	}
+	
+//	public Employee() {//Employee 생성자에 오류가 발생헀는대 내용은 함축적 상위 생성자가 정의되지 않았다고 나온다
+//		         //그 말은 내가 super을 호출하려고 하는대 여기엔 아무것도 없다는 뜻이다
+//		         //그래서 할 수 있는 것들 중 하나는 Person을 개방형으로 만들고 기본 생성자를 만들어 주는 일이다 Person클래스로....
+//		System.out.println("Employee Constructor");
+//	}
+	
+	public Employee (String name, String title) { //이름을 필수로 //언제든 누군가 고용자를 만들때 이름,직책이 필수가 되게끔 만들게 하고 싶으니
+									//또다른 문제 발생 문자열 이름 만듬에도 불구하고 함축적 상위클래스 Person이 정의되지 않았다 뜸 ! 무조건 직접적으로 다른 생성자를 호출해야 한다 !
+		super(name);// 우리가 할 수 있는 것은 여기에 super(name); //상위클래스 생성자를 이름과 함께 부를수 있다
+		this.title = title;               //이제 Student 클래스로 가서 비슷한 것을 하자 Student로....
+		System.out.println("Employee Constructor");
+	}
+	
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getEmployer() {
+		return employer;
+	}
+
+	public void setEmployer(String employer) {
+		this.employer = employer;
+	}
+
+	public char getEmployeeGrade() {
+		return employeeGrade;
+	}
+
+	public void setEmployeeGrade(char employeeGrade) {
+		this.employeeGrade = employeeGrade;
+	}
+
+	public BigDecimal getSlary() {
+		return slary;
+	}
+
+	public void setSlary(BigDecimal slary) {
+		this.slary = slary;
+	}
+
+
+	public String toString() { 
+		return super.toString() + "#" + title + "#" + employer + "#" + employeeGrade + "#" + slary + "#";
+	}
+}
+
+----------------------------------------------------------------------------
+
+
+
+----------------------------------------------------------------------------
+
+Student 클래스 파일
+
+
+package level2Inheritance;
+
+public class Student extends Person{             
+	            //ㄴ> 이것도 컴파일 에러가 발생하고 있다 무슨일이 생기고 있는것일까? Person의 생성자를 지우면 컴파일에러가 사라지지만 
+			        //생성자를 다시 추가하면 컴파일 에러가 나온다 이 오류는 어디서 생기고 있는 것일까? 다시 Person 클래스로...
+	private String collegeName;
+	private int year;
+	
+	public Student(String name ,String collegeName) { //함축적 생성자 오류 나오니 생성자 지정해줘야 함(Person 정의하지 않아 Person을 호출할수 없다)
+		super(name);
+		this.collegeName = collegeName; //이제 StudentRunner로....
+	}
+	
+	public String getCollegeName() {
+		return collegeName;
+	}
+	public void setCollegeName(String collegeName) {
+		this.collegeName = collegeName;
+	}
+	public int getYear() {
+		return year;
+	}
+	public void setYear(int year) {
+		this.year = year;
+	}
+	
+}
+
+
+----------------------------------------------------------------------------
+
+
+
+----------------------------------------------------------------------------
+
+StudentRunner 클래스 파일
+
+
+package level2Inheritance;
+
+public class StudentRunner {
+
+	public static void main(String[] args) {
+		
+//		Student student = new Student();
+//		student.setName("Ranga");   
+//		student.setEmail("in28minutes@gmail.com");
+		
+		
+		//그리고 Employee클래스를 만들자
+		Employee employee = new Employee("Ranga" , "Programmer Analyst");  //이제 이름과 직책을 줘야한다 그리고 실행
+		//보다 시피 Person 생성자가 먼저 출력되고 그다음 Employee생성자 출력 그 이후 나머지 상세정보들이 나온다 
+//		employee.setName("Ranga");
+		employee.setEmail("ranga@in28minutes.com");
+		employee.setPhoneNumber("123-456-7890");
+		employee.setEmployeeGrade('A');
+		employee.setTitle("Programmer Analyst");
+//		employee.setEmployer(null);
+//		employee.setSlary(null);
+		System.out.println(employee);
+	}
+}
+
+----------------------------------------------------------------------------
+
+/*
+코드리뷰)
+중요한 점은 만약 아무 생성자도 제공하지 않으면 함축적으로 상위 클래스에서 인수 생성자가 호출되지 않는다는 것이다.
+그래서 인수가 없는 Person 생성자가 있다면 그것이 Student와 Employee에서 호출되는 것이다 만약 Student와 Employee 클래스들이 생성자가 없다면 
+직접적으로 생성자를 인수와 함께 상위클래스에서 제공을 한다면 이생성자를 양쪽 하위 클래스에서 호출해줘야 한다
+여기서 우리가 한 것은 super(name);을 이용해 호출했다
+또한 직접 super(name);을 호출하지 않는다면, 첫번째 줄은 super란 것으로 불리는것을 보았다
+그리고 발생한 상황에선 컴파일 오류가 발생한다 왜냐하면 거기에는 기본생성자가 Person클래스 안에 없기 때문이다
+컴파일 하게 하려면 super(name);을 호출해야한다
+*/
+
+
+
+/*
+정리)
+요약하면 너가 기억해야할 제일 중요한것은 하위 클래스 생성자는
+상위 생성자가 무조건 정의되어야 한다는 점이다
+그것은 해본 것처럼 직접적일수도 아니면 이것을 지운다면 함축적일수도 있다
+*/
