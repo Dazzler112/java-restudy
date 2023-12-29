@@ -1,0 +1,165 @@
+
+Animal과 Pet이란 클래스를 만들어보자
+둘사이엔 어떠한 관계도 없다
+jshell> class Animal {
+   ...> }
+|  created class Animal
+
+jshell> class Pet{
+   ...> }
+|  created class Pet
+
+
+그렇다면 Dog란 클래스를 만들어서 Animal과 Pet을 연장하려고 하면 자바에선 이것이 가능 할까?
+jshell> class Dog extends Animal , Pet {
+   ...> }
+|  Error:
+|  '{' expected
+|  class Dog extends Animal , Pet {
+|                          ^
+
+C++ 에서는 허용이 되지만 자바에선 허용되지 않는다 왜냐하면 자바에서는, 다중 상속은 지원되지 않기 때문이다
+
+어떤 사람들은 두 인터페이스를 연장함으로써 다중상속이 가능하다 하지만 이것을 진짜 다중상속이라 치고싶지 않다
+(해당 내용은 나중에 인터페이스에 대해 다룰때 이것에 대해 자세히 알아보자)
+
+하지만 지금 당장 두클래스를 동시에 연장시킬 수 없는것을 보고있다
+
+다중상속은 여러 복잡함을 갖고 와 C++ 프로그래밍을 조금 더 어렵게 만든다
+그게 자바는 다중상속을 허용치 않기로 결정한 이유이다
+
+하지만! 연관 관계의 연속을 가질 수는 있다
+그래서 하고자 하는 것은 Animal 클래스를 재정의 한다고 해보자
+jshell> class Animal {
+   ...> }
+|  modified class Animal
+
+이제 Pet클래스가 Animal을 연장시킨다고 하자 
+
+jshell> class Pet extends Animal{
+   ...>     public void groom() {
+   ...>         System.out.println("Gromm"); //털정리 ^_^;
+   ...>     }
+   ...> }
+|  replaced class Pet
+
+이제 Pet클래스가 있고 Animal클래스도 있고 
+
+jshell> class Dog extends Pet{
+   ...> }
+|  created class Dog
+
+Dog클래스는 Pet을 연장한다
+이렇게, Pet클래스는 Animal 클래스를 연장한다
+
+너가 갖고 있는 것은 Animal 클래스다 Pet은 Animal을 연장시켜 주고, Dog는 Pet을 연장시켜준다
+
+
+이제 Dog의 인스턴스를 생성하여 주자
+jshell> Dog dog = new Dog();
+dog ==> Dog@108c4c35
+
+어떤 일이 일어날까? 이 생성자가 호출되고 그다음 Pet클래스 생성자가 호출되고
+그다음 Animal 클래스 생성자가 호출되겠지 그리고 다음에는 무엇이 호출될까?
+맞다, 객체 클래스의 생성자가 호출된다 왜냐하면 이건 객체 클래스를 연장하기 때문이다
+너가 성립시킨 것은 상속 계층이란 것이다.
+Dog는 Pet을 연장하고, Pet은 Animal을 연장하고, Animal은 객체를 연장한다
+이것은 상속 계층의 한 종류이다
+
+그래서! 자바에선 상속 계층은 있을수 있지만 다중 상속은 있을 수 없다.
+
+그리고 dog.toString()이라 적으면 무엇이 출력될까? 호출되는 메소드는 객체 클래스에 있다
+
+jshell> dog.toString();
+$8 ==> "Dog@108c4c35"
+dog가 어떻게 toString() 메소드까지 접근할까?
+왜냐하면 Dog는 Pet을 상속하고 Pet은 Animal에서 상속받고 Animal은 객체 클래스에서 상속받고 객체 클래스는
+toString() 메소드를 갖고 있기 때문에 dog도 toString() 메소드를 가질 수 있는 것이다.
+
+또 dog는 groom메소드를 호출할 수도 있다 
+jshell> dog.groom();
+Gromm
+
+groom에 어떻게 접근하는 걸까?
+왜냐 하면 Dog는 Pet을 연장하고 Pet에서 groom메소드가 정의되기 때문이다
+
+재미있는 것은 하위 클래스 변수를 담을수 있는 상위 클래스 참조 변수를 만들수 있다는 것이다.
+
+즉 Pet pet = new Dog()라고 할수 있다, 이건 허용이 된다
+Pet pet = new Dog();에서 new Dog()이것은 하위 클래스고 Pet pet 상위클래스 참조 변수에 존재할 수 있다.
+jshell> Pet pet = new Dog();
+pet ==> Dog@3d71d552
+
+그리고 pet.groom()이라 할수 있다
+jshell> pet.groom();
+Gromm
+이러면 Groom을 출력한다 
+
+하지만 그 반대는 허용되지 않는다.
+jshell> Dog dog = new Pet();
+|  Error:
+|  incompatible types: Pet cannot be converted to Dog
+|  Dog dog = new Pet();
+|            ^-------^
+
+보자 호환되지 않는 종류라고 표시됨
+Pet은 Dog로 변환될 수 없다고 나옴 그래도 상위클래스에서 하위 클래스 변수를 참조할 수 있다.
+Pet은 상위클래스고 dog는 하위클래스라 상위 클래스 변수에서 하위 클래스 변수를 잡을 수 있다.
+
+마지막으로 말하고 싶은 중요한 것은 of.Instanceof 이다
+만약 pet instanceof Pet이라 하면 사실이라 나온다.
+
+jshell> pet instanceof Pet
+$12 ==> true
+
+pet instace of Dog도 사실이라 나온다 
+jshell> pet instanceof Dog
+$13 ==> true
+
+이것으로 현재 객체가 상위클래스의 인슨턴스인지 확인할 수 있다. 맞다면 사실임을 되돌려준다.
+
+그래서 pet instanceof String 하면 오류가 나온다 문자열로 변환될 수 없기 때문이다.
+jshell> pet instanceof String
+|  Error:
+|  incompatible types: Pet cannot be converted to java.lang.String
+|  pet instanceof String
+|  ^-^
+
+pet instanceof Animal도 사실이라 나오고 
+jshell> pet instanceof Animal
+$15 ==> true
+
+pet instanceof Object도 true
+jshell> pet instanceof Object
+$14 ==> true
+
+그래서 instanceof는 현재 객체가 특정 클래스의 인스턴스인지 알 수 있게 해준다.
+
+한번 Animal 클래스의 인스턴스를 만들어 보자
+jshell> Animal animal = new Animal();
+animal ==> Animal@573fd745
+
+전의 예시에선 pet을 새로운 dog로 만들어 냈었다 실제로 Dog는 인스턴스였고 pet instanceof Dog가 사실이라 출력된 것이다.
+
+여기선 Animal animal = new Animal()을 만들었다
+animal은 과연 pet의 인스턴스일까?
+jshell> animal instanceof Pet;
+$17 ==> false
+거짓을 출력한다, Animal클래스는 상위 클래스니까
+
+상위클래스 변수는 하위 클래스의 인스턴스가 아니고 animal instanceof Dog; 에서도 같은 상황이다.
+jshell> animal instanceof Dog;
+$18 ==> false
+거짓출력
+
+하지만 animal은 객체 클래스의 오브젝트이므로 참으로 나온다.
+jshell> animal instanceof Object;
+$19 ==> true
+
+
+
+/*
+정리)
+이렇게 해서 instanceof연산자를 이용할 수 있다
+이 학습에선 상속에 관한 몇가지 수수께끼들에 대해 알아봤다
+*/
