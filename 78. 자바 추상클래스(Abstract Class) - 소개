@@ -1,0 +1,117 @@
+
+이번 학습에선 추상 클래스라는 아주 중효한 개념을 시작해 보겠다
+이 단계에서는 추상 클래스의 제한들에 대해 이해해 볼 것이다.
+다음 단계는 추상 클래스가 보통 어디에 사용되는지 이야기해 볼 것이다.
+
+보통 클래스를 만들 때에는
+jshell> class Animal {
+   ...>     public void bark() {
+   ...>  System.out.println("Test");
+   ...>     }
+   ...> }
+|  modified class Animal
+사용하고 싶은 모든 메소드들의 적용법을 제공해야 겠지?
+여기서 Animal 클래스와 그 bark 메소드를 만들었다.
+
+인스턴스와 animal.bark()를 생성하여 Test를 출력한다
+jshell> Animal animal = new Animal();
+animal ==> Animal@bebdb06
+
+jshell> animal.bark();
+Test
+
+이것이 지금까지 계속 해왔던 것이다
+모든 클래스마다 새로운 메소드를 만들때 마다 특정 메소드의 적용법을 제공했다
+
+클래스는 몇 개의 메소드에 대한 적용법을 굳이 특정하지 않아도 되게 해 주는 기능이 있다
+
+내가 AbstractAnimal 클래스르 호출했다고 하자 
+|  Error:
+|  missing method body, or declare abstract
+|      public void bark();
+|      ^-----------------^
+
+여기서 메소드를 선언할 뿐 적용법을 제공하고있지 않는다
+뭐라고 나왔냐? 메소드 몸체가 없다고 한다
+
+이제 추상을 선언해 보자
+계속 나아가서 이것을 추상으로 선언해 보자
+여기서 할 수 있는 것은 abstract public void bark라는 키워드를 넣고 세미콜론과 그다음 엔터를 누르는것이다.
+jshell> class AbstractAnimal{
+   ...>    abstract public void bark();
+   ...> }
+|  Error:
+|  AbstractAnimal is not abstract and does not override abstract method bark() in AbstractAnimal
+|  class AbstractAnimal{
+|  ^--------------------...
+또 다른 오류가 나타나는걸 볼 수 있을 것이다.
+AbstractAnimal이 추상적이지 않다고 말하는 것이다.
+추상적 메소드를 적의하려 하지만 추상클래스가 존재하지 않는다 라고 읽을수 있겠다
+
+우리가 추상 클래스를 정의하는 방법은 이것이다
+클래스 앞에 Abstract와 AbstractAnimal이라는 키워드를 넣고 public void bark()를 넣음으로써
+메소드를 추상적이라 정의할 수 있다.
+jshell> abstract class AbstractAnimal {
+   ...>     abstract public void bark();
+   ...> }
+|  created class AbstractAnimal
+
+우리는 Animal이라는 추상 클래스와 그에 들어가는 bark() 메소드를 만들었지만
+bark()메소드 적용법을 제공하고 있지 않다.
+그럼 누가 bark()메소드의 적용법을 제공할까?
+하위 클래스들이다.
+AbstractAnimal을 연장하는 Dog클래스를 원한다 치고
+이제 정의를 여기에 담도록 하자
+jshell> class Dog extends AbstractAnimal {
+   ...> }
+|  Error:
+|  Dog is not abstract and does not override abstract method bark() in AbstractAnimal
+|  class Dog extends AbstractAnimal {
+|  ^---------------------------------...
+추상적이지 않고 추상적 메소드를 덮어씌우지도 않으니 생성을 허용하지 않을 것이다.
+
+어떤 클래스가 추상적 클래스를 연장하고 싶으면 우리는 추상적 메소드에 대한 적용법을 제공해야 한다.
+이제 public void bark() 그리고 간단한 적용례를 제공해보자
+jshell> class Dog extends AbstractAnimal {
+   ...> public void bark(){
+   ...>         System.out.println("Bow Bow");
+   ...>     }
+   ...> }
+|  created class Dog
+클래스가 무엇을 하는 중일까?
+추상 클래스를 연장해서 bark()메소드에 적용법을 제공하는 것이다.
+Dog 클래스는 AbstractAnimal을 연장하고 bark를 위한 적용법을 제공한다.
+이제 할 수 있는건 Dog 클래스의 인스턴스를 만들수 있는 것이다
+jshell> Dog dog = new Dog();
+dog ==> Dog@6d21714c
+그다음 dog.bark() 호출은 허용할까?
+jshell> dog.bark();
+Bow Bow
+맞다, 출력되는걸 봐라 하지만 클래스를 위해서 인스턴스를 만들 수는 없다.
+jshell> AbstractAnimal animal = new AbstractAnimal();
+|  Error:
+|  AbstractAnimal is abstract; cannot be instantiated
+|  AbstractAnimal animal = new AbstractAnimal();
+|                          ^------------------^
+AbstractAnimal animal = new AbstractAnimal();은 허용되지 않는거다
+추상클래스의 인스턴스는 만들어질 수 없다.
+
+/*
+정리)
+추상 클래스를 정의하는 방법은 abstract라는 키워드로 시작함으로써
+추상 메소드들을 추상 클래스에 넣게 되는거다.
+추상 메소드는 정의도 없고 형태도 없는 메소드를 말한다.
+그들은 그들이 무엇을 하는지 말하지 않는다.
+그저 정의만 가지고 있을 뿐이다
+그들은 너가 호출할 수 있는 문법을 갖고 있다.
+그게 전부다 
+우리가 깨달은 건 추상클래스의 경우 인스턴스를 만들 수 었다는 것이다
+하지만, 우리는 추상크래스를 연장해 구상 클래스를 만든다 
+이건 abstract라는 키워드를 갖고 있기 때문에 추상클래스인 것이다
+구상클래스가 추상 클래스를 연장하려면
+모든 추상 메소드에 대한 적용법을 제공해야 한다 
+그리고 구상클래스의 인스턴스를 통해 우리가 메소드들을 호출할 수 있는것을 보았다
+하지만 너의 마음속에는 질문이 한 가지 남아 있을것이다.
+추상클래스를 써야 할까?
+다음 학습에 알아보자
+*/
