@@ -1,0 +1,88 @@
+
+먼저 추상 메소드가 들어 있지 않은 AbstractTest란 추상 클래스를 만들어보자
+jshell> abstract class AbstractTest {
+   ...> }
+이건 허용이 될까?
+jshell> abstract class AbstractTest {
+   ...> }
+|  created class AbstractTest
+문법적으로는 허용이 된다.
+추상 메소드가 없어도 추상 클래스를 만들 수 있다.
+문법적으론 가능하지만 굳이 이렇게 해야하는지는 모르겠다
+이것이 추상메소드 없는 추상 클래스이다.
+
+또 다른 수수께끼를 봐보자
+
+매우 단순한 추상클래스를 만들어 보자
+jshell> abstract class AbstractAlgorithm {
+   ...>     abstract void steps();
+   ...> }
+|  created class AbstractAlgorithm
+이 방식이 우리가 추상 클래스를 만드는 방식이다
+이자체는 수수께끼가 아니고 
+
+진짜 수수께끼는, 만약 Algoritm1 클래스가 AbstractAlgorithm을 연장시킨다 하고 
+jshell> class Algorithm1 extends AbstractAlgorithm{
+   ...> }
+괄호를 닫으면 무슨일이 일어날까? 엔터를 누르면 결과가 어떻게 나올까?
+
+jshell> class Algorithm1 extends AbstractAlgorithm{
+   ...> }
+|  Error:
+|  Algorithm1 is not abstract and does not override abstract method steps() in AbstractAlgorithm
+|  class Algorithm1 extends AbstractAlgorithm{
+|  ^------------------------------------------...
+여기서 말하길 추상적이거나 단계를 적용해야한다 그래서
+void steps() 를 위한 적용법을 제공하거나 이것이 추상적이어야 겠지?
+
+그럼 어떻게 이 클래스를 추상으로 만들까?
+
+클래스를 추상으로 만드려면 이것도 추상으로 만들어야 한다.
+
+jshell> abstract class Algorithm1 extends AbstractAlgorithm{
+   ...> }
+|  created class Algorithm1
+그러니 추상 클래스를 만들면서 자기 자신도 추상적일수 있다.
+
+해야할 일은 시작에 추상을 더하면 되는 것이다.
+그렇게 추상클래스는 다른 추상 클래스를 연장할 수 있다.
+
+그리고 만약 어떤 추상 클래스가 다른 추상클래스를 연장한다면 
+그것은 그 추상 클래스에 들어있는 추상메소드들을 위한 적용법을 제공할 필요가 없다.
+
+이제 이 AbstractAlgorithm을 가지고 무엇을 해보자 폐쇄형 변수를 저장하려 한다
+jshell> abstract class AbstractAlgorithm {
+   ...>     private int stepCount;
+   ...> }
+이것은 허용될까? 생각해 보자 과연 추상 클래스는 그 안에 멤버 변수가 정의될 수 있을까?
+jshell> abstract class AbstractAlgorithm {
+   ...>     private int stepCount;
+   ...> }
+|  replaced class AbstractAlgorithm
+맞다, 추상클래스는 정의된 변수들을 가질 수 있고 
+또한 구상적으로 정의된 메소드들고 가질 수 있다.
+그래서 이렇게 폐쇄형이나 개방형 정수 getStepCout()도 가질수 있다.
+jshell> abstract class AbstractAlgorithm {
+   ...>     private int stepCount;
+   ...>     public int getStepCount() {
+   ...>         return stepCount(); //이 stepCount 값을 출력할 수 있다는 뜻임
+   ...>     }
+   ...> }
+|  replaced class AbstractAlgorithm, however, it cannot be instantiated or its methods invoked until method stepCount() is declared
+이것도 허용이 되는 것이다, 너는 
+비추상적 메소드들을 추상클래스 안에 가질수 있다는 것이다 전에 했던 AbstractRecipe를 할 때도 보았던 것이다.
+excute() 메소드는 비추상적 메소드다 왜냐하면 구상적 적용법이 있기 때문이다
+/*
+public void excute() {
+  getReady();
+  doTheDish();
+  cleanup();
+}
+
+abstract void getReady();
+abstract void doTheDish();
+abstract void cleanup();
+//이 세 메소드들은 추상적이었다.. 적용법이 없었기 때문
+*/
+
+여기까지가 추상클래스에 대한 몇가지 중요한 수수께끼들이었다
