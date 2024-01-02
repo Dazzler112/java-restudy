@@ -1,0 +1,151 @@
+
+저번 학습에선 인터페이스의 한 예시를 보았다 
+GamingConsole과 그의 인터페이스를 보았고
+MarioGame과 ChessGame 두가지 구현을 만들어냈다
+
+이번 학습에선 인터페이스의 또다른 예시를 보자
+
+어떤 프로젝트가 있다 하자 그 프로젝트는 다른 팀에게 코딩의 복잡한 부분을 외주하고 싶다.
+
+int complexAlgorithm (int number1, int number2);
+이 복잡한 알고리즘은 이런 종류라고 하자
+숫자를 입력값으로 받아들인다고 두숫자를 받아들여 정수를 출력값으로 돌려준다고 하자
+이걸 그들이 어떻게 할 수 있을까?
+
+어떻게 프로젝트가 복잡한 알고리즘은 외주를 주면서도 자신의 코드에 작업을할 수 있을까?
+우리가 할 수 있는건 그 복잡한 알고리즘을 인터페이스로 만드는 것이다,
+그럼 시~~작 해보자
+
+
+
+
+---------------------------------------------------------------------
+
+ComplexAlgorithm 인터페이스
+
+
+package interfaceTraining;
+
+public interface ComplexAlgorithm {
+	
+	//아까 지문의 메소드를 정의해보자
+	int complexAlgorithm (int number1, int number2);
+	//Project클래스로..
+	
+	//ComplexAlgorithm의 진짜 구현이 없으니 모조 구현을 생성할 것이다.
+	//이 ComplexAlgorithm을 말이다 그들은 이제 나아가서 DummyAlgorithm을 생성하고 //DummyAlgorithm클래스파일로...
+
+	//그래서, 양쪽 시스템들은 이런 메소드가 있을 것이고(int number1, int number2) 저런 인터페이스가 있을 것이고 외주 팀이 이것의 진짜 구현을 제공할 거라는 사실을 받아들이는 것이다.
+	//외주 팀이 진짜 구현을 제공하면 어떤 일이 벌어질까? DummyAlgorithm을 복사하고 붙여넣어 RealAlgorithm이라 생성해주자 
+	//시간이 얼마 지난 후 그팀이 RealAlgorithm을 개발한다 치자 //RealAlgorithm 클래스 파일로..
+}
+
+---------------------------------------------------------------------
+
+
+
+
+
+---------------------------------------------------------------------
+
+DummyAlgorithm 클래스파일
+
+
+package interfaceTraining;
+
+//DummyAlgorithm은 ComplexAlgorithm을 구현한다고 할거라 했지?
+public class DummyAlgorithm implements ComplexAlgorithm{
+
+	//컴파일 오류 나오면 미구현된 메소드들을 추가해주자 ctrl+1 or cmd + 1
+	@Override
+	public int complexAlgorithm(int number1, int number2) {
+		//그리고 DummyAlgorithm은 이것들을 더한다고 하자
+		return number1 + number2; 
+		//num1 num2를 더한다고 하고 세부정보를 돌려받는 것이다
+		//이제 ComplexAlgorithm과 Project가 할 수있는 것은 //Project클래스로..
+	}
+	
+}
+
+---------------------------------------------------------------------
+
+
+
+
+
+---------------------------------------------------------------------
+
+RealAlgorithm 클래스 파일
+
+
+package interfaceTraining;
+
+
+public class RealAlgorithm implements ComplexAlgorithm{
+
+	@Override
+	public int complexAlgorithm(int number1, int number2) {
+		
+		return number1 * number2;
+	}
+	
+}
+
+---------------------------------------------------------------------
+
+
+
+
+
+---------------------------------------------------------------------
+
+
+Project 클래스파일
+
+package interfaceTraining;
+
+public class Project {
+
+	//이들은 ComplexAlgorithm을 사용하고 싶겠지?
+			//그래서 그들이 할 수 있는것은 모조 알고리즘을 만들 수 있다, 그렇게 그들은 이 인터페이스의 모조(int complexAlgorithm (int number1, int number2);) 구현을 생성하는 것이다. //ComplexAlgorithm 인터페이스로..
+	public static void main(String[] args) {
+		//DummyAlgorithm을 알고리즘으로 사용할 수 있다, 이제 작업을 할 수가 있는 것이다.
+		//이제 여기에
+//		ComplexAlgorithm algorithm= new DummyAlgorithm();
+		//그럼 이것은 DummyAlgorithm으로 처음에 작업을 하고 
+//		System.out.println(algorithm.complexAlgorithm(10, 20));//이라 할 수 있다
+		//그래서 Project코드를 통해 이런 일이 가능하다 알고리즘을 가지고 계속 작업하는 것이다.
+		//사용 중이 출력된다, Project는 무엇을 하고 있는 것일까? DummyAlgorithm을 이용하고 있고 계속 작업이 가능하다는 말이다
+		//그래서, 이 DummyAlgorithm을 이용해 코드를 짤 수 있다.
+		//이것이 가능한건 이 두시스템 사이의 통신을 정의하는 인터페이스가 있기 때문이다 //ComplexAlgorithm인터페이스로..
+		
+		//이제 프로젝트가 해야할 것은 그저 DummyAlgorithm에서 RealAlgorithm으로 전환하는 것 뿐이다.
+		ComplexAlgorithm algorithm = new RealAlgorithm(); //그러면 프로젝트는 계속 RealAlgorithm을 이용할 수 있다.
+		//그러면 프로젝트는 계속 RealAlgorithm을 사용할 수 있는 것이다.
+		System.out.println(algorithm.complexAlgorithm(10, 20));
+		//출력==>200
+	
+	}
+
+}
+
+---------------------------------------------------------------------
+
+
+
+
+
+
+/*
+
+정리)
+인터페이스는 두 프로젝트 간의 소통 방식을 제공하기도 한다
+그래서 너는 인터페이스를 정의하고 메소드가 어떻지를 정의하고, 메소드 호출을 정의하고
+외주 팀이 나중에 구현을 제공할 수 있고, 그리고 프로젝트는 계속 그 특정한 것의 모조 구현을 가지고 작업할 수 있는것이다.
+인터페이스는 너가 외부 인터페이스가 실제로 사용 가능하지 않아도 작업을 계속할 수 있게 해준다
+인터페이스를 정의하고 모조 구현을 제공하는 순간 너는 진짜 구현이 없어도 그걸 사용할 수 있는 것이다
+너가 인터페이스에 대해 생각할 수 있는 방법은 소통하는 두 클래스간의 통신계약을 이뤄내는 것이다(Interface is a Contract)
+그래서, 특정 클래스가 확실히 구현할 메소드들이 무엇인지, 그리고 시스템 안의 모든 다른 클래스들은
+그 특정 클래스가 모든 메소드들을 담을 것을 기대할 수 있다.
+
+*/
