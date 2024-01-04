@@ -1,0 +1,83 @@
+
+예시로 전에 했던 GameRunenr클래스를 보겠다
+
+
+예시)----------------------------------------------------------------------------------------
+
+package interfaceTraining;
+
+public class GameRunner{
+//간단한 배열을 만들자 예시를 먼저 이야기하고 다형성이 도대체 무엇인지에 관해 이야기해보도록 하자
+
+	public static void main(String[] args) {
+    //배열을 만들자 GamingConsole의 배열을 만들것이다. Mario와 Chess를 만들자
+    GamingConsole[] games = {new MarioGame(), new ChessGame()};
+    for(GamingConsole game : games) {
+      		game.up();
+      		game.down();
+      		game.left();
+      		game.right();
+    }
+    이걸 실행하면 어떤 것을 보게 될까?
+    /* => 출력
+      Jump
+      Goes into a hole
+      Go forward
+      Move piece up
+      Move piece down
+      Move piece left
+      Move piece right
+    */
+    우리가 여기서 하는 것은 같은 코드의 조각을 가지고, 같은 코드의 조각을 두 다른 클래스에서 실행하는 것이다.
+    우리는 실행되는 코드를 바꾸지 않았다.
+    실행되는 코드는 같은데 단지 우리가 두 다른 게임에서 호출할 때 두 다른 클래스(MarioGame(), ChessGame())에서 코드를 호출하는 것이다
+	}
+}
+---------------------------------------------------------------------------------------------
+
+
+같은 코드가 두 다른 행동방식을 가지는데, 그건 MarioGame()을 사용하냐 아니면 ChessGame()을 사용하냐에 따라 달렸다
+이것이 다형성이라 불리우는 것이다
+
+신경써야할 점은, 다형성은 ❗인터페이스❗에 적용되는 만큼 ❗상속❗ 개념에도 적용된다는 것이다.
+
+
+상속 예시를 하나 만들어보도록 하자 (전에 만들기로 했던 Animal)
+
+예시)----------------------------------------------------------------------------------------
+
+package interfaceNAbstractClassTraining;
+//직접적으로 이 안에 클래스를 넣어줄 것임
+
+abstract class Animal {
+	abstract void bark(); 
+}
+
+class Dog extends Animal{
+
+	@Override
+	void bark() {
+		System.out.println("Bow Bow");
+	}
+	
+}
+
+class Cat extends Animal {
+
+	@Override
+	void bark() {
+		System.out.println("Meow Meow");
+	}
+}
+
+public class AnimalRunner {
+	public static void main(String[] args) {
+		Animal[] animals = {new Cat(), new Dog()};
+		
+		for(Animal Object : animals) {
+			Object.bark();
+		}
+	}
+}
+
+---------------------------------------------------------------------------------------------
