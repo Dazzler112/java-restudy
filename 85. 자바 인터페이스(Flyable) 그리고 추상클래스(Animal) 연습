@@ -1,0 +1,119 @@
+
+인터페이스와 추상 클래스의 차이점을 알아봤으니 간단한 예제를 보자
+
+
+Interface 지문
+
+interface Flyable
+
+void fly();
+Bird "with wings"
+Aeroplane "with fuel"
+Flyable[] flyingObjects = {new Bird(), new Aeroplane()};
+Loop and invoke fly method
+
+
+Abstract Class 지문
+
+abstract class Animal
+
+void bark()
+Dog "Bow Bow"
+Cat "Meow Meow"
+Animal[] animals = {new Cat(), new Dog()};
+Loop and invoke bark method
+
+
+
+--------------------------------------------------------------------
+
+FlyableRunner 클래스파일
+
+
+package interfaceNAbstractClassTraining;
+//이번에는 몇개의 내부 클래스들을 사용하기 시작할 것이다.
+
+interface Flyable {
+	void fly();
+}
+
+class Bird implements Flyable {
+
+	@Override
+	public void fly() {
+		System.out.println("with wings");
+	}
+	
+}
+class Aeroplane implements Flyable {
+
+	@Override
+	public void fly() {
+		System.out.println("with fuel");
+	}
+	
+}
+public class FlyableRunner {
+	public static void main(String[] args) {
+		//여기 안에 배열을 사용하겠다
+		Flyable[] flyingObjects = {new Bird(), new Aeroplane()};
+		//지문대로 루프를 돌려서 출력하기로 했지?
+		for(Flyable Object :flyingObjects) {
+			Object.fly();
+			/*
+			 =>출력이 잘 된다
+			 with wings
+			 with fuel
+			 */
+		}
+	}
+}
+
+--------------------------------------------------------------------
+/*
+첫째로 fly메소드가 Bird에 호출된다 그래서, "with wings"를 출력한다 그리고 지금
+두번째로 출력할때는 Aeroplane의 "with fuel"이 출력된다
+여기서 우리가 하는 것은 인터페이스를 이용해 전혀 다른 두 가지의 공통된 메소드를 대표하는 것이다.
+이것이 정확히 인터페이스가 하는 일이다 인터페이스는 수행가능한 공통된 행동들을 대표한다
+*/
+
+
+/*
+개념상으론 void bark()라는 추상 메소드를 만들고 이 추상 클래스의 두가지 다른 구현을 만들고 싶었음
+해답은 다형성 설명할때 같이 해보겠다
+*/
+
+나의해답-------------------------------------------------------------------------------------------
+package interfaceNAbstractClassTraining;
+
+abstract class Animal {
+	abstract void bark(); //개념상으론 void bark()라는 추상 메소드를 만들고 이 추상 클래스의 두가지 다른 구현을 만들고 싶었음
+}
+
+class Dog extends Animal{
+
+	@Override
+	void bark() {
+		System.out.println("Bow Bow");
+	}
+	
+}
+
+class Cat extends Animal {
+
+	@Override
+	void bark() {
+		System.out.println("Meow Meow");
+	}
+}
+
+public class AnimalRunner {
+	public static void main(String[] args) {
+		Animal[] animals = {new Cat(), new Dog()};
+		
+		for(Animal Object : animals) {
+			Object.bark();
+		}
+	}
+}
+--------------------------------------------------------------------------------------------------
