@@ -1,0 +1,63 @@
+
+이번 학습은, ArrayList를 반복하는 여러가지 다른 방법들에 대해 알아보자
+
+jshell> List<String> words = List.of("Apple","Bat","Cat");
+words ==> [Apple, Bat, Cat]
+
+이 ArrayList를 루프해서 안에 존재하는 모든 값들을 출력하고 싶다면 어떻게 해야 할까?
+이것이 이번 학습의 요지이다
+
+방법중 하나는, 루프에겐 일반적으로, 우리는 ArrayList의 길이를 아나? 맞다 우리는 알고있다
+그래서 words.size일까? length일까? size다 어느 집합이든지 size를 쓰는게 맞고 i++한 다음
+ System.out.println(words.get(i))라 할 수 있다.
+jshell> for(int i = 0; i < words.size(); i++) {
+   ...>     System.out.println(words.get(i));
+   ...> }
+Apple
+Bat
+Cat
+
+이러면, 이것은 인덱스 i의 값을 가져와 출력한다
+이것이 가장 기본적인 방법이다.
+
+개선된 for 루프도 있다
+for(String word : words) 라 하고 System.out.println(word)라 하면 정확히 같은 결과를 준다
+
+jshell> for(String word : words) {
+   ...>     System.out.println(word);
+   ...> }
+Apple
+Bat
+Cat
+
+위에건 기본적인 for루프 아래건 개선된 for루프 인것이다
+
+
+이것 말고 리스트는 반복자를 제공하므로 여기에 
+jshell> Iterator wordsIterator = words.iterator();
+wordsIterator ==> java.util.ImmutableCollections$ListItr@7a4f0f29
+words.iterator()라 할수 있다 반복자는 너가 리스트를 반복할 수 있는 또다른 방법이다
+
+접근법에선 while루프를 써야한다 그래서, while(wordsIterator.hasNext()) 이것이 반복자 인터페이스 안에 존재하는 메소드들이다
+words.iterator에 요소가 존재하는 한 니가 할것은, 그것을 루프로 돌려볼 것이다 ,
+println 이제 다음 요소를 가져오길 바라겠지? 어떻게 해야 할까? 답은 wordsIterator.next()이다
+이것이 다음 요소를 줄 것이고 이제 루프를 닫으면 된다
+
+jshell> while(wordsIterator.hasNext()) {
+   ...>     System.out.println(wordsIterator.next());
+   ...> }
+Apple
+Bat
+Cat
+
+"Apple", "Bat", "Cat"이라는 같은 출력이 발생하는 것을 볼수 있다 
+
+반복할 요소가 존재하고 wordsIterator 가 next를 가지는 한 한번 next를 직접 해보면
+그럼 그 요소를 여기에(println()) 출력하게 된다
+
+/*
+정리)
+우리는 배열들을 반복하면서 안에 있는 값들을 출력하는 법을 배웠다
+그리고 세가지 다른 방식을 이야기했다 
+(일반적for문 , 향상된 for문, Iterator 생성후 while문 사용)
+*/
