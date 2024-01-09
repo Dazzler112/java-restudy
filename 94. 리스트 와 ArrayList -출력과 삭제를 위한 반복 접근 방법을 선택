@@ -1,0 +1,112 @@
+
+저번 학습에서는, 리스트를 반복하는 세가지 방법에 대해 알아보았다
+왜 리스트를 반복하는 방법이 세가지나 될까? 왜 필요할까?
+왜냐면, 특정 작업동안에는 특정 루프를 사용해야하기 때문이다
+
+이번 학습에선 루프 작업시 어떤 루프를 써야 할지 알아보도록 하자
+
+리스트를 생성해 보자
+jshell> List<String> words = List.of("Apple","Bat","Cat");
+words ==> [Apple, Bat, Cat]
+ArrayList안에 넣어주자
+List<String> wordsAl = new ArrayList<>(words);
+<>에서 특정 타입을 선언해 줘야 하지만 뒤의<>(제너릭)에는 타입을 선언해주지 않아도 된다. 이것이 자바의 새로운 기능이다
+굳이 양쪽 데이터 종류를 특정해 주지 않아도 된다 
+그래서 이건 문자열의 리스트라고 추론할 수 있는 것이다 
+
+jshell> List<String> wordsAl = new ArrayList<>(words);
+wordsAl ==> [Apple, Bat, Cat]
+이제 wordsArrayList가 있다
+
+이제 리스트를 루프시키며 "at"로 끝나는 단어들을 출력하고 싶다면 어떻게 해야할까?
+
+• enhanced forloop
+
+가장 쉬운 방법은 개선된 for 루프를 가지고 하는거겠지 for(String word : words) 왜냐면 지금은 변경을 하는게 아니니까 word의 리스트를 이용할 수 있다
+문제될게없다 그리고 if(word.endsWith("at"));라 한다음 System.out.println(word)라 하고 루프를 닫아주면
+
+jshell> for(String word : words) {
+   ...>     if(word.endsWith("at")){
+   ...>        System.out.println(word);
+   ...>     }
+   ...> }
+Bat
+Cat
+
+Bat와 Cat을 출력한다
+그래서, 우리는 특정 논리에 따라 루프를 돌려 값들을 출력할 수 있다
+니가 반복자로 같은 것을 하려 했으면, 아마도 많은 양의 코드를 짜야했을 것이다.
+그래서, 이런 상황에선 for루프가 선호될 수 있다, 
+나중에 이것보다 더 좋은 방법인 Streams를 활용하는 방법을 나중에 함수형 프로그래밍과 람다를 배울때 알려주겠다
+
+지금은 너가 아는 한에서 이것이 최고의 접근법이다.
+
+
+만약 너가 "at" 로 끝나는 모든 값들을 지우고 싶어한다면, 개선된 for루프를 사용할 수 있을까?
+한번 확인해 보자
+
+• enhanced forloop 제거 가능?
+
+리스트를 변경하고 싶기때문에 wordsAl을 사용할거임 기본적List.of()는 변경할 수 없다, 왜냐하면 그건 불면리스트를 돌려주니까
+wordsAl을 만들었고 이걸 활용할 것이다.
+jshell> for(String word : wordsAl) {
+   ...>     if(word.endsWith("at")){
+   ...>        wordsAl.remove(word);
+   ...>     }
+   ...> }
+이제 wordsAl을 출력해 무엇이 있는지 확인해 보자
+jshell> wordsAl
+wordsAl ==> [Apple, Cat]
+
+"Apple"과 "Cat"이 있는게 보일거다 "at"로 끝나는 모든 것을 지우려 했지만 "Cat"은 지워지지 않았다 왜일까?
+
+• enhanced forloop 의 단점
+
+왜냐면, 개선된 for루프를 사용할 때 루프의 중간에서 변경점을 만드는건 추천하지 않는다, 특히 제거는❗
+왜냐면, 단어를 제거함으로써 반복이 어떻게 진행되느냐가 바뀔 수 있기 때문이다 이런 상황에선 반복자를 가지고 하는 것이 추천된다.
+그래서, 만약 특정 단어를 리스트에서 제거하고 싶다면, 반복자가 가장 좋겠다 
+어떻게 할 수 있는지 알아보자
+
+
+• Iterator(반복자)사용 while문
+
+재초기화
+jshell> List<String> words = List.of("Apple","Bat","Cat");
+words ==> [Apple, Bat, Cat]
+jshell> List<String> wordsAl = new ArrayList<>(words);
+wordsAl ==> [Apple, Bat, Cat]
+
+이제 "at"로 끝나는 모든걸 지우고 싶다..
+반복자를 가지고 어떻게 해야할까?
+
+jshell> Iterator<String> iterator = wordsAl.iterator();
+iterator ==> java.util.ArrayList$Itr@2077d4de
+이제 우리는 반복자를 가졌고 이것을 이용해 루프를 돌릴 수 있다
+
+
+jshell> while(iterator.hasNext()){
+   ...>     if(iterator.next().endsWith("at")) {   //너는 "at"를 포함하는 것인지 "at"로 끝나는 것인지를 확인하고 싶겠지 //만약 이게 "at"로 끝난다 하면 무엇을 하고싶지? 지우고 싶었지
+                                                   //그러면, ArrayList에서 반복자를 이용해 어떻게 요소를 제거할까? 그걸위한 메소드가 있다
+   ...>              iterator.remove();            //iterator.remove()이다 이제 루프를 닫고 엔터를 누르면 된다.
+   ...>     }
+   ...> }
+
+while문이 실행된 걸 볼수 있고 이제 wordsAl을 출력해보면
+
+jshell> wordsAl
+wordsAl ==> [Apple]
+단 하나의 단어만 있다 "Apple"이다 "Bat"과 "Cat"은 지워졌다
+
+
+
+
+
+/*
+정리)
+이 학습에서 우리가 들여다 본 것은 루프 사이 ArrayList에
+변경점을 만드는 방법이었다
+제일 좋은 방법은 반복자(Iterator)를 사용하는 것이다
+반복자가 무언가를 제거할 때 최고의 방법이다
+그저 루프만 한다고 하면, 대부분의 경우 그냥 개선된(enhanced) for 루프가 최선이다
+하지만 너가 제거나 그런 종류의 작업을 하려면, 반복자로 가는 것이 더 낫고 반복자로 가는 것이 더 안전하다
+*/
