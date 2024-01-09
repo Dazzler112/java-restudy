@@ -1,0 +1,137 @@
+
+저번에는 ArrayList와 Vector의 차이에 대해 알아보았다
+오늘은 리스트들을 대상으로 할 수 있는 온갖 다른 작업들에 집중해 보자
+
+첫 단계에서는, 우리가 리스트에서 어떻게 데이터를 가져오는지 이야기했고
+기본적으로 List.of()를 이용해 만든 리스트는 불변 리스트란 것도 알았다
+데이터를 바꿀 수 없고 
+ArrayList나 LinkedList, Vector를 만들 수 있는 세가지 방식 또한 알아봤다
+
+이제, 이 영상에서 wordsArrayList를 이용해 ArrayList안에 정보를 삽입해 보겠다
+하지만 같은 작업을 LinkedList나 Vector에 쓸 수 있다. 
+우리가 사용하는 리스트의 구현에 기반해서는 그다지 달라지지 않기 때문이다
+
+jshell> List<String> words = List.of("Apple","Bat","Cat");
+words ==> [Apple, Bat, Cat]
+
+jshell> List<String> wordsArrayList = new ArrayList<String>(words);
+wordsArrayList ==> [Apple, Bat, Cat]
+일단 기본
+
+• 추가
+
+요소 하나를 ArrayList에 추가하고 싶다면 wordsArrayList.add 라고 하는 것이다,
+그리고 "Elephant" 라고 할 것이다
+
+jshell> wordsArrayList.add("Elephant");
+$3 ==> true
+이렇게 요소 하나를 추가했다
+또한 특정 인덱스에 요소를 추가할 수도 있다
+
+2번위치에 무언가를 넣고 싶다고 해보자
+jshell> wordsArrayList.add(2,"Ball");
+Ball을 2번위치에 넣는다고 하자
+
+jshell> wordsArrayList
+wordsArrayList ==> [Apple, Bat, Ball, Cat, Elephant]
+"Ball"은 이제 wordsArrayList의 2번 위치에 "Ball"이 있는 것을 볼수 있다
+
+즉, 너는 요소를 아무 위치에나 추가할 수 있다.
+
+리스트에 대한 공통적으로 중요한 점은 중복을 가질 수 있다는 것이다
+
+ArrayList.add("Ball")에서 인덱스를 특정하지 않으면 이것이 추가됨을 볼 수 있을것이다
+jshell> wordsArrayList.add("Ball");
+$6 ==> true
+
+jshell> wordsArrayList
+wordsArrayList ==> [Apple, Bat, Ball, Cat, Elephant, Ball]
+끝에 추가되어 있는 것을 볼수있다
+즉, ArrayList에는 같은 요소가 존재할 수 있다. ArrayList는 중복을 허용하기 때문이다
+
+이제, 또 다른 리스트가 존재하고 저 요소들을 다 이 ArrayList에 추가하고 싶다 하자
+그러므로, 간단한 리스트를 만들어보자
+
+jshell> List<String> newList = List.of("Yak", "Zebra");
+newList ==> [Yak, Zebra]
+List.of()로 생성 후 이 리스트의 요소들을 이 리스트에 추가하고 싶다 하자
+
+jshell> wordsArrayList.addAll(newList);
+$9 ==> true
+wordsArrayList.addAll을 통해 집합을 통과시켜 할 수 있다 이제 이 집합은 newList인 것이다
+
+그리고 만약 wordsArrayList의 내용물을 출력한다면, 무엇이 나올까?
+
+jshell> wordsArrayList
+wordsArrayList ==> [Apple, Bat, Ball, Cat, Elephant, Ball, Yak, Zebra]
+끝에 Yak와 Zebra가 있는게 보일것이다.
+
+특정 위치를 지정할 수도 있다
+addAll(2,newList)를 입력하면 모든 요소들이 2번 위치에서 시작되어 삽입되겠다
+
+지금까지 이 단계에선 리스트에 요소를 추가하는 작업을 살펴보았다
+단 하나의 요소를 추가하거나 요소를 특정 위치에 추가하거나, 요소의 리스트를 현존하는 리스트에 추가했다
+
+• 수정
+
+이제, 리스트 안에 있는 데이터를 변경하는 작업들을 살펴보자
+이 인덱스의 요소를 바꾸고 싶다고 해보자
+0,1,2,3,4,5,6 그래서 6번째 인덱스 이요소를 바꾸고 싶다고 하자 "Ball" 대신 "Fish"를 원한다고 하자
+"Ball"은 이곳에 어울리지 않기 때문에..
+Ball 자리에 "Fish"를 넣고 싶다고 하자 어떻게 해야할까?
+
+wordsArrayList.set(6,"Fish")라고 할것이다.
+그러면 어떤일이 일어나냐면 "Ball"이란요소가 제거되고 그자리에 "Fish"가 있겠지
+
+jshell> wordsArrayList.set(6,"Fish");
+$16 ==> "Ball"
+
+wordsArrayList를 출력하면, 여기에 "Ball"대신 "Fish"가 보일 것이다.
+jshell> wordsArrayList
+wordsArrayList ==> [Apple, Bat, Ball, Cat, Dog, Elephant, Fish, Yak, Zebra]
+
+이것은 특정 위치에 있는 요소를 바꾸는 방법이다
+
+• 삭제
+
+변경하는 작업중 마지막은 요소의 제거이다
+
+ArrayList에서 요소를 제거하는 방법은 두가지가 있다.
+인덱스를 기반으로, 그리고 그 요소 자체를 기반으로
+
+그래서 인덱스 2의 요소를 제거하고 싶다고 하자
+wordsArrayList.remove(2)를 입력하면 무슨일이 일어날까?
+
+jshell> wordsArrayList.remove(2);
+$18 ==> "Ball"
+요소를 제거하겠지
+
+wordsArrayList를 출력한다 하면, "Ball"이 존재하지 않는 것을 볼수 있다
+jshell> wordsArrayList
+wordsArrayList ==> [Apple, Bat, Cat, Dog, Elephant, Fish, Yak, Zebra]
+
+여기서 .remove()는 우리에게 그 요소를 되돌려주고 ArrayList에서 그 요소를 제거하는 것이다.
+
+요소를 제거하는 또다른 선택지는 요소를 직접 특정하는 방법이다, remove "Dog"라 하면
+jshell> wordsArrayList.remove("Dog");
+$20 ==> true
+"Dog"의 첫번째 인스턴스가 제거되고 '참'이 출력된다
+
+jshell> wordsArrayList
+wordsArrayList ==> [Apple, Bat, Cat, Elephant, Fish, Yak, Zebra]
+이제 리스트를 출력하면 "Dog"가 존재하지 않는것을 볼 수 있다
+
+만약 존재하지 않는 요소를 제거하려고 한다면 존재하는 리스트에서 "Dog"는 존재하지 않는다
+jshell> wordsArrayList.remove("Dog");
+$22 ==> false
+그렇다면 거짓을 돌려준다 
+즉, 이것이 하는 말은 "Dog"가 있는지를 확인해봤지만, 여기엔 없어, 라고 하는것이다
+
+
+
+/*
+정리)
+이번 시간에는 리스트에 할 수 있는 모든 변경작업들에 대해 알아보았다
+리스트에 요소를 추가함으로써 시작했고 특정 위치의 요소를 바꾸는 방법을 알아 보았고
+인덱스와 요소 자체를 기반으로 리스트에서 요소를 제거하는 방법도 알아보았다
+*/
