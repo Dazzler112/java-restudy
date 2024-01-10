@@ -1,0 +1,122 @@
+
+전 학습에서 컴파일 오류로 끝마친 첫번째 단계를 다시 할 것이다
+
+우리는 Comparable 인터페이스르 Student 클래스에 구현해야 한다고 했었다
+이제 그것을 해보도록 하자
+
+
+-------------------------------------------------------------------------
+
+
+StudentCollectionRunner 클래스 파일
+
+
+package collectionsTraining;
+
+import java.util.*;
+
+public class StudentCollectionRunner {
+
+	public static void main(String[] args) {
+		
+
+		List<Student> students= List.of(new Student(1, "Ranga"),
+										new Student(100, "Adam"),
+										new Student(2, "Eve"));
+		
+		
+		System.out.println(students);
+		
+		ArrayList<Student> studentAl = new ArrayList<>(students);
+
+		Collections.sort(studentAl); 
+		
+		//Comparable인터페이스를 구현하고 싶다..// Student클래스로..
+		//Student클래스에서 Comparable인터페이스를 구현했고 보다시피 코드가 컴파일되고 이제 syso를 정렬 후 실행해보자
+		System.out.println(studentAl);
+		//출력 ==> [1 Ranga, 2 Eve, 100 Adam]
+		//이제 모든 학생들이 자신의 id에 따라 정렬되었다 만약 정렬순서를 반대로 바꾸고 싶다면 //다시 Student클래스파일로...
+		
+		//뒤집었을 경우 출력 ==> [100 Adam, 2 Eve, 1 Ranga] //그래서 반대 순서를 원하면 Student클래스의 compareTo메소드를 뒤바꾸면 된다
+	}
+
+}
+
+-------------------------------------------------------------------------
+
+Student 클래스 파일
+
+
+package collectionsTraining;
+
+public class Student implements Comparable<Student> { //인터페이스를 구현하려면, 무엇을 해야하나? 그안에 있는 모든 메소드를 구현해야 한다. //implements하자 마자 컴파일 오류가 나온다 //ctrl+1번으로 메소드 추가
+
+	private int id;
+	private String name;
+	
+	public Student(int id, String name) {
+		super();
+		this.id = id;
+		this.name = name;
+	}
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	} 
+	
+	
+	public String toString() {
+		return id+ " " + name; 
+	}
+
+	//미구현된 메소드가 여기 밑에 있다 //compareTo는 보다시피 객체를 생성한다 //학생끼리 비교하고 싶으니
+	//위의 implements의 Comparable<T>에 T를 Student라 하겠다
+	//그리고 compareTo메소드의 인자도 Student로 바꿀 수 있다
+	//이렇게 우린 한 학생을 다른 학생과 비교하고 싶은 것이다. //그게 우리가 이걸 한 이유 //학생들을 어떻게 비교하고 싶을까?
+	//내가 정렬할때는, 학생들이 id가 늘어나는 순서대로 정렬되길 원한다
+	//그래서 id를 이용해 커지는 숫자대로 정렬하고 싶다 //return Integer.compare()란 것을
+	@Override
+	public int compareTo(Student that) { 
+//		return Integer.compare(this.id, that.id); //일반적으로 이것을 표현하는 법은 this.id 일반적으로 우리가 compareTo()를 쓸 때 우린 이것을 that이라 부른다
+										                             //즉 this는 현재 객체고, 'that'은 우리가 비교하려는 객체이다,
+										                             //Integer.compare()는 대단한 구현이다 이것은, 자바7부터 하는 버전에 존재한다
+	
+          		/*
+          		  그리고 compareTo 내부를 보면, 이것은 if x < y라 하면, -1을 출력한다 if x==y라 하면,0을 출력한다
+          		  public static int compare(int x, int y) {
+          	        return (x < y) ? -1 : ((x == y) ? 0 : 1);
+          	      }
+          	      이것이 Comparable 인터페이스가 작동하는 방식이다
+          		 */
+		
+		return Integer.compare(that.id ,this.id); //정렬을 반대로 뒤집고 싶으면 that.id, this.id라 하면 된다 순서를 바꾸는 것이다
+	}
+	//여기서 일어나는 일은, 현재 id가 우리가 비교하려는 학생의 id와 비교하는 것이다 이제StudentCollectionRunner를 저장하자
+	//StudentCollectionRunner 클래스로..
+}
+
+
+
+-------------------------------------------------------------------------
+
+
+
+
+/*
+정리)
+Compareable 인터페이스 구현 방법을 배웠다 어떻게 Comparable 인터페이스 구현을 부여해서
+우리 기준에 맞춰 학생들을 정렬하는 방법을 배웠다
+*/
+
