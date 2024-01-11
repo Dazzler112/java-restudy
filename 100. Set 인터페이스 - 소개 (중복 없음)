@@ -1,0 +1,83 @@
+
+이번 학습에선, Set 인터페이스로 바꿀 것이다
+지금까지 우리는 List 인터페이스에 대해 이야기했었다
+이제부터는 Set 인터페이스에 대해 이야기하겠다, 
+이 단계에서는 Set 인터페이스의 어디가 특이한 건지 그리고 언제 Set 인터페이스르 사용할지에 대해 알아보자
+
+Set 인터페이스는 컬렉션 인터페이스를 연장하지만 그다지 많은 새로운 메서드를 제공하지는 않는다,
+그러면, Set 인터페이스의 용도는 무엇일까?
+
+Set 인터페이스에 대해 제일 중요한 점은 유일한 것만 가질 수 있다는 것이다,
+• Set에서는 중복이 허용되지 않는다
+- 두 객체가 같다면, 그중 하나만 Set에 들어갈 수 있다
+
+// Unique things only - Does not allow duplication.
+// If obj1.equals(obj2) then only one of them can be in the See
+public interface Set<E> extends Collection<E> {
+
+}
+• 또 다른 점은, 리스트 인터페이스와 비교해보면 Set 인터페이스는 위치 접근을 제공하지 않는다.
+
+이 두 요점에 대해 직접 한번 보자
+
+이 단계에서, 우리는 어떻게 Set을 만들까? 리스트를 만드는것과 매우 비슷하다
+jshell> Set<String> set  = Set.of("Apple", "Banana", "Cat"); //List와 다른점은 List.of가 아닌 Set.of()를 사용한다
+set ==> [Apple, Banana, Cat]
+
+우리는 Set이 중복을 허용하지 않는다고 했다 Apple을 추가한다고 해보자 set.add("Apple")이 허용이 될까?
+jshell> set.add("Apple");
+|  Exception java.lang.UnsupportedOperationException
+|        at ImmutableCollections.uoe (ImmutableCollections.java:142)
+|        at ImmutableCollections$AbstractImmutableCollection.add (ImmutableCollections.java:147)
+|        at (#2:1)
+안된다 UnsupportedOperationException 이라고 뜨는데 
+왜냐하면 Set은 기본적으로 변경을 허용하지 않기 때문이다, 우리가 만들어야 할 것은 HashSet이다,
+HashSet은 Set의 여러 구현중 하나이다, Set의 여러 다른 구현들은 다음 단계에서 다뤄보도록 하자
+
+지금은 당장  Set<String> hashSet  = new HashSet<>(set); 를 HashSet안에, 추가하도록 하자
+
+jshell> Set<String> hashSet  = new HashSet<>(set);
+hashSet ==> [Apple, Cat, Banana]
+
+HashSet안에 'Apple'을 추가할수 있는지 보자 허용이될까? 어떤일이 벌어질까?
+jshell> hashSet.add("Apple");
+$4 ==> false
+ 거짓이라 나온다 Apple이 이미 리스트 안에 있다고 한다
+ hashSet을 출력하면 Apple, Cat, Banana가 보인다
+jshell> hashSet
+hashSet ==> [Apple, Cat, Banana]
+새로운 Apple이 없다
+
+이(Apple, Cat, Banana)가 됬단 점이다 우리가 처음 입력했던건 ("Apple", "Banana", "Cat") 즉, 순서가 이미 상실된 것이다
+우리가 HashSet을 쓸때, 순서가 약간 달라지는 것을 보았다 여기에서도 hashSet ==> [Apple, Cat, Banana]
+
+우리가 Set을 생성했을때, 우리는 ("Apple", "Banana", "Cat")의 Set을 만들었지만 ("Banana", "Apple", "Cat")이 되버렸다.
+제일 중요한 것은,
+• Set의 요소는 위치에 신경을 쓰지 않는다는 점이다 
+이것은 "Apple"이 있는지는 신경쓰지만, "Apple"이 어디있는지는 신경 쓰지 않는 것이다
+
+이것이 너가 hashSet.add(2,"Apple")라 할수 없는 이유이다
+jshell> hashSet.add(2,"Apple");
+|  Error:
+|  method add in interface java.util.Set<E> cannot be applied to given types;
+|    required: java.lang.String
+|    found:    int,java.lang.String
+|    reason: actual and formal argument lists differ in length
+|  hashSet.add(2,"Apple");
+|  ^---------^
+여기서 말하길 add를 위한 적합한 메서드를 찾지 못했다 한다, 왜냐면 Set에서는 위치에 기반해 더하거나 제거하지 못한다
+
+
+
+
+
+/*
+정리)
+요약하자면, 
+•1. Set 안에는, 중복이 허용되지 않고 
+•2. 그리고 Set 안에서는, 위치는 그다지 중요하지 않다
+즉, 너는 특정위치에 요소를 추가하고자 할 수 없다
+
+이것이 리스트와 Set의 두가지 중요한 차이점이였다
+Set은 유일한 값들을 저장하는데 쓰인다
+*/
