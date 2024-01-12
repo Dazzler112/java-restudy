@@ -1,0 +1,143 @@
+
+이번 단계에선 HashSet, LinkedHashSet과 TreeSet을 직접 다뤄 볼것이다.
+
+HashSet을 만드는 것으로 시작
+정수 리스트로 저장할 것임
+jshell> Set<Integer> number = new HashSet<>();
+number ==> []
+HashSet을 초기화 했다. number는 텅 비어있음 숫자 몇개르 추가해 보자
+
+jshell> number.add(765432);
+$2 ==> true
+더 많은 숫자를 추가해 보자
+jshell> number.add(76543);
+$3 ==> true
+jshell> number.add(7654);
+$4 ==> true
+jshell> number.add(765);
+$5 ==> true
+jshell> number.add(76);
+$6 ==> true
+이제 5자리 숫자를 가진 Set이 있다 
+추가 한 순서는 화면에 보이는 것처럼 첫번째로 765432 두번째 76543 셋 7654 넷 765 다섯 76
+
+• HashSet 특성
+이제 number를 출력한다면 무엇이 나올까?
+jshell> number
+number ==> [765432, 7654, 76, 765, 76543]
+이것이 무작위 순서로 저장되어 있는 것을 볼 수 있다, 즉 이것은 삽입 순서대로 저장되지 않는 것이다.
+정렬된 순서로도 저장되지 않았다
+HashSet에선 삽입 순서나 정렬 순서는 신경쓰지 않는다
+
+• LinkedHashSet 특성
+자, LinkedHashSet을 이용해 똑같은 number를 생성해 보자
+jshell> Set<Integer> numbers = new LinkedHashSet<>();
+numbers ==> []
+LinkedHashSet을 만들고 이제 같은 코드를 실행해 보자
+
+jshell> numbers.add(765432);
+$9 ==> true
+jshell> numbers.add(76543);
+$10 ==> true
+jshell> numbers.add(7654);
+$11 ==> true
+jshell> numbers.add(765);
+$12 ==> true
+jshell> numbers.add(76);
+$13 ==> true
+HashSet과 똑같이 넣어줬다
+이제 numbers를 출력해 보자
+
+jshell> numbers
+numbers ==> [765432, 76543, 7654, 765, 76]
+보다시피, LinkedHashSet은 요소들을 삽입 순서대로 보관하고 있다 
+즉, 니가 삽입한 순서대로 저장되는 것이다 정렬된 순서로 저장되지 않지만 
+삽입 순서대로 저장된다.
+여기에 추가로 요소 하나를 더 삽입하면 어떻게 될까?
+jshell> numbers.add(765789)
+$15 ==> true
+
+jshell> numbers
+numbers ==> [765432, 76543, 7654, 765, 76, 765789]
+정확히 삽입된 순서대로 저장되는게 보인다.
+
+하지만,이것은 Set이기 때문에 중복 값을 저장할 수 없다, 그래서
+내가 76이라 한다면 무슨 일이 일어날까?
+jshell> numbers.add(76);
+$17 ==> false
+거짓을 반환 한다.
+'이것은 Set이니까 중복값을 저장할 수 없다' 라고 한 것이다.
+
+• TreeSet 특성
+TreeSet도 만들어 보자
+jshell> Set<Integer> numbers = new TreeSet<>();
+numbers ==> []
+아까의 값들을 추가해 주자
+
+jshell> numbers.add(765432);
+$19 ==> true
+jshell> numbers.add(76543);
+$20 ==> true
+jshell> numbers.add(7654);
+$21 ==> true
+jshell> numbers.add(765);
+$22 ==> true
+jshell> numbers.add(76);
+$23 ==> true
+
+이제 numbers를 출력하면 뭐가 보일까?
+jshell> numbers
+numbers ==> [76, 765, 7654, 76543, 765432]
+정렬된 순서대로 나온다
+
+즉, 이 예시에서 우리는 숫자를 정렬된 순서로 저장하는 것이다.
+이것 또 한 Set이기 때문에 중복값을 추가할 수는 없다.
+jshell> numbers.add(76);
+$25 ==> false
+
+• 요점
+이번 학습에선 Set의 세가지 다른 옵션을 보았다
+우리는 Hashset은 삽입 순서나 정렬 순서에 상관없는 것을 보았다,
+
+LinkedHashSet은 삽입 순서를 저장하지만 정렬순서는 상관이 없다
+
+그리고 TreeSet에선 정렬 순서를 신경 써야 하고 삽입 순서는 신경 쓰지 않아도 된다
+
+
+
+
+예제)
+이제 이 단계의 예제들을 보자 여기서 할 일은화면에 보이듯 문자의 리스트를 만드는 것이다 
+List<Character> character = List.of('A', 'Z', 'B', 'Z', 'F');
+자, 이렇게 문자의 리스트를 만든다
+jshell> List<Character> character = List.of('A', 'Z', 'B', 'Z', 'F');
+character ==> [A, Z, B, Z, F]
+
+높은 확률로 너는 이클립스 안에서 이런 종류의 문자 리스트를 메인 메서드로 가지는 자바 클래스를 만들 수 있을 것이다.
+니가 알아내고자 하는 것은 이 특정 리스트 안의 유일한 문자이다, 유일한 문자를 순서대로 정리하려 할 때
+그리고 유일한 문자를 알파벳 순으로 정렬할 때 무엇을 써야할지 생각해 봐라,
+정렬된 유일한 문자들은 'A' 'B' 'F' 'Z'겠지, 하지만 삽입된 순서대로 저장하면 'A','Z' 
+여기서'A'는 반복되니까 포함시키지않는다, 'B' 그다음 'F' 그래서 'A', 'Z', 'B', 그리고 'F'가 되겠지?
+어떤 컬렉션을 사용해야 저걸 할 수 있을지 생각해 봐라
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+나의 해답 
+jshell> Set<Character> ch = new LinkedHashSet<>(character);
+ch ==> [A, Z, B, F]
