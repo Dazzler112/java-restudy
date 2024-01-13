@@ -1,0 +1,77 @@
+
+저번 학습파일에 나온 예제를 풀어보도록 하자
+
+
+-------------------------------------------------------------------------------------
+
+
+SetRunner 클래스파일
+
+
+
+
+package arraysTraining;
+
+import java.util.*;
+
+public class SetRunner {
+	
+	public static void main(String[] args) {
+		//저번 자료 붙여넣기
+		List<Character> character = List.of('A', 'Z', 'B', 'Z', 'F');
+		//우린 정렬된 순서의 유일한 문자가 무엇인지 알아보려고 헀다 //"유일한"이라는 단어를 들으면 Set을 떠올려야 한다
+		//Set에 대해 지금까지 주어진 것은 TreeSet, HashSet 그리고 LinkedHashSet이라는 옵션이다.
+		
+		//만약 알파벳 순서대로 요소를 저장하고 싶다면? TreeSet
+		
+		//unique - Set
+		//Tree
+		//Hash
+		//LinkedHash
+		Set<Character> treeSet = new TreeSet<>(character);
+		//이건 허용될까? 확인해보자 TreeSet을 가져오고 Set도 가져오자 // 보다시피 코드가 작동한다, 즉 허용된다는 뜻
+		System.out.println("treeSet" + treeSet);
+		//출력 ==> treeSet[A, B, F, Z]
+		//출력이 알파벳 순서대로 [A, B, F, Z]라 나온다 TreeSet을 사용하고 있기 때문이다
+		
+		
+		//이제 삽입 순서대로 갖고 싶다고 하자 'A'먼저 그다음'Z','A'는 중복이니 신경쓰지 않고 다음'B' 'F' 
+		//이렇게 정렬하려면 무엇을 써야 할까?
+		//LinkedHashSet을 써야한다 삽입 순서대로 정렬하는 거니까
+		Set<Character> linkedHashSet = new LinkedHashSet<>(character);
+		System.out.println("linkedHashSet" + linkedHashSet);
+		//출력 ==> linkedHashSet[A, Z, B, F]
+		//요소들이 삽입된 순서대로 저장되어 있는 것을 볼수 있다
+		
+		
+		
+		//이제 알파벳 순서나 삽입 순서에 상관없이 입력한다면 HashSet을 이용하면 된다
+		Set<Character> hashSet = new HashSet<>(character);
+		System.out.println("hashSet" + hashSet);
+		//출력 == > hashSet[A, B, F, Z]
+		//이제 HashSet안에는 TreeSet과 같은 출력값을 받을 수도, 아닐 수도 있다
+		//몇 가지 요소를 더 넣으면 달라질 수 있다, 숫자로 만든다면 달라질 수 있다,
+		//HashSet은 해싱 함수에 기반하기 때문이다
+		//간혹 정렬이 되어있을 수 있지만 항상 그럴 거라 기대할 순 없다
+	}
+}
+
+-------------------------------------------------------------------------------------
+
+
+
+
+/*
+정리)
+저번 단계와 이 예제의 제일 중요한 것은 만약 너가 ❗ 유일한 ❗ 것들을 원한다면 
+Set을 써야 한다는 점이다, 그리고 Set을 쓰는 순간 
+너가 내려야 될 결정은 삽입 순서를 유지할지, 정렬 순서를 유지할지 결정하는 것이다
+둘 중 하나를 원하면, 너는 TreeSet이나 LinkedHashSet 둘 중 하나를 사용하겠지
+어느 순서든 괜찮다면 HashSet을 쓰겠지 이 중에서 HashSet이 제일 효율적이다
+하지만 LinkedHashSet은 삽입 순서를 제공하고 TreeSet은 알파벳 순서를 제공한다
+지금까지 우리는 Set의 구현을 다양한 시점에서 바라봤다
+
+다음 학습에선 TreeSet을 좀 더 깊이 들여다 보자
+*/
+
+Set의 핵심 키  = ❗ 유일한 값❗
