@@ -1,0 +1,111 @@
+
+이번 학습에선 TreeSet에 대해 깊이 알아보곘다
+HashSet과 LinkedHeadSet에 실행 될 수 있는 작업들은 컬렉션과 완벽히 일치한다
+하지만, TreeSet은 데이터가 정렬됨으로써 더 많은 작업들을 제공한다,
+TreeSet은 NavigableSet이라는 걸 구현하고 이 덕분에 몇 가지 기능을 쓸 수 있다
+
+  // A,C,B
+  // A,B,C
+class TreeSet implements Set,NavigableSet {
+  // 3,5,7
+  // sorted - natural order
+  // implements NavigableSet
+}
+이 학습에서 그 기능들을 살펴보자
+
+TreeSet을 만들어 보자
+
+jshell> TreeSet<Integer> numbers = new TreeSet<>(Set.of(65, 54, 34, 12, 99));
+numbers ==> [12, 34, 54, 65, 99]
+
+TreeSet을 만들었고 정렬된 순서로 저장되어 있다, 이게 Tree의 기본 특성이다 Tree안에는 모든게 정렬되어 있다
+
+TreeSet은 NavigableSet 인터페이스도 구현한다 어떤 의미냐면,
+원래는 컬렉션 인터페이스에 기존에 존재하지 않는 몇 가지 다른 작업을 제공한다는 의미이다.
+이런 종류의 작업들은 오직 Tree에만 있다 (분류된 데이터가 있는곳에 말임)
+
+• floor 메서드
+리스트에서 40 작은 요소를 찾고싶다 하자, 어떤 요소가 이 리스트에서 40보다 작은지 보자, 어떤 요소들이 있지? 34이다
+jshell> numbers.floor(40);
+$2 ==> 34
+
+floor는 포괄적이다 
+만약 floor(34)를 입력한다면 34를 반환하겠지?
+jshell> numbers.floor(34);
+$3 ==> 34
+
+• lower 메서드
+하지만, 만약 34미만을 원한다면?
+34필요 없고 34보다 작은 숫자만을 보고 싶다면 lower를 사용할 수 있다
+jshell> numbers.lower(34);
+$4 ==> 12
+floor는 34와 같거나 작은 숫자를 반환하고, lower는 34미만의 숫자를 반환한다, 이경우는 12임
+
+즉,너는 34보다 작은 요소들을 찾기 위해 구현해야 할 필요가 없다, 
+이 숫자 중 무엇이 저것보다 작은 숫자인지 매우 쉽게 찾을수 있다, floor 아니면 lower
+
+• ceiling 메서드
+ceiling에도 똑같이 적용된다
+jshell> numbers.ceiling(34);
+$5 ==> 34
+이것은 34보다 더 큰 숫자를 반환한다
+ceiling은 34보다 크거나 같은 숫자를 반환한다
+
+그래서, 만약 36 이상의 수를 입력하면 54를 출력하겠지 
+jshell> numbers.ceiling(36);
+$6 ==> 54
+
+
+• higher 메서드
+또 다른 동위 함수는 higher이다
+jshell> numbers.higher(34);
+$7 ==> 54
+higher는 34를 초과하는 숫자를 반환한다.
+
+• subSet 메서드
+또 서브셋을 가져올 수도 있다 
+예를 들어 20과 80 사이의 모든 숫자를 가져온다 하자
+jshell> numbers.subSet(20, 80);
+$8 ==> [34, 54, 65]
+
+또다른 subSet() 작업을 해보자
+이번엔 34와 54라고 하자 
+jshell> numbers.subSet(34, 54);
+$9 ==> [34]
+보는것 같인 34만 반환한다, 즉 하위 제한은 포괄적이고 상위 제한은 배타적이다
+그래서 54가 포함되지 않았다
+
+그래서 이렇게하면, 54도 출력된다
+jshell> numbers.subSet(34, 65);
+$10 ==> [34, 54]
+34와 같거나 크고 65보다 작은 숫자들이다
+
+만약 너가 직접적으로 특정하고 싶다면, 크거나 같거나 , 작거나 같은것을 포함하고 싶다면 이렇게 하면 된다
+jshell> numbers.subSet(34, true, 65, true);
+$11 ==> [34, 54, 65]
+이러면 상위와 하위 제한을 다 포함해 출력할 것이다
+그래서 34도 포괄적이고 65도 포괄적이다
+그리고 거짓을 입력하면 양쪽다 제외되겠지?
+jshell> numbers.subSet(34, false, 65, false);
+$12 ==> [54]
+54만 출력이 됨
+
+• headSet 메서드
+또 다른 재밌는 메서드는 numbers.headSet()이란 것이다
+50이라 한다면
+jshell> numbers.headSet(50);
+$13 ==> [12, 34]
+
+• tailSet 메서드
+50까지의 모든 숫자들을 출력하고 tailSet();을 입력한다면
+jshell> numbers.tailSet(50);
+$14 ==> [54, 65, 99]
+50 이후의 모든 숫자를 출력한다.
+
+
+/*
+정리)
+이번 학습에선 TreeSet이 NavigableSet인터페이스를 구현함으로써
+기존의 메서드 중 흥미로운 걸 보았다
+TreeSet안의 데이터는 정렬되어 있기 때문에 특정 구간이나 특정 값보다 작거나 큰 값을 구할 수 있다
+*/
