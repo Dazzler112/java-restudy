@@ -1,0 +1,31 @@
+
+이번 학습은 Queue 인터페이스로 넘어가 보자
+Queue는 작업하고 싶은 순서대로 정렬할 때 쓰인다
+
+예를 들면, 할일 목록이 있다
+예를 들어, 하루를 시작하면 할 일이 있다
+할 일이 생기면, 할일 목록에 정리해 넣는다 그래서 시간에 맞게 할일을 한다
+이런 일을 할 때 Queue가 큰 도움이 된다
+Queue는 컬렉션의 연장이라 컬렉션의 메서드를 모두 지원한다.
+
+컬렉션의 메서드뿐만 아니라 
+Queue는 add, offer, remove, poll, peek이라는 메서드도 지원하고(이건 나중에 직접 해볼때 알아보겠다)
+
+interface Queue<E> extends Collection<E> {
+  boolean add(E paramE);
+  boolean offer(E paramE);
+  E remove();
+  E poll();
+  E peek();
+}
+
+우리가 구현할 Queue는 우선순위 Queue라는 것이다
+
+
+class PriorityQueue implements Queue {
+  // sorted - natural odrder
+  //
+}
+PriorityQueue에선 기본적으로, 너가 지정한 순서대로 정렬돼 있다
+하지만 나중에 임의의 비교자 구현을 통해 이 순서를 바꿀 수 있다 
+그래서 요소가 너가 원하는 임의의 순서대로 처리되길 원한다면 그렇게 설정할 수 있다
