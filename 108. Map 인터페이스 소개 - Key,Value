@@ -1,0 +1,70 @@
+
+이번시간은 Collection의 마지막 부분에 대해 알아보자
+Map 인터페이스이다, 맵 인터페이스의 제일 중요한 점은 Collection 인터페이스를 연장하지 않는다는 것이다.
+그래서 Collection과 관련된 모든 작업이 맵에선 적용되지 않는다 
+맵은 Collection 프레임워크의 일부이다 하지만 Collection 인터페이스를 구현하자는 않는다.
+
+맵은 키-값 쌍을 저장하는데 쓰인다
+예를 들면, 아래의 예제처럼 저런 문자들이 있다고 하자
+Example - A,C,A,C,E,C,M,D,H,A
+'A'는 몇개인지, 'C'는 몇개인지 저장한다면 
+{["A", 3], ["C", 3]} 를 입력한다 
+
+                        Map
+• Key - Value Pair
+ ‣ {["key1", value1], ["key2", value2], ["key3", value3]}
+• Example - A,C,A,C,E,C,M,D,H,A
+ ‣ {["A", 3], ["C", 3]}
+
+
+이런 상황에 맵을 찾는다 맵 인터페이스르 보면 
+맵 인터페이스 내의 대표적인 메서드가 키 - 값 쌍과 관련이 있다, 기초적인 것들은다 같다
+크기는 size는 몇가지 항목이 있는지 입력하면 되고, 
+그리고 isEmpty() 
+
+그리고 get,put등은 키와 값을 넣는다, 키를 값과 함께 입력하거나 특정 키로 값을 구할 수 있다
+그래서 예시에서는 ("A",3)이란 값을 넣었고 이제 "A"에 맞는 값을 불러올 수 있다 그럼 3이 나온다.
+
+특정 한 키를 삭제할 수도 있다, 그러면 특정 항목 전체를 지우는 것이 된다 (V remove(Object key);)
+
+그리고 putAll(),아니면 clear()같이 Collection을 비우는 메소드들도 사용할 수 있다 이건 다른 모든 Collection에도 존재하는 것이다.
+
+키는 Set으로 구할수 있다 그래서 너는 A,C,그리고 존재하는 다른 요소들의 세트를 구할 수 있다, 키라고 불리는것으로 (Set<K> keySet();)
+모든 키들이 포함된 세트를 구할 수도 있다
+("A",3) "A"가 키 3이 값이다 키-값 쌍이다, 이안에 존재하는 모든 키를 가지고 너는 세트를 구할 수 있다.
+
+그리고 값을 가지고 Collection을 구할 수도 있다 (Collection<V> values();),
+값 3,3과 같은 값을 구할 수 있겠지. 맵 인터페이스를 직접 다룰 때 이메서드에 더해 몇가지 더 보겠다
+interface Map<K, V> {
+  int size();
+  boolean isEmpty();
+  boolean containsKey(Object PramObject);
+  boolean containsValue(Object pramObject);
+  V get(Object key);
+  V put(K key, V value);
+  V remove(Object key);
+  void putAll(Map<? extends K, ? extends V> paramMap);
+  void clear();
+  Set<K> keySet();
+  Collection<V> values();
+  Set<Entry<K, V>> entrySet();
+  boolean equals(Object paramObject);
+}
+
+맵 인터페이스에는 네가지 중요한 구현들이 있는데 
+HashMap, HashTable, LinkedHashMap, TreeMap이다
+이들에 대해선 다음 학습에 더 깊이 알아보도록 하자.
+
+
+
+
+/*
+정리)
+이번학습엔 맵이라는 개념을 보았다
+맵은 키-값 쌍과 인터페이스가 다이다
+맵은 그에 관련된 다양한 메서드를 제공한다
+키를 쭉 구하거나 값을 쭉 구할 수 있고 
+아니면 키를 반복해서 특정한 키에 대한 값을 구할 수도 있다 
+특정 값을 키 및 값과 함께 삽입할 수도 있고
+특정 키를 기반으로 값을 구할 수도 있다
+*/
