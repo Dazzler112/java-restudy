@@ -1,0 +1,145 @@
+
+이번 단계에선, Queue에 있는 여러 메서드를 가지고 예제를 만들어보자
+
+텅빈 값으로 Queue를 만들어 보자
+jshell> Queue<String> queue = new PriorityQueue<>();
+queue ==> []
+
+•poll 메소드
+Queue에서 요소를 꺼낼 수 있는 메서드는 queue.poll()이고 queue가 비어있을 땐  poll은 null을 반환한다
+jshell> queue.poll();
+$2 ==> null
+
+•offer 메소드
+Queue에 요소를 추가하려 한다면 queue.offer()를 써서 요소를 추가한다
+이런식으로 "Apple"이라고 써서 추가할 수 있다
+jshell> queue.offer("Apple");
+$3 ==> true
+
+•addAll 메소드
+addAll()을 쓸 수도 있다, 이거 여러 요소르 추가하는 방법인데, 먼저 리스트를 만들고 Queue에 여러 요소들을 추가하면 된다
+알파벳 역순으로 입력해 보겠다
+jshell> queue.addAll(List.of("Zebra", "Monkey", "Cat"));
+$4 ==> true
+
+queue에는 무엇이 들어있을까? 
+알파벳 순서로 정렬돼 있다
+jshell> queue
+queue ==> [Apple, Cat, Monkey, Zebra]
+
+•poll 메소드 사용 및 Queue특성
+그리고 queue.poll()을 입력하면,
+jshell> queue.poll();
+$6 ==> "Apple"
+Apple을 반환한다, 이제 "Apple"을 처리할 수 있고
+
+queue를 지금 출력하면 뭐가 나올까?
+jshell> queue
+queue ==> [Cat, Zebra, Monkey]
+"Apple"은 queue에서 빠졌다, 그리고 나머지가 준비되어 있다, 
+그래서 queue.poll()을 한다면 다음요소가 선택된다
+
+jshell> queue.poll();
+$8 ==> "Cat"
+jshell> queue.poll();
+$10 ==> "Monkey"
+jshell> queue.poll();
+$11 ==> "Zebra"
+
+그리고 queue를 출력하면
+jshell> queue
+queue ==> []
+비어있다
+
+Queue는 전시회나 영화관에서 줄 서는 것처럼 작동한다
+Queue에선 요소의 우선순위를 지정할 수 있다는 점만 빼면 기본적으로 자연스러운 순서로 나열된다.
+여기서는 오름차순으로 되어있다, 그래서 요소 하나가 Queue에 추가되면 순서가 어떻게 되는지를 보고 처리된다
+
+
+
+•Queue 예제 
+
+이제 새로운 클래스를 만들어 보자 너가 할 일은 임의의 순서를 지정하는 것이다
+자연스런 순서는 queue를 처리하는데 사용되고 있으니 
+여기선 다른 순서를 지정해야 한다
+
+
+----------------------------------------------------------------------
+
+
+QueueRunner 클래스 파일
+
+
+
+
+package arraysTraining;
+
+import java.util.*;
+
+
+class StringLengthComparator implements Comparator<String> {//1-1
+
+	@Override
+	public int compare(String value1, String value2) {
+		//문자열의 길이를 기반으로 비교해야겠지?
+		
+//		return Integer.compare(value1.length(), value2.length());//이러면 오름차순으로 정렬됨//1-2
+		return Integer.compare(value2.length(), value1.length());
+	}
+	
+}
+
+public class QueueRunner {
+	
+	public static void main(String[] args) {
+		
+		Queue<String> queue = new PriorityQueue<>(
+							  new StringLengthComparator()); //1-2 생성자 안에 comparator의 새인스턴스를 입력하면 실행됨//•임의순서 출력시
+		queue.addAll(List.of("Zebra", "Monkey", "Cat")); //이제 queue.poll()를 입력
+		System.out.println(queue.poll());
+		System.out.println(queue.poll());
+		System.out.println(queue.poll());
+		System.out.println(queue.poll());
+	•일반 출력시
+    /*출력 == > 
+		 Cat
+		 Monkey
+		 Zebra
+		 null
+		 */
+		//"Cat"이 먼저다 왜냐면, "Cat"이 먼저 오기 때문 그다음 Monkey, Zebra  C,M,Z 
+		//이게 이 단어들이 처리되는 순서이다, 이게 자연스런 순서이다
+		
+
+  •임의순서 출력시
+		//하지만 다른 순서를 지정하려 한다 가정해보자 나만의 임의의 순서를 만들 건데
+		//예를들어, 문자열 길이를 기준으로 작업한다 해 보자//더 짧은 걸 먼저 처리한다고 가정 어떻게 해야할까?
+		//comparator를 정의하면 된다 //전에 comparator를 만드는 법을 봤지?//위에 클래스 생성,,.. 1-1
+		/*출력 ==>
+		 Cat
+		 Zebra
+		 Monkey
+		 null
+		 */
+		//출력이 세글자,다섯글자,여섯글자 순서를 반대로 뒤집고 싶으면 compare메소드 return 코드를 뒤집어 주면 된다
+		/*뒤집은 후 출력 ==>
+		 Monkey
+		 Zebra
+		 Cat
+		 null
+		 */
+		//순서가 뒤바뀌었다 긴것들 먼저 처리되고 다음 짧은 것들이 처리됨
+	}
+}
+
+----------------------------------------------------------------------
+
+
+
+
+
+/*
+정리)
+ 이번엔 Queue의 기본에 대해 봤다 poll, offer 그리고 
+ Queue안의 요소들이 처리되는 순서를 임의로 구현하는 방법을 알아봤다
+*/
