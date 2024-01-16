@@ -1,0 +1,82 @@
+
+이번 학습은 맵 내 여러 구현의 차이점을 알아보자
+HashMap, LinkedHashMap, TreeMap을 보도록 하자
+
+• HashMap
+HashMap으로 시작한다
+jshell> Map<String, Integer> hashmap = new HashMap<>();
+hashmap ==> {}
+지금 HashMap은 아무것도 갖고 있지 않다 몇가지 값을 넣어보자
+jshell> hashmap.put("Z",5);
+$2 ==> null
+jshell> hashmap.put("A",15);
+$3 ==> null
+jshell> hashmap.put("F",25);
+$4 ==> null
+jshell> hashmap.put("L",250);
+$5 ==> null
+jshell> hashmap
+hashmap ==> {A=15, F=25, Z=5, L=250}
+
+해시맵은 정렬된 순서도 삽입된 순서도 아님을 알 수 있다.
+정렬 순서와 삽입 순서를 둘 다 잃어버린다, 하지만 순서는 상관이 없기 때문에 효율적이다
+그래서 맵과 연관된 다른 데이터 구조보다 더 효율적이다, 
+너가 어떤 순서로 열쇠들이 저장되는지 신경쓰지 않는다면 HashMap은 완벽한 데이터 구조이다
+
+
+
+• LinkedHashMap
+다음은 LinkedHashMap이다
+jshell> LinkedHashMap<String, Integer> linkedHashMap = new LinkedHashMap<>();
+linkedHashMap ==> {}
+값을 넣어주자
+jshell> linkedHashMap.put("F", 25);
+$8 ==> null
+jshell> linkedHashMap.put("A", 15);
+$9 ==> null
+jshell> linkedHashMap.put("Z", 5);
+$10 ==> null
+jshell> linkedHashMap.put("L", 250);
+$11 ==> null
+
+jshell> linkedHashMap
+linkedHashMap ==> {F=25, A=15, Z=5, L=250}
+linkedHashMap을 입력하면 F,A,Z,L의 순서가 정확히 유지되는 것을 볼 수 있다
+이것은 삽입 순서를 저장한다, 우리가 삽입하는 순서가 열쇠를 저장하는 방식인 것이다
+
+
+• TreeMap
+이제 마지막으로 볼건 TreeMap이다
+jshell> TreeMap<String, Integer> treeMap = new TreeMap<>();
+treeMap ==> {}
+똑같이 값을 넣어줌
+jshell> treeMap.put("F", 25);
+$14 ==> null
+jshell> treeMap.put("A", 15);
+$15 ==> null
+jshell> treeMap.put("Z", 5);
+$16 ==> null
+jshell> treeMap.put("L", 250);
+$17 ==> null
+
+jshell> treeMap
+treeMap ==> {A=15, F=25, L=250, Z=5}
+열쇠가 정렬한 순서대로 나온다 A,F,L,Z
+
+
+
+/*
+정리)
+우리가 여기서 보고 있는 것은 맵 인터페이스의 세 가지 다른 구현이다
+그리고 그 차이점이 무엇인지도 명확하게 보았다 
+*/
+
+
+이제 예제를 풀어보자
+
+• 예제
+1. 문자열 "This is a great thing"이라 입력하자 이 문자열이 주어졌을 때, 각 문자가 문자열에서 몇 번 나오는지 알고 싶다
+2. 이 문자열에서 각 단어가 몇번이나 존재하는지를 알고 싶다
+
+어떻게 해야 할까? 과제이다 IDE를 이용해 이것을 하는 단순한 프로그램을 적어보자
+해답은 다음학습에
