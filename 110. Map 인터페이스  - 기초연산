@@ -1,0 +1,127 @@
+
+이번엔 맵으로 할 수 있는 기본적인 연산들을 해보도록 하자
+아주 간단한 맵을 하나 만들고 회수연산을 시행해 보도록 하자
+
+맵을 만드려면 두 가지 다른 종류를 입력해야 한다 <K, V> 열쇠의 종류가 무엇인지와 값의 종류가 무엇인지
+그럼, 열쇠부분엔 문자열이라고 하자
+jshell> Map<String, Integer> map = Map.of("A",3 , "B",5, "Z",10);
+map ==> {A=3, B=5, Z=10}
+맵이 만들어진 것이 보일것이다
+Z는 10, A는 3, B는 5 란 값을 갖고있다 
+평상시대로, .of()함수를 쓰면 값을 삽입할 수 없다
+
+예를 들어, 여기에 값을 넣는다면 Map.put("R",1) 이 가능할까?
+jshell> map.put("R",1);
+|  Exception java.lang.UnsupportedOperationException
+|        at ImmutableCollections.uoe (ImmutableCollections.java:142)
+|        at ImmutableCollections$AbstractImmutableMap.put (ImmutableCollections.java:1072)
+|        at (#2:1)
+
+jshell>
+허용되지 않는다, 왜냐하면 기본적으로 .of()를 이용해 만든 것은 모두 불변이기 때문이다
+그래서 안의 데이터를 더 이상 바꿀 수 없다
+
+• .get()
+그럼 이제 안에 들어있는 데이터를 보려고 한다, 맵을 입력해서 데이터를 보자
+jshell> map
+map ==> {A=3, B=5, Z=10}
+열쇠에 맞는 값Z를 알아내려고 하면 어떻게 해야 할까?
+map.get("Z")를 통해 "Z"를 입력하면 된다.
+jshell> map.get("Z");
+$4 ==> 10
+10이 출력된다. 
+
+비슷하게 map.이라 하고 존재하지 않는 값을 찾으려 할 때, 이것은 null값을 반환해 준다.
+jshell> map.get("C");
+$5 ==> null
+
+
+• .size()
+다른 Collection과 비슷하게 size가 있다, 요소가 몇개가 들어있는지 알수 있다
+jshell> map.size();
+$6 ==> 3
+
+• .isEmpty()
+그리고 isEmpty()도 있다
+jshell> map.isEmpty();
+$7 ==> false
+
+• .containsKey()
+그리고 특정 값이 존재하는지 확인하는 메서드도 있다, containsKey()를 입력한다
+"A"라는 키를 포함하고 있는지 보자
+jshell> map.containsKey("A");
+$8 ==> true
+F란 키는 갖고 있을까?
+jshell> map.containsKey("F");
+$9 ==> false
+거짓
+
+• .containsValue()
+그리고 값을 확인해 볼 수도 있다 containsValue()
+3이라는 값을 포함하는가?
+jshell> map.containsValue(3);
+$10 ==> true
+4도 포함 할까?
+jshell> map.containsValue(4);
+$11 ==> false
+
+이것들이 맵의 모든 구현에 존재하는 활용 메서드 중 일부이다
+
+• .keySet()
+또 입력할 수 있는 건 열쇠들의 전체 세트를 구하는 것이다, keySet이라 하면 된다
+이것은 데이터 구조와 열쇠들의 Collection만 가져온다.
+jshell> map.keySet();
+$12 ==> [A, B, Z]
+
+• .value()
+그리고 map.values()라 하면 값이 반환된다
+jshell> map.values();
+$13 ==> [3, 5, 10]
+
+jshell> map
+map ==> {A=3, B=5, Z=10}
+맵을 보면 "Z", "A", "B"라는 모든 열쇠가 KeySet에 의해 반환되는 거고 
+값은  10, 3 ,5가 나온다
+
+우린 맵의 기본적 회수 연산에 대해 알아보았다
+이제 맵 내의 데이터를 다루어 보겠다
+
+
+맵을 다시 초기화 해 준다
+jshell> Map<String, Integer> map = Map.of("A",3 , "B",5, "Z",10);
+map ==> {A=3, B=5, Z=10}
+
+• HashMap으로 예제 만들어 보기
+이제 같은 값을 가지고 HashMap을 만든다,
+jshell> Map<String, Integer> hashmap = new HashMap<>(map);
+hashmap ==> {A=3, B=5, Z=10}
+hashmap을 만들었다 이제 요소들을 어떻게 추가할까? hashmap.put()을 이용해 "F",5 라고 할 수 있다
+jshell> hashmap.put("F", 5);
+$17 ==> null
+
+jshell> hashmap
+hashmap ==> {A=3, B=5, Z=10, F=5}
+F키에 5가 추가된것을 볼 수 있다
+
+우리가 put()을 하자마자, null을 반환하면서 F값이 아무것도 없다고 한다
+즉, 무엇을 의미하냐면, "F"에 대응하는 것이 없었다는 것이다
+
+이제 "Z"를 입력하면, 예를들어, "Z"가 11번 발생한다고 하면 어떻게 될까?
+jshell> hashmap.put("Z",11);
+$19 ==> 10
+"Z"의 값이 11로 바뀌고 이전 값도 반환한다
+그래서 hashmap.put("Z", 11)를 입력하면 이전 값이었던 10을 반환한다
+
+해시맵을 해보자
+jshell> hashmap
+hashmap ==> {A=3, B=5, Z=11, F=5}
+보다시피 "A"는 3, "Z"는 11, "B"는 5 ,"F"는 5와 같다고 볼 수 있다
+
+
+
+
+/*
+정리)
+이번 학습은 해시맵을 예시로 들어 맵에 수행될 수 있는 공통된 연산들에 대해 알아보았다
+다음 학습은 HashMap과 TreeMap 그리고 LinkedHashMap 사이의 차이점에 대해 알아보자
+*/
