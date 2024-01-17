@@ -1,0 +1,105 @@
+
+저번 학습에서 예제로 줬던 것을 한번 보자
+
+• 예제
+1. 문자열 "This is an awesome occasion. " "This has never happened before."이라 입력하자 이 문자열이 주어졌을 때, 각 문자가 문자열에서 몇 번 나오는지 알고 싶다
+2. 이 문자열에서 각 단어가 몇번이나 존재하는지를 알고 싶다
+
+
+
+------------------------------------------------------------------------------------------
+
+
+MapRunner 클래스파일
+
+
+
+package collectionsTraining;
+
+import java.util.*;
+
+public class MapRunner {
+	
+	public static void main(String[] args) {
+		
+		//꿀팁 "This is an awesome occasion. This has never happened before."; 에서 occasion. This 사이를 Enter해 버리면 "..occasion". + "This...." 로 바뀐다(2줄로 됨)
+		String str = "This is an awesome occasion. "
+				+ "This has never happened before.";
+		//이제, 이 특정한 문자열에서 각 글자가 몇 번이나 있는지 알아내려 한다 어떻게 해야할까?
+		
+		//이게 맵인데 여기에 글자가 이 횟수만큼 저장된다 그래서 맵이 좋다 //아주 간단한 맵을 만든다
+		Map<Character, Integer> occurrences  =  new HashMap<>();
+/*		
+ 	실행 설명 예시)
+		//예로 occurrences에 요소 넣어주기
+		occurrences.put("T", 1); 
+		//기본적으로 발생에서는 아무것도 없을 것이다 
+		//문자열의 글자를 차례대로 본다면 맵의 키 목록에 없을 수도 있다 목록에 없다면, 검색할 때 null 값을 반환하겠지
+		//그리고 만약 null을 반환한다면, "T"를 1로 초기화한다
+		//이제 시작해보면 (str 변수보기) "T"를 볼 건데 "T"는 1이다 쭉 훑어보자
+		occurrences.put("h", 1);//다음으로 occurrences.put("h", 1); 을 입력하고 계속 이런식으로 입력한다
+//		occurrences.put("i", 1); //다음 i,1 이"i" 키를 검색하면 이미 i 하나가 존재하는 것을 볼 수 있다 그러면 값을 더해준다 
+//		          |
+//		          V
+		occurrences.put("i", 2);
+		//이런 종류의 알고리즘이 사용할 만한 것들이다.
+		 
+*/
+		//그럼 이제 해보자 , 다음은 문자 차례대로 보는 것이다
+		//글자 차례대로 확인하는 것이다, 이렇게 하는 방법 하나가 모든 글자를 입력하는 것이다.
+		char[] characters = str.toCharArray(); //이게 문자열의 모든 요소를 반환하고 그럼 그것을 개선된for 루프를 사용해 처리할 수 있다
+		for(char character : characters) {
+			//글자를 가져오고, 거기에 있으면 값을 늘려준다
+			//Get the character
+			Integer integer = occurrences.get(character); //글자가 여기 존재한다면? 지역 변수에 부여한다
+			if(integer == null) {// 그리고 만약 이 정수가 ==null이라면(존재하지 않는다는 뜻), 
+				occurrences.put(character, 1);//이게 초기화
+			} else { //아니라면?
+				occurrences.put(character, integer + 1);
+			}
+			//존재하지 않으면 값을 1로 초기화하고, 존재한다면 그 글자의 값을 올려줌
+			
+			//if it is there, we increment the count
+			//if it is not there, initialize to 1
+			//이것이 그런 알고리즘이다
+			
+		}
+		System.out.println(occurrences);
+		//출력 ==> { =9, a=5, b=1, c=2, d=1, e=8, f=1, h=4, i=4, m=1, n=4, .=2, o=4, p=2, r=2, s=6, T=2, v=1, w=1}
+		//보다시피 띄어쓰기 매우 많고 'a'는 5번,'b'는 1,'c'는 2,'d'는 1,'e'는 8번...이다
+		
+		
+		//교차검증을 해 볼수도 있다 그렇게 진짜인지 확인해 보는것이다
+		//문자열을 가져오는 논리는 아주 간단하다 //그래서 해야할것은 문자열을 가지고 맵을 만들어 보자
+		Map<String, Integer> stringOccurrences  =  new HashMap<>(); //Map<String,Integer>로 시작
+		
+		//String str 안에 있는 모든 단어를 확인할 것이다 
+		//그러면 str.split("")을 입력하면 된다
+		String[] words = str.split(" "); //이러면 그 안에 있는 모든 단어를 반환할 것이다 이걸 지연 변수에 넣으면 된다
+		
+		//이제 단어 리스트를 가지고 있으니 이제 확인할 수 있다
+		for(String word : words) {
+			Integer integer = stringOccurrences.get(word);
+			if(integer == null) {
+				stringOccurrences.put(word, 1);
+			} else {
+				stringOccurrences.put(word, integer + 1);
+			}
+		}
+		
+		System.out.println(stringOccurrences);
+		//출력 ==> {awesome=1, never=1, occasion.=1, before.=1, This=2, is=1, has=1, an=1, happened=1}
+		//지금 보이는 수정할 점은 점을 지우는 것이다, 점은 단어로 인식될 필요가 없다 나중에 개선하자
+	}
+}
+
+------------------------------------------------------------------------------------------
+
+
+
+
+/*
+정리)
+각 글자가 문자열에 몇 번이나 나오는지,
+단어가 몇 번이나 나오는지 출력하는 방법을 배웠다 
+*/
