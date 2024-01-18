@@ -1,0 +1,107 @@
+
+이번 학습은 다른 맵에 없는 TreeMap의 추가적인 작업들에 대해 알아보자
+
+jshell> TreeMap<String, Integer> treemap = new TreeMap<>();
+treemap ==> {}
+트리맵을 만들고
+
+jshell> treemap.put("F", 25);
+$2 ==> null
+jshell> treemap.put("Z", 5);
+$3 ==> null
+jshell> treemap.put("L", 250);
+$4 ==> null
+jshell> treemap.put("A", 15);
+$5 ==> null
+jshell> treemap.put("B", 25);
+$6 ==> null
+jshell> treemap.put("G", 25);
+$7 ==> null
+
+트리맵이 있으면 어떤 종류의 값들이 여기 있을까?
+
+jshell> treemap
+treemap ==> {A=15, B=25, F=25, G=25, L=250, Z=5}
+같은 열쇠들의 정렬된 순서대로 있다, A,B,F,G,L 그리고 Z임을 볼 수 있다
+이것이 트리맵의 특징이다.
+이게 우리가 배운 내용이였다
+
+언제든지 'Tree'란 단어가 보이면, 항상 정렬되어 있다는 것이다, 
+
+• NevigableMap 매서드 
+트리맵은 맵만이 아니라 NevigableMap도 구현한다 그리고, 
+NevigableMap은 여러 가지 흥미로운 매서드를 제공한다
+기본부터 시작해보자
+
+"B"다음 무엇에 무엇이 오는지 알아내고 싶다고 하자, 그럼 treemap.higherKey
+jshell> treemap.higherKey("B");
+$9 ==> "F"
+이것은 "B"보다 더 높은 값을 반환한다, "B"보다 큰 값이다
+이제 "C"를 볼 수 있다 이것은 같은 것들을 되돌려주겠지,
+jshell> treemap.higherKey("C");
+$10 ==> "F"
+
+• ceilingKey() , lowerKey매서드
+왜냐하면 이건 C보다 크니까, 하지만 Set에서 갖고 있던 것과 비슷한 함수가 있다,
+트리셋에서는 ceilingKey()지,CeilingKey()는 입력한 값과 같건 더 큰 값을 반환한다 (higherKey()는 더 큰값만 확인)
+ceilingKey는 같거나 큰 것이고 higerKey()는 초과를 냐타낸다, 그리고 여개에 상응하는 함수도 아래쪽에 갖고 있다
+그래서, lowerKey()는 "A"를 반환하고 flooreKey()는 B를 되돌려 준다
+jshell> treemap.ceilingKey("B");
+$11 ==> "B"
+
+jshell> treemap.lowerKey("B");
+$12 ==> "A"
+treemap.lowerKey("B");은 B보다 작은것을 찾고
+
+jshell> treemap.floorKey("B");
+$13 ==> "B"
+treemap.floorKey("B"); 이것은  B보다 작거나 같은것을 찾는 것이다.
+
+
+•firstEntry()
+너는 또 트리맵 안에 존재하는 첫번째 입력값을 구할 수도 있다
+treemap.firstEntry()로 말이다
+jshell> treemap.firstEntry();
+$14 ==> A=15
+
+•lastEntry()
+그리고 트리맵의 마지막 입력값도 가질 수 있다, 
+jshell> treemap.lastEntry();
+$15 ==> Z=5
+이건 정렬된 데이터이기 때문에 모든 데이터를 가져오기 쉽다 참조로 쓸 수 있게 빠르게 데이터를 출력해 보자
+
+jshell> treemap
+treemap ==> {A=15, B=25, F=25, G=25, L=250, Z=5}
+모든 데이터를 가져오기 쉽다, 참조로 쓸 수 있게 데이터를 출력해보자
+A는 15, Z는 5 마지막 입력값 트리맵의 데이터는 정렬되어 있기 때문에 데이터를 가죠오는게 쉽다
+
+무엇이 첫 번째인지, 무엇이 마지막인지, 무엇이 어떤것 보다 더 큰지, 어떤 것보다 더 작은지 같은 것들 말이다
+
+• subMap
+TreeSet과 비슷하게 하위 맵을 만들 수 있는 기능성 또한 있다
+subMap() 그리고 
+"C" 에서 "Y"까지 하위 맵을 원한다고 할 수 있다
+jshell> treemap.subMap("C","Y")
+$17 ==> {F=25, G=25, L=250}
+C와 Y사이의 모든것을 반환한다
+그래서 25,25,250을 출력한다
+
+B와 Z사이를 시도해보자 
+jshell> treemap.subMap("B","Z")
+$18 ==> {B=25, F=25, G=25, L=250}
+보는대로 B도 포함이 된다 , 즉 B와 같거나 큰, 하지만 Z보다 작은것을 나타낸다,
+subMap은 왼쪽으로는 포괄적이고 오른쪽으로는 배타적이다 그래서 Z는 포함되지 않았다
+
+포함 시키고 시키면 ("B, true, "Z", true)를 입력해라
+jshell> treemap.subMap("B",true,"Z", true);
+$19 ==> {B=25, F=25, G=25, L=250, Z=5}
+Z도 포함이 되었다
+
+
+
+/*
+정리)
+이학습에서 본 것은 트리맵이 NevigableMap 인터페이스를 구현함으로써 가지고 있는 몇 가지 중요한 작업을 알아보았다
+데이터가 정렬되어 있기 때문에 첫 번째 입력값, 마지막 입력값, 특정 값 사이의 하위맵, 그리고
+열쇠를 이용해 무엇보다 큰 아니면 무엇보다 작은 것들을 가져올 수 있다
+*/
