@@ -1,0 +1,111 @@
+
+저번 학습에선, 왜 제네릭이 필요한지 알아 보았다,
+이번 학습에선 저번에 했던 MyCustomerList에 제네릭을 구현하겠다.
+
+
+--------------------------------------------------------------------------------------------------
+
+
+MyCustomList 클래스 파일
+
+
+
+
+//많은 사람들이 제네릭이 복잡하다고 느끼는 경향이 있다
+//하지만, 제네릭은사실 매우 간단한 것이다.
+//너가 해야할것은 그저 제네릭 종류를 정의하는 것이다
+public class MyCustomList<T> {//<>이것은 각괄호이다 각괄호 안에는, 제네릭 타입을 정의할 수 있다
+//이것을 하고 난 다음에, 무엇이 일어나냐면, MyCustomList(T);라고 하자 마자	
+//GenericsRunner에 간단한 오류 하나가 여기에 나오는 것을 볼 수 있다 뭐라고 하는 거냐면, MyCustomList는 raw종류고 매개변수화를 시도해 보라고 나온다
+//보다 시피 MyCustomList에 <T>매개변수화를 지우면 여기에 경고가 뜨질 않는다
+//하지만<T>라고 하자마자 이것은 클래스가 종류 매개변수를 받아들인다고 한다 그래서, 너는 종류 매개변수를 특정할 수 있다
+	
+//	ArrayList<String> list = new ArrayList<>(); //이것을 String에서 T로 바꾸면 된다
+//	                  ↓
+	ArrayList<T> list = new ArrayList<>(); 
+	//그래서 ArrayList<T> 기저의 데이터 구조는, 같은 종류를 써야 한다는 것이다
+	//그래서, 문자열 대신,ArrayList<T>라고 하는 것이고 
+	
+	public void addElement(T element) {//같은 것으로 String 대신 T라고 하고
+		list.add(element);
+	}
+
+	public void removeElement(T element) {//이 안의 String 대신 T라 바꿔주는 것이다
+		list.remove(element);
+	}
+	//String이 들어있던 어느곳이든 T로 바꾸고 이것은 이제 기능성이 작동하는데 도움이 되겠지?
+	//다시 GenericsRunner클래스 파일로....
+	
+	//이제 toString()을 구현..
+	public String toString (){
+		return list.toString(); //지금은 복잡한 구현 검지검지
+	}
+}
+
+--------------------------------------------------------------------------------------------------
+
+
+
+
+
+--------------------------------------------------------------------------------------------------
+
+
+GenericsRunner 클래스 파일
+
+
+
+
+public class GenericsRunner {
+	
+	public static void main(String[] args) {
+
+		MyCustomList<String> list = new MyCustomList<>(); //그래서 여기 <String>이라 할 수 있다.
+		//또한, 종류를 말할 수 있다. 이 안에서 우리가 하고 있는 것은, 여기MyCustomList<T>에 종류를 추가하자마자, 
+		//여기 MyCustomList list =... 에 어떤 종류를 사용하고 싶은지 특정할 수 있다는 것이다
+		list.addElement("Element 1");
+		list.addElement("Element 2");
+		String value = list.get(0);
+		
+		System.out.println(list); //syso 출력
+		//출력 ==> [Element 1, Element2] 
+
+		MyCustomList<Integer> list2 = new MyCustomList<>();
+		//그래서 list2에는 이것이 정수라고 할 수 있다
+		
+		//하지만 요소추가 메소드는 아직 정수를 받아들이지 못한다 어떻게 해야할까? MyCustomList클래스파일로...
+		
+		list2.addElement(Integer.valueOf(5));
+		list2.addElement(Integer.valueOf(7));
+		Integer number = list.get(0);
+		//list2는 이제 정수를 추가할 수 있다 이제 toString을 구현할 것이다 MyCustomList클래스파일로..
+		System.out.println(list2);
+		//출력 ==> [5, 7]
+		//그리고 문자열을 저장하는 리스트, 정수를 저장하는 리스트를 가질 수 있다
+		//그리고 너는 이 리스트가 문자열([Element 1, Element2])을 저장하는것을 볼 수 있고 이 리스트는 정수([5, 7])를 저장한다
+		
+		/*사실 ArrayList가 어떻게 구현되는지 보면, 완벽히 똑같은 방식이다 ArrayList로 가면
+		public class ArrayList<E> 여기에 E를 사용하는것을 볼 수 있다 
+		add메소드를 찾아보면 add(E, Object[],int):void 보다시피 add(E)이다
+		E가 이들이 쓰는 것이다
+		
+		그것이 여기에서 T라고 특정하는 것이다
+		T가 타입의 압글자여서 사용하길 선호한다, 그리고 여기에 어떤 종류든 쓸 수 있다.
+		여기서 보통 쓰이는 명명 규칙은 항상 대문자를 쓰는것이다, 그리고 만약 
+		너가 더 멀리 확장하고 싶다면 최고의 방법은,
+		MyCustomList<T> 우클릭하면 Refactor -> Rename후 <TYPE> 모두 대문자여야 한다
+		이것이 특정 종류라는 것을 표시하기 위해서다 
+		만약 한종류만 사용되고 있으면, 그냥 T 단 한글자를 사용하는 것을 선호한다
+		그리고 너가 일정하게 하면 이코드를 보든 사람들 또한 이걸 매우 쉽게 이해하게 되겠지?
+		*/
+		//이 리스트에 또다른 메소드를 추가하고 싶다 MyCustomList요소를 리스트에 되돌려 받고 싶다
+		//그러면 할 수 있는것은 이렇게 하고 싶겠지? 위에다 쓰자 String value = list.get(0); get을 인덱스 기반으로 그래서 만약 첫요소 갖고 싶다면, get(0)을 쓰겠지?
+		//여기서도, 매우 비슷한 것이다 정수를 하고 싶다 Integer number = list.get(0); 이다
+		
+	}
+}
+
+--------------------------------------------------------------------------------------------------
+
+
+//get구현은 다음시간에 해보겠다 한번 생각해 보자
