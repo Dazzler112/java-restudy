@@ -1,0 +1,102 @@
+
+Collection을 갖고 작업할 때 제네릭을 포괄적으로 사용하고 있었다,
+이번 시간에는 제네릭을 이용해 클래스와 메서드를 만드는 법을 배울것이다.
+더 중요하게, 너는 왜 제네릭이 필요한지 이해하게 될 것이다.
+
+왜라는 질문으로 시작하자 우린 왜 제네릭이 필요할까?
+이 학습에서 이야기할 질문이다.
+
+
+
+----------------------------------------------------------------------------------------------------
+
+
+
+GenericsRunner 클래스파일
+
+
+
+
+package genericsTraining;
+
+public class GenericsRunner {
+	
+	public static void main(String[] args) {
+		//이제 ArrayList같은 클래스를 만들고 싶겠지, 임의의 ArrayList클래스를 만들고 싶다, 일반적인 ArrayList보다 조금 더 하는게 많은 것을 말이다
+		MyCustomList list = new MyCustomList();
+		//MyCustomList의 로직을 완성하기위해 MyCustomList클래스 파일로....
+		
+		//이제, 예를 들어, list.addElement와 ("Element 1"); ("Element 2");라 입력하고
+		list.addElement("Element 1");
+		list.addElement("Element 2");
+		
+		//제거도 할 수 있다. 하지만 같은 클래스를 숫자를 가지고 만든다 하자
+		//그래서, 숫자를 이용한 리스트를 만들고 싶다 가정한다, 자,정수들을 저장하고 싶다
+		MyCustomList list2 = new MyCustomList(); //그래서 list2를 저장한다면
+		list.addElement(Integer.valueOf(5));//value.of(5)
+		list.addElement(Integer.valueOf(7));//value.of(7)을 입력한다
+		/*니가 구현한 것은 현재로선 단 한가지 데이터 종류에만 작동한다 그데이터 종류가 무엇이지?
+		String(문자열)이다 
+		만약 정수나 정의한 임의의 클래스를 사용하고 그 종류의 요소를 저장하고 싶다면 
+		니가 구현한건 문자열만을 사용하도록 만들어졌기 때문에 작동하지 않는다
+		MyCustomList의 메서드는 문자열만을 받아들인다
+		그래서, 제 구현은 이 특정한 데이터 종류에 묶여있는 것이다
+		한 데이터 종류에 묶이지 않은 클래스를 만들려면 어떻게 해야할까?
+		MyCustomList클래스가 정수를 가지고도 작동하길 바라겠지
+		이 클래스(MyCustomList)가 만든 임의의 클래스와도 작동하길 바란다
+		이걸 어떻게 해야할까??
+		=> 이것이 제네릭이 풀려고 하는 문제점이다 제네릭을 제대로 쓰기만 하면 
+		이 특정 리스트에서 어느 요소든 삽입하고 제거할 수 있게 되겠지
+		이제 제네릭이 왜 필요한지 이해했다 제네릭이 해결하려고 하는 문제점이 무엇인지를
+		*/
+	}
+}
+
+----------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+----------------------------------------------------------------------------------------------------
+
+
+
+MyCustomList 클래스파일
+
+
+package genericsTraining;
+
+import java.util.*;
+
+//구조가 준비되었다
+public class MyCustomList {
+	//ArrayList를 가지고 싶다 
+	ArrayList<String> list = new ArrayList<>();
+	//그리고 이제, 이것에 요소를 추가할 수 있길 바란다 하자
+	public void addElement(String element) {
+		list.add(element);
+	}//논리를 최대한 간단하게 한다
+	
+	
+	//그리고 여기에 요소를 제거하는 메서드도 있다고 하자
+	public void removeElement(String element) {
+		list.remove(element);
+	}
+	//값들의 리스트를 저장할 수 있고 
+	//안에 존재하는 요소들에 추가하거나 제거할 수 있는 매우 간단한 클래스가 있다
+	
+	//설계가 완벽하진 않다, 제거가 성공적인지 아닌지를 출력하지 못한다든가 하는 점에서 말이다, 하지만 상관없다.
+	//지금 당!장!은, 제네릭에 관한 것들이 중요한 것이다.
+	
+	//이 MyCustomList의 인스턴스를 이 안에 만들었다. //GenericsRunner 클래스파일로..
+}
+
+----------------------------------------------------------------------------------------------------
+
+
+
+/*
+ 다음 학습에선 MyCustomList에 제네릭을 구현하는 것을 알아보자
+*/
