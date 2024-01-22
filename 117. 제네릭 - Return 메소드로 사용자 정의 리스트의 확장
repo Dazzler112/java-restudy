@@ -1,0 +1,88 @@
+
+
+-----------------------------------------------------------------------------------------------
+
+
+GenericsRunner 클래스 파일
+
+
+
+//이 특정 메서드(get(0))에 문자열만이 아니라 정수도 출력하고 싶다.. 어떻게 해야할까?//list.get(0)부분 ctrl+1하고 생성후//MyCustomList클래스파일로...
+public class GenericsRunner {
+	
+	public static void main(String[] args) {
+
+		MyCustomList<String> list = new MyCustomList<>(); 
+		list.addElement("Element 1");
+		list.addElement("Element 2");
+		String value = list.get(0);
+		
+		//여기에선, 너는 이것을 저장할 수 있다 그리고 지금, 만약 니가 실행한다면, 보다시피 그값을 가질 수 있다 그래서, 이쪽에서 값을 출력해보자
+		//리스트가 아니다,
+		System.out.println(value); 
+		//출력 ==> Element 1
+
+		MyCustomList<Integer> list2 = new MyCustomList<>(); 
+		list2.addElement(Integer.valueOf(5));
+		list2.addElement(Integer.valueOf(7));
+		Integer number = list.get(0);
+		// 그리고 여기에다 숫자를 출력할 것이다 우리는 양쪽 리스트의 첫 요소들을 출력하는 것이다
+		System.out.println(number);
+		//출력 ==> 5
+		//봐보자 Element 1 과 5가 출력됬다
+		
+		/*
+		 이제 우리가 할 수 있는것은, 우리는 종류를 되돌려받을 수 있다 여기서 중요한 것은 
+		 종류를 되돌려 받을수 있다는 것이다 
+		 MyCustomList클래스 파일에 
+		 addElement(T element), removeElement(T element) 이부분에서 우리는 종류를 매개변수로 보냈지
+		 T get(int index) 여기서 종류를 리턴 값으로 받을 수 있다, 
+		 제네릭에서는 클래스의 변수 종류를 특정하는 순간 일반적으로 어디서 종류를 특정하든 그 모든 위치에서
+		 <T>이것을 종류로 쓸 수 있다 그리고 이 활용도를 기반으로 
+		 MyCustomList<String> 가 문자열이라고 한다면 T가 있는 어디든지간에 문자열로 치환 되겠다 
+		 MyCustomList<Integer> 이경우는 T는 정수로 치환된다
+		*/
+		
+	}
+}
+
+-----------------------------------------------------------------------------------------------
+
+
+
+
+
+-----------------------------------------------------------------------------------------------
+
+
+MyCustomList 클래스 파일
+
+
+
+
+public class MyCustomList<T> {
+
+	ArrayList<T> list = new ArrayList<>(); 
+	
+	public void addElement(T element) {
+		list.add(element);
+	}
+
+	public void removeElement(T element) {
+		list.remove(element);
+	}
+	
+	public String toString (){
+		return list.toString();
+	}
+	
+	public T get(int index) {
+		
+		return list.get(index); //두 가지 이유로 컴파일되지 않는다 
+		//첫 번째론 문자열만으로 국한되고 싶지 않다 정수도 쓰고싶다 정수면 정수,문자열이면 문자열
+		//이것을 정의할 수 있는 방법은 public T라고 하는 것이다 자,public T get(index); 그리고 list.get(index) 우리가 돌려받고 싶은 것이다
+		//GenericsRunner 클래스파일로..
+	}
+}
+
+-----------------------------------------------------------------------------------------------
