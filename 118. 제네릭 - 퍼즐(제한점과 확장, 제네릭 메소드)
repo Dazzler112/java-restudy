@@ -1,0 +1,177 @@
+
+이번 학습에선,제네릭에 관련된 몇 가지 간단한 수수께끼들을 보자
+
+
+
+---------------------------------------------------------------------------------------------
+
+
+GenericsRunner 클래스파일
+
+
+
+
+public class GenericsRunner {
+	
+	//static X 라 할 수 있다 X는 종류의 하나이다, 무언가를 한다 치자(doSomthing)
+	static <X> X doubleValue (double value) {//X를 종류로써 여기 인자에 사용할 수 있고 (X value)라 입력 후 return value
+		
+		return value;
+		//어디서 X를 정의하고 있냐? X가 무엇이냐? 할 수 있는건 static 뒤에 <X>라 하는 것이다,
+		//그저 정적 키워드를 메서드로 옮겨야 했다, 정적, 그리고 종류
+		//여기서 하는 말은 같은 종류<X>의 값을 받아들이고(X value) 같은 종류의 값을 반환(return value)한다는 것이다.
+		//이 메서드는 사실 하는게 없다 무엇을 하게 하려면 doSomething에서 doubleValue이름을 바꾸겠다
+		//그리고 더블 값을 입력하려면 객체 클래스의 메서드만이 일반적으로 존재한다
+		//이제 doubleValue 이 메서드 덕분에 뭐든 함께 호출할 수 있겠지?
+		//이제 메인메소드로 가서 doubleValue()라 입력하고 (new String());이나 (Integer.value);나 특정값 5로 호출할 수 있을 것이다 
+	}
+	
+	
+	//만약 니가, <X extends List>라고 한다면 즉, 리스트를 구현하는 아무거나 라고 한다면, 여기에 쓸 수 있다.
+	static <X extends List> void duplicate (X list) {
+		//리스트를 연장하는 아무거나 여기와 여기에서도 사용할 수 있다, 값을 2배로 하는 대신 메소드명을 duplicate라 하고,
+		//되돌아오는 종류를 void라 하자 그리고 X를 받아들이고 이쪽에서, return부분에 할 것은 이 리스트의 요소들을 복사한다
+		
+		//할 것은, 이것을 (X list)라 하고 list.addAll, 그리고 다시 같은 리스트
+		list.addAll(list); //무슨일이 일어날까?
+		/*
+		리스트 안의 모든 요소들이 복사된다 이것이 ArrayList이든, LinkedList이든, 아니면 Vector든, 
+		리스트의 종류에 상관없이 리스트의 아무 구현이면 이것을 이용해 값을 복사할 수 있다.
+		*/
+	}
+	
+	
+	
+	public static void main(String[] args) {
+		
+		//지금은, 문자열과 정수를 쓰고 있다 MyCustomList를 오로지 숫자만 가지고 사용하고 싶다고 하자,
+		//즉 MyCustomList<String> 이것을 정수와 사용되는 것을 원치 않는다 이것을 어떻게 할 수 있을까?
+		//할 수 있는 방법은 MyCustomList 클래스 파일로...
+		MyCustomList<Long> list = new MyCustomList<>(); 
+		//뭐라고 입력하냐면, 문자열은 숫자가 아니라고 한다, 
+		//만약 너가 정수 클래스의 계층을 보면 MyCustomList<Integer>의 Integer 오른쪽 마우스 클릭 후 Quick Type Hierarchy 클릭
+		//전체 종류 계층을 보여준다 보다시피 정수는 숫자에 상속받는다 Number는 추상 메서드를 가진 추상 클래스이고
+		//Integer는 여기( public abstract class Number implements java.io.Serializable )에서 상속을받는 것이다
+		//이 특정 클래스는, Long과도 사용할 수 있고 long 요소들을 이 안에 쓸수도 있다 그래서,
+		//할 수 있는 건 long.get(0); 그리고 요소 (51);(71); 을 추가할 수 있지만 문자열을가지고는 사용할수 없다(String ->Long으로 수정)
+		//다시 MyCustomList 클래스 파일로....
+		list.addElement(51);
+		list.addElement(71);
+		Long value = list.get(0);
+		
+		System.out.println(value); 
+
+		MyCustomList<Integer> list2 = new MyCustomList<>(); 
+		list2.addElement(Integer.valueOf(5));
+		list2.addElement(Integer.valueOf(7));
+		Integer number = list.get(0);
+		System.out.println(number);
+		
+		
+		
+		
+		String value = doubleValue(new String());
+		Integer number = doubleValue(Integer.valueOf(5));
+		//즉 제한이 없다는 것이다 심지어 새 ArrayList로도 호출할 수 있다
+		ArrayList list1 = doubleValue(new ArrayList()); 
+		//여기서 너가 하는것에 제한은 없다, 왜냐면 이 메서드는 여기서 하는 말은, 
+		//입력값으로 ArrayList를 해야하기 때문에, 
+		//이제 이것을 고치면 이것을 입력할 수 있는것을 볼 수 있다 그리고 이메서드는 무엇을 하냐? 
+		//이 특정한 종류를 반환한다
+		//여기서 받기위한 문자열이 있어야 한다 그래서 String value = doubleValue라 하고 나서 
+		//아래는 String number 라 하겠다 작동할까? No 왜냐하면 이것은 같은 X라는 종류를 반환할 테니까 
+		//즉 어느 값을 통과시키든 그것이 너가 되돌려받는 값인 것이다 즉,값의 종류를 되돌려 받는다는 것이다
+		//즉 String number 이것은 정수여야 한다(Integer로 수정)
+		//그리고 리스트를 통과시키면 종류는 ArrayList로 나오겠다
+		/*
+		 static <X> X doubleValue (double value) {
+				return value;
+		 }
+		 이런 것을 함으로써의 진짜 이득은 종류를 제한할 때 생긴다 //위의 메소드로 다시 가서 하나더 생성.. 
+		*/
+		
+		//여기에 아주 간단한 리스트를 만들어 보자 우리가 한 것중 하나는 요소들을 value1, number1, 그리고 list1로 재명명했다
+		//새로운 리스트를 만들어 보자
+		ArrayList<Integer> numbers = new ArrayList<>(List.of(1,2,3));//이것을 변경할 수 있게 하고 싶어서 List.of()를 직접적으로 쓰지 않은것
+		//ArrayList에는 ,여기에 List.of(1,2,3); 요소들이 있는 리스트를 만들고 있다 뭐라고 할거냐면 ArrayList<Integer>
+		//그리고 이제 입력할 건 duplicate numbers
+		duplicate(numbers); //어떤일이 일어날까?
+		System.out.println(numbers); //1,2,3 이 숫자들이 복사되어야 겠지? 1,2,3은 다시 추가되어야 할 것이고
+		//1,2,3을 2번 볼 수 있어야 한다, 너도 보다시피
+		//[1,2,3,1,2,3]  ArrayList가 아니더라도 여기엔 아무 종류나 사용할 수 있다.
+		//LinkedList를 사용할 수도 있다
+		LinkedList<Integer> numbers = new LinkedList<>(List.of(1,2,3));
+		//[1,2,3,1,2,3] 종류에 상관없이, 이 메서드는 작동할 것이다 리스트를 연장하는 그 어떤 클래스도 사용할 수 있는 것이다
+		/*
+		static <X extends List> void duplicate (X list) 이 메서드의 멋진 사실은 
+		여기에는 리스트 클래스에 존재하는 모든 메서드들이 여기에도 가능하단 점이다 
+		그래서, 모든 리스트 메서드들이 가능하다 그래서 만약 너가 제네릭 논리를 리스트의 아무 구현에 구현하고 싶다면,
+		이런 것을 할 수있다. 이것은 매우 포괄적인 메서드이다
+		*/
+	}
+}
+
+---------------------------------------------------------------------------------------------
+
+
+
+
+
+
+---------------------------------------------------------------------------------------------
+
+
+
+MyCustomList 클래스파일
+
+
+
+
+public class MyCustomList<T extends Number> {//<T extends Number>라 하는것이다
+	//T가 숫자를 연장한다고 하자마자 GenericRunner 클래스파일의 MyCustomList<String> 인스턴스는 컴파일 오류가 뜨는걸 볼수 있다.
+	//GenericsRunner 클래스 파일로.... 
+	
+	//이것이 제한하는 방법이다. 제한의 장점은 요소에 가능한 모든 메서드들을 호출할 수 있다는 것이다
+	
+	ArrayList<T> list = new ArrayList<>(); 
+	
+	public void addElement(T element) {//이쪽으로 와서 .byteValue(); .doubleValue(); .floatValue(); 라 할 수 있다,
+		element.byteValue();        //왜냐면 이것들은 Number 클래스안에 모드 존재하는 메서드이기 때문이다 
+									//즉 숫자를연장하는 아무거나 이 메서드들이 존재하는 것을 알 수 있다. ❗ 이것이 장점이다.
+									//여기에 쓰일수 있는 클래스들을 제한 하면 모든 하위 클래스들은 이 클래스(Number)를 구현하는 장점이 있다
+									//그래서 이 특정한 클래스에서 메서드들을 쓸 수 있다 이것이 extends Number를 사용할 때의 장점이다. ❗
+		list.add(element);
+	}
+	/*
+	여태것, 종류를 가지고 제네릭을 써왔지? 제네릭을 클래스와 함께 정의했고 여기에<T> 사용했다,
+	제네릭은 종류에 한해서만 사용될 필요가 없다 메서드를 가지고 제제릭을 만들 수도 있다
+	*/
+	//예를 들어 간단한 정적 메서드를 만들어 보자 GenericsRunner 클래스 파일로...
+	public void removeElement(T element) {
+		list.remove(element);
+	}
+	
+	public String toString (){
+		return list.toString();
+	}
+	
+	public T get(int index) {
+		
+		return list.get(index);
+	}
+	
+}
+
+
+---------------------------------------------------------------------------------------------
+
+
+
+
+
+/*
+정리)
+이번 학습에선 제네릭에 관한 조금 더 복잡한 것에 대해 알아 보았다
+extends에 대해 이야기했고 제네릭 메서드를 만드는 방법에 대해 이야기했고
+그리고 어떻게 extends와 제네릭 메서드를 같이 사용하는지에 대해도 이야기해 보았다
+*/
