@@ -1,0 +1,135 @@
+
+제네릭에 대한 마지막 학습에는 WildCard란 것을 볼 것이다.
+전 단계에는 제네릭 클래스를 만드는 법과 제네릭 메서드를 만드는것을 보았다 
+이제, 와일드카드를 메서드 인수에 사용할 것이고 
+이 와일드카드들은 지역 변수들과 멤버 변수들에도 사용될 수 있다
+학습을 시작하겠다.
+
+
+
+
+-----------------------------------------------------------------------------------------------
+
+
+
+GenericsRunner 클래스파일
+
+
+
+public class GenericsRunner {
+
+	static <X> X doubleValue (double value) {
+		
+		return value;
+	}
+	
+	
+	static <X extends List> void duplicate (X list) {
+		
+		list.addAll(list);
+	}
+	
+	//숫자로 이뤄진 아무 리스트나 더할 수 있는 메서드를 만들고 싶다고 해보자//무엇을 의미하는 걸까?
+	//정적 메서드를 만든 다음 이것이 숫자를 반환한다고 해보자//숫자를 리턴하길 바라고
+	//이것을 sumOfNumberList<>라고 하겠다
+	static double sumOfNumberList(List<? extends Number> number) {//Number 클래스를 연장하는 아무 리스트나 받아들일 수 있었으면 좋겠고 number라 부르겠다
+	//이 ?물음표는 와일드카드라고 불리는 것이다 //숫자 클래스를 연장하는 아무 종류의 리스트는 적절한 리스트인 것이다, 즉, 숫자 클래스를 연장하는 아무 리스트나 이것에 매개변수로 입력될 수 있는 것이다 
+	//이제 논리를 구현해 보자, 다시 Number 대신에, 더블을 결과값으로 할 것이다.
+		double sum = 0.0;
+		for(Number number : number) {
+			sum += number.doubleValue();
+			//덧셈을 하고, 그다음 결과값을 되돌려주는것임 (지금 당장은, 여기 존재하는 이 메서드는, 아무 리스트나 더하는데 쓸 수 있다)
+		}
+		return sum;
+		//다음 메인메소드에 syso
+	}
+	
+	
+	static void addACoupleOfValue(List<? super Number> number) { //<? super Number>라고  하면 된다
+		//즉 너는 하한 경계가 숫자라고 하는 것이다 자, void addACoupleOfValue라 명명해준 다음
+		//이 리스트에 와서 numbers.add(1)을 추가하거나 (1.0);, (1.0f); 부동소수점, 아니면 심지어 롱을 추가할 수도 있다
+		numbers.add(1);
+		numbers.add(1.0);
+		numbers.add(1.0f);
+		numbers.add(1l);
+		//숫자 클래스의 하위 클래스인 이상 아무 종류나 이 특정한 numbers에 추가될 수 있는것이다.
+		//이것이 ❗ 하한 경계 와일드카드 ❗이다 
+		//다시 아래 메인메서드로...
+	}
+	
+	public static void main(String[] args) {	
+		//sumOfNumberList라 한다음 List.of()를 통과시킬 수 있다. (1,2,3,4,5)를 만들고 그다음 
+		System.out.println(sumOfNumberList.Listof(1,2,3,4,5));
+		//출력 ==> 15.0
+		
+		//더블 리스트를 만들겠지, 왜냐하면 모든 부동소수점은 기본적으로 Double이기 때문이다, 이것이 더블리스트가 되겠고 
+		System.out.println(sumOfNumberList.Listof(1.1, 2.1, 3.1, 4.1, 5.1));
+		//출력 ==> 15.5
+		
+		//너는 long리스트도 시도해 볼수도 있다, 이것은 모두 롱 리터럴일 것이다 그래서, 만들어진 리스트종류가 롱이겠지? 
+		System.out.println(sumOfNumberList.Listof(1l, 2l, 3l, 4l, 5l));
+		//출력 ==> 15.0
+		//보다시피 이 특정한 메서드는 이것들을 다 더할 수 있을 것이다, 즉 너는 15.0, 15.5, 그리고 15.0을 보게 되겠지
+		//신기하지? 이것은 정수도 더할 수 있고 부동소수점도 더할수 있고, 그리고 Long도 더할수 있다.
+		//<? extends Number> 이 안의 와일드카드는 ❗ 상한 경계 화일드 카드 ❗라고 불리우는 것이다
+		//그리고 하한 경계 와일드 카드라는 다른 와일드카드들도 있다, 어떻게 생겼을까? 다시 메서드 생성하게 윗부분으로...
+
+
+
+		//이제 이 리스트를 실해할 수 있다 간단한 실행으로 시작해보자 값 몇개를 추가하고, 그리고 ArrayList()를 만든다음
+		List emptyList = new ArrayList<Number>();
+//		System.out.println(addACoupleOfValue(emptyList)); void는 sysout(addACoupleOfValue())을 할 수 없다 그래서, sysout(emptyList);라 할것이다
+		addACoupleOfValue(emptyList);
+		System.out.println(emptyList); 
+		//출력 ==> [1, 1.0, 1.0, 1]
+		//그리고 보다시피 이 리스트는 통과시킨 모든 값들을 가지고 있다
+	
+		String value = doubleValue(new String());
+		Integer number = doubleValue(Integer.valueOf(5));
+		ArrayList list1 = doubleValue(new ArrayList()); 
+		ArrayList<Integer> numbers = new ArrayList<>(List.of(1,2,3));
+		duplicate(numbers); 
+		System.out.println(numbers); 
+		LinkedList<Integer> numbers = new LinkedList<>(List.of(1,2,3));
+		
+		
+		MyCustomList<Long> list = new MyCustomList<>(); 
+		list.addElement(51);
+		list.addElement(71);
+		Long value = list.get(0);
+		
+		System.out.println(value); 
+
+		MyCustomList<Integer> list2 = new MyCustomList<>(); 
+		list2.addElement(Integer.valueOf(5));
+		list2.addElement(Integer.valueOf(7));
+		Integer number = list.get(0);
+		System.out.println(number);
+		
+
+	}
+}
+
+-----------------------------------------------------------------------------------------------
+
+
+
+
+
+/*
+정리)
+이번 학습에선 상한 경계와 하한 경계 와일드카드들을 살펴보았다
+상한 경계는 Number 클래스를 연장하는, 즉, Number 클래스의 하위 클래스인
+모든 리스트들에 대해 공통된 논리를 구현하는데 도움을 주고,
+
+하한 경계 와일드카드는 우리가 숫자의 하위 타입들의 여러 다른 값들을 많이 추가할 수 있게 도와준다,
+
+저번 몇번의 단계에서는 제네릭에 대해 다양한 것들을 배웠다
+제네릭에 대해 보면 제일 흔히 사용되는 제네릭 종류는 종류<T>(Type)에 대한 제네릭이다
+즉, 이것이 제일 흔히 사용되는 제네릭이란 것이다 
+다른 흔히 쓰이는 제네릭은 메서드를 가지고 썼던 것이다 ( static <X extends List> void duplicate (X list) <==  이런것)
+즉, static <X extends List> void duplicate (X list) 여기에 메서드를 만들었고 제네릭을 이안(<X extends List>)에 선언했고, 사용했다
+
+본 다른 두가지 예시들 상한 경계 와일드카드와 하한 경계 와일드카드는 상대적으로 덜 쓰이지만
+이해해두면 좋은 것들이다
+*/
