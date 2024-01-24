@@ -1,0 +1,82 @@
+
+만약 너가 함수형 프로그래밍과 객체지향 프로그래밍 간의 제일 큰 차이점이 무엇인가에 대해 물어본다면 
+가장 돋보이는 것은 함수형 프로그래밍에서는 함수들이 일등 국민이다 
+일등 국민이 무엇을 의미하냐고? 예전에 했던 예시 하나를 보자
+
+
+----------------------------------------------------------------------------------
+
+
+
+
+package arraysTraining;
+
+import java.math.*;
+
+public class StudentRunner {
+	
+	public static void main(String[] args) {
+		
+		Student student = new Student("Ranga", 97,98,100); //학생은 객체이다
+    //이 객체는, 변수에 저장할 수 있고 변수에 메소드들을 호출할 수 있고 
+		
+/*
+    객체를 메소드에 데이터로서 통과시킬 수 있다
+    예를 들면 이런것)
+      public class RectangleRunner {
+  
+  	  public static void main(String[] args) {
+  		Rectangle rectangle = new Rectangle(12, 23);
+  		System.out.println(rectangle);
+  		
+  		rectangle.setWidth(25);
+  		System.out.println(rectangle);
+  
+      	}
+      }
+*/
+    
+		int number = student.getNumberOfMarks();
+		System.out.println("number of marks : " + number);
+		
+		int sum = student.getTotalSumOfMarks();
+		System.out.println("sum of marks : " + sum);
+		
+		int maximumMark = student.getMaximumMark();
+		System.out.println("maximum of marks : " + maximumMark);
+		
+		int minimumMark = student.getMinimumMark();
+		System.out.println("minumum of marks : " + minimumMark);
+		
+		BigDecimal average = student.getAverageMarks();
+		System.out.println("average : " + average);
+		
+		System.out.println(student);
+		student.addNewMark(35); 
+		System.out.println(student);
+		
+		student.removeMarkAtIndex(1);
+		System.out.println(student);
+	}
+}
+
+----------------------------------------------------------------------------------
+
+
+
+
+/*
+개요 정리)
+    이제, 함수나 메소드에 대해 생각해 보자 과연 메소드에 함수를 매개변수로 보낼 수 있을까?
+    메소드에게서 함수를 되돌려받는 값으로 할 수 있을까?
+    과연 변수에 함수를 지정할 수 있을까?
+    아니!, 여태까지, 이야기한 아무것에서나 변수에 객체를 저장하고, 객체를 매개변수로 보내고 객체를 리턴값으로 받았다
+    하지만 함수를 가지고는, 그렇게 할 수 없다
+    그리고 여기서 함수형 프로그래밍이 빛을 발한다, 함수형 프로그래밍은 들어와서 함수에 일등 지위를 주려고 한다
+    너는 그것을 어떻게 하는지 물어 볼 수 있다
+    이것이 다음 몇 개의 단계에서 시도해볼 것이다. 
+    함수로 변수를 만들어보고, 함수에 함수를 집어 넣어보고, 그리고 리턴값을 함수로 가져올 수 있는건 전혀 다른 사고방식을 요구한다
+    그리고 초보자로서 이 모든것을 이해하는 것은 약간 어렵고 복잡할 수 있다
+    그래서 이번 학습에선 이것을 매우 간단하게 할 것이다, 한 단계, 한 단계 아주 간단한 예시를 들면서 
+    함수형 프로그래밍에 관한 넓고 다양한 개념들을 하나씩 소개시켜 주도록 할 것이다.
+*/
