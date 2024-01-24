@@ -1,0 +1,114 @@
+
+이제 함수형 프로그래밍 학습을 해보자
+
+전 학습에선 함수형 프로그래밍이 일등 국민 지위를 주는 것에 중점을 둔다고 했지?
+조금은 이상한 정의지만 이게 무엇을 의미하는지 이번 학습 단계에서 보자 간단한 예시를 만들어 보자,
+이번은 함수형 프로그래밍을 사용하지 않겠다 
+기본적으로 객체 프로그래밍을 사용하고 그리고 이것이 어떻게 함수형 프로그래밍에서 구현되는지 볼 것이다
+
+
+
+-------------------------------------------------------------------------------------------
+
+
+
+FunctionalProgrammingRunner 클래스파일
+
+
+
+
+package funtionalProgramming;
+
+import java.util.*;
+
+public class FunctionalProgrammingRunner {
+	
+	public static void main(String[] args) {
+		//간단한 리스트를 만들자
+		List<String> list = List.of("Apple" ,"Banana", "Cat", "Dog");
+	
+		//루프도 사용 (모든값을 출력하기 위해)
+//		printBasic(list); 
+		  /* 출력 ==> 
+			Apple
+			Banana
+			Cat
+			Dog
+		  */
+		//이제 for문을 드래그 마우스 우클릭 Refector -> Extract Method(메소드추출)하고 이것을 printBasic이라 부르겠다
+		//이것이 아무 리스트나 출력하는 방식이다
+		//하지만, 함수형 프로그래밍을 가지고는, 또다른 접근법을 가져온다
+		
+		//간단한 코드 조각을 써 넣겠다, 지금 이단계에선 너가 이것을 완벽히 이해하지 못할 수 있지만,
+		//앞으로 몇가지 단계동안, 이해하도록 노력해볼 것이다 그리고 적은 코드를 쪼개볼 것이다
+		//아래 printBasic메소드를 복사해서 간단한 정적 메소드를 만들것이다.
+		
+		
+		printWithFP(list);//어떤 일이 벌어질지 보자 ❗ 1-1
+		/*
+		 출력 ==>
+		 Apple
+   		 Banana
+		 Cat
+		 Dog
+		 */
+		//루프를 돌리면서 매 문자열을 가지고 무엇을 할지 말하는 대신
+		//이것을 흐름으로 변환하고 forEach를 이 안에 호출한 다음 
+		//element -> System.out.println(element) 각 요소들을 가지고 무엇을 통과시켜 주는것이다
+		//신기한 접근법이다, 안그래?
+		//또다른 흥미로운 것은 forEach에 보내는 것이 무언인지에 대해서이다 
+		//element -> System.out.println(element) 이것이 데이터이냐? NO❗
+		//이것은 데이터가 아니다! 이것은 행동이다!
+		//코드를 보내는 것이다, 각 요소들 마다 이것( element -> System.out.println(element) )을 실행하라고 보내는 것이다
+		//forEach에 함수 코드를 보내는 것이다
+		
+	}
+
+	private static void printBasic(List<String> list) {
+		for(String string : list) {
+			System.out.println(string);
+		}
+	}
+	
+	
+	//하고 싶은것은 함수형 프로그래밍으로 출력하는 것이다
+	//함수형 프로그래밍에선, 같은 것을 하는 방법은
+	private static void printWithFP(List<String> list) {
+		//.stream이라 하는것이다
+		list.stream().forEach(
+					element -> System.out.println("element- " + element)
+					);
+		//이 리스트 안의 요소들을 갖고 값의 흐름으로 변환시키는 것이다
+		//그래서 이것( ("Apple" ,"Banana", "Cat", "Dog"); )은값의 흐름이 되는 것이다.
+		//즉, 처음에 Apple 다음 Banana, 다음 Cat, Dog
+		//forEach를 가지고 무엇을 하고 싶을까? 어떤 행동을 하고싶은지 볼 수 있다
+		//action(행동)은 그저 메소드에 불과하지, 맞지?
+		//어떤 행동을 하고 싶을까? 하고싶은 것은, 요소를 각자 가져가고 싶다, 즉 너는 요소들을 각자 갖고가고 싶고 그래서 syso(element)를 호출하고 싶겠지
+		//이제 (element -> System.out.println(element)); 이문법에 집중하자 자, 여기서 하는 말은
+		//list.stream().forEach하고 괄호 열고 괄호 안에는 element -> 라고 하는것이다 이것은 특정한 문법인데 -> 이것은 람다 표현이라는 것이다
+		//람다식에 대해선 나중에 더 알아보도록 하고, 여기서 하는 말은 이 리스트 안의 각자의 요소들에 syso를 실행하는 것이다 이것은 그저 논리에 불과하다
+		//element -> System.out.println(element) 이것이 메소드 코드이다. 즉 흐름 리스트 안의 각자 요소마다, 그 요소를 syso을 하라는 것이다.
+		//자, 여기서 할 것은 printBasic 대신에 printWithFP라 해 보겠다 (위의 메인메서드 수정...) ❗ 1-1
+	}
+}
+
+-------------------------------------------------------------------------------------------
+
+
+
+
+
+/*
+정리)
+저번 학습에 말했듯이 일등 시민 지위의 함수 
+그리고 이것( element -> System.out.println(element) )이 
+그것을 위한 첫 한발짝인 것이다
+흐름의 각 요소마다 실행될 함수를 보내는 것이다, 그리고 그것이 실행되고 출력되는것을 보았다
+심지어 이안의 논리를 바꿀 수도 있다 즉, 각 요소마다 ("element - " + element)라고 시킬 수 있다
+element - Apple , element - Banana... 
+이 단계에서 많은 것을 하진 않았지만, 람다 표현이라는 중요한 문법에 대해 소개했다 크게 신경쓰지는 말자
+❗ 중요한 것은 함수를 매개변수로서 또 다른 함수에 통과시킨후 루프를 돌릴 수 있다는 점이다
+이것이 배운 함수형 프로그래밍의 첫번째 중요한 개념이다 ❗
+이것은 그저 디딤돌에 불과하다
+아직 함수형 프로그래밍에 대해 배워야 할 것이 많고 이 여행을 다음학습에 진행하도록 하겠다
+*/
