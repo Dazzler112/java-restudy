@@ -1,0 +1,163 @@
+
+전 학습에선, 우리는 forEach에 대해 이야기해보고 요소들을 출력하기 위해 코드를 짜 보았다,
+이 학습에서 할 건, 논리를 추가하는 것이다,
+전 단계에서는 모든 것을 출력했었다
+이번엔 요소를 걸러내 일부만 출력하려고 한다
+Banana를 Bat으로 바꾸고 
+
+
+
+-----------------------------------------------------------------------------------------------------
+
+
+
+FunctionalProgrammingRunner2 클래스 파일
+
+
+
+
+package funtionalProgramming;
+
+import java.util.*;
+
+public class FunctionalProgrammingRunner2 {
+	
+	public static void main(String[] args) {
+		//Banana를 Bat으로 바꾸고 'at'으로 끝나는 요소들만 출력하고 싶다
+		//일반적으로 어떻게 해야할까? printBasic 이것을 복사해 printBasicWithFiltering을 추가하자
+		List<String> list = List.of("Apple" ,"Bat", "Cat", "Dog");
+	
+
+//		printWithFP(list);
+//		printBasicWithFiltering(list); //❕ 1-1
+		/*출력 ==> Bat
+				  Cat
+		*/
+		//Bat,Cat만 출력되고 있다
+		
+		//함수형 프로그래밍을 이용해 어떻게 똑같은 것을 할 수 있을까? forEach를 하기 전 우리는 무언가를 하고 싶다..
+		//printBasicWithFiltering 복사해서 printWithFPWithFiltering 으로 명명
+	
+		printWithFPWithFiltering(list);
+		/*출력==> element- Bat
+			     element- Cat
+		 */
+	
+	}
+
+	private static void printBasic(List<String> list) {
+		for(String string : list) {
+			System.out.println(string);
+		}
+	}
+	
+	//인제 어떻게 해야 할까 일반적으로 it(string.endsWith("at"))하고 출력하는 것이다
+	private static void printBasicWithFiltering(List<String> list) {
+		for(String string : list) {
+			if(string.endsWith("at")) {
+			System.out.println(string);
+			}//이것이 우리가 일반적으로 할 수 있는 방법이다.
+		}
+	}//이제 printBasicWithFiltering을 호출할 수 있다 ❕ 1-1로..
+	
+	
+	private static void printWithFP(List<String> list) {
+
+		list.stream().forEach(
+					element -> System.out.println("element- " + element)
+					);
+
+	}
+	
+	//우리가 할 것은 forEach에다 특정한 코드를 통과시키는 것이 맞지?
+	private static void printWithFPWithFiltering(List<String> list) {
+		//element(요소)마다 이걸 ( System.out.println("element- " + element) )하라고 하는 것이다 이걸 시키는 것이다
+		//이제 여기서 우리가 하고싶은 건 'at'로 끝나는 것들만 선택할 수 있게 하는 것이다, 그것을 할 수 있는 방법은 
+		//❗ 필터라고 불리는 것을 추가하는 것이다. ❗
+		
+		//즉, 필터 논리라고 할 수 있다 자, 필터는 이런 것들만 들어갈 수 있게 허용 한다
+		//어떤 것들이 들어가게 허용되길 바라고 있지? endsWith "at"인 요소들을 허용하고 싶다 그래서,
+		//너는 여기서 무엇을 하지?
+		list.stream()
+			.filter(
+					element -> element.endsWith("at")
+					)
+				.forEach(
+						element -> System.out.println("element- " + element)
+						);
+		//여기서 하는 것은, 여기 filter(element-> 이건 람다 표현의 표식이다,
+		//elements.endsWith("at") 즉, 이런 조건들을 만족시키는 것들만 골라내라고 하는 것이다
+		//그래서, 우리는 논리를 다시 한 번 보내는 것이다
+		//우리는 필터 메서드에 논리를 보내면서 하는 말은 '만약 이 논리가 사실이면, 가서 이것을 하고
+		//그렇지 않다면 아무것도 하지 말아라' 라는 것이다
+		
+		/* 
+    코드 정리)
+      다시 여기 어떤일이 벌어지는지 보이지? 그래서, 루프를 돌리는 대신에 우리는 다른 용어로 말하는 것이다.
+  		함수형 프로그래밍에서는 우리는 루프를 돌리고 많은 일을 하려는 것이 아니다, 우리가 하려는 것은 그저 
+  		각 요소를 가지고 무엇을 해야하는지 말해주는 것 뿐이다
+  		.filter()여기서 우리가 하는 말은, 첫 번째로, 그 요소를 걸러내는 필터 논리는 무엇이 되어야 할까?
+  		endsWith("at")을 충족 시키는 것 그것이 필터 논리이다
+  		그래서 endsWith()이것이 "at"으로 끝난다면? .forEach()각각 요소들마다,꺼내서 출력을 하는 것이다
+		*/
+
+	}
+	
+}
+
+
+-----------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+예제를 몇개 해보도록 하자 
+여기에는, 우리가 하는 것은 모든 숫자를 출력하는 것이다 맞지?
+jshell> List<Integer> list = List.of(1,4,7,9);
+list ==> [1, 4, 7, 9]
+
+jshell> list.stream().forEach(
+   ...>        element -> System.out.println(element)
+   ...>        );
+1
+4
+7
+9
+자, 우리는 list.stream().forEach라고 써서 모든 숫자를 출력했다
+이제 홀수 숫자만 걸러내 보자 이것이 첫 예제이다
+두번째 예제는 짝수만 걸러내 보자 
+첫 예제의 출력값은 1,7,9일 것이고, 두번째 예제의 출력값은 4뿐이겠지?
+한번 해 보자
+
+
+forEach 하기 전에 filter로 걸러줘야겠지? 그래서 무엇을 대상으로 걸려야 하지? 모든elements(요소들)이다,
+이제 홀수 숫자들을 출력하는 것으로 시작해 보자
+만약 이것이 ==1 이라면, 이것은 홀수란 뜻이겠지 그래서, 이제 forEach라 한 다음 실행시키고 싶은 코드를 짤 수 있겠지?
+무엇을 실행해야 할까? 각 요소들을 가지고 무엇을 하면 될까? syso
+jshell> list.stream().filter(element -> element%2 ==1).
+   ...>             forEach(
+   ...>               element -> System.out.println(element)
+   ...>               );
+1
+7
+9
+그래서 걸러내기 위한 논리를 말한 것이다 그것은 element -> element%2 == 1 그리고 이것들 마다 element -> System.out.println(element) 라 하고 싶겠지
+우리는 많은 양의 논리를 루프 없이 구현하려 하고 있는 것이다.
+
+
+이제 우리는 짝수를 출력하는 예제를 풀어보겠다
+jshell> list.stream().filter(element -> element%2 ==0).forEach(
+   ...> element -> System.out.println(element)
+   ...> );
+4
+
+이것만으로 짝수가 출력된다
+
+
+/*
+결론)
+함수형 프로그래밍은 이해하기 매우 복잡한 것이지만, 재미있는 부분도 있다
+초기 단계에서는 어렵게 느낄 수 있지만 너가 조금만 노력해 보면 함수형 프로그래밍을 아주 좋아할 것이다
+*/
