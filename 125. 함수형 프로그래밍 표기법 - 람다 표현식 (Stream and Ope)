@@ -1,0 +1,115 @@
+
+지금까지 함수형 프로그래밍이 함수에 일등 지위를 주는 거라고 배웠다
+함수가 다른 메서드에 매개변수(parameter)로 전달될 수 있게 허용하는 것이다
+
+이전 학습에서 함수형 프로그래밍을 시작했고
+함수형 프로그래밍에선 상태 변이가 없다는 것도 이야기했다
+그리고 함수형 프로그래밍은 어떻게 하나가 아니라 뭘 할지에 맞춘 거라고 했었다
+
+오늘은 함수형 프로그래밍에 잘 쓰이는 기본 단어를 배워보겠다
+
+• 람다식
+첫 번째는 람다 표현식이다
+
+	private static int fpSum(List<Integer> numbers) {
+		return numbers.stream().reduce(
+				 0,
+				 (number1, number2) -> number1 + number2);
+	}
+여기 보이는 부분은 일반적으로 람다 표현식(Lamdba Expression) 이라 한다 ( (number1, number2) -> number1 + number2)  이런것들..)
+단지 단축 매서드이다
+즉, 두 매개변수를 받아 합을 되돌려주는 매서드의 단축형인 것이다
+람다 표현식이라 불리고 그 안에 사실 여러 줄의 코드가 있을 수 있다
+(number1, number2) -> number1 + number2) 여기 어떤 변화가 일어나는지 보자 이 부분을 괄호 안에 {}를 넣을 것이다
+그리고 중괄호 안에 return을 명시해야겠지 그리고 syso도 추가하겠다 어떤 코드 블록이든 괄호 안에 입력할 수 있다
+그리고 syso안에 (number1 + " " number2) 를 추가하자 매서드를 만드는 것이다
+(number1, number2) -> {
+ System.out.println(number1 + " " + number2);
+ return number1 + number2
+} );
+
+	private static int fpSum(List<Integer> numbers) {
+		return numbers.stream()
+         .reduce(0,
+				 (number1, number2) -> {
+         System.out.println(number1 + " " + number2);
+         return number1 + number2
+        });
+	}
+이 전체가 람다 표현식인 것이다 람다 표현의 안에 매서드를 정의해 단축형으로 만든다
+람다 표현식은 매개변수가 있다 (number1, number2) 이 모든게 매개변수(prameter)다
+         System.out.println(number1 + " " + number2);
+         return number1 + number2
+이것이 바디(body)이다
+실행하면 어떻게 될까?
+/*출력==>
+ 0 4
+ 4 6 
+ 10 8
+ 18 13
+ 31 3
+ 34 15
+ 49
+*/
+보면 첫 줄에 0과 4가 이 메서드로 전달되고 합이 4라, 4와6이 전달, 합10이라 10 8이.. 전달된다 이렇게 49까지 진행된다
+실행 방식은 이렇다 이 특정 메서드에 더 나은 표기법일 수도 있겠다
+단, 논리가 매우 단순해야 한다 여러 줄의 코드는 할 수 없고 코드 한 줄만 가능한 것이다 한 줄이면 리턴이 필요가 없다
+	private static int fpSum(List<Integer> numbers) {
+		return numbers.stream()
+         .reduce(0,
+				 (number1, number2) ->  number1 + number2);
+	}
+
+• Stream
+다음 부분은 스트림이다 이는 간단히 객체의 소스이다
+
+	private static int fpSum(List<Integer> numbers) {
+		return numbers.stream().reduce(
+				 0,
+				 (number1, number2) -> number1 + number2);
+	}
+이 경우, 숫자 스트림이다 문자열 스트림일수도, 특정 클래스 객체 스트림일 수도 있다
+일반적으로 스트림에 관해서는 두 가지 연산이 있다
+중간 연산과 종단 연산이 있다
+
+private static void printWithFPWithFiltering(List<String> list) {
+		list.stream()
+			.filter(element -> element.endsWith("at"))
+				.forEach(element -> System.out.println("element- " + element));
+	}
+-첫 예시에서 필터를 해봤었다 즉, 요소(element)를 필터하는 거였다 (element -> element.endsWith("at"))
+이 부분이 중간 연산이다 중간 연산은 요소를 받고, 요소 스트림을 받아 스트림 안의 숫자를 reduce하거나
+다른 종류의 요소로 map할 수도 있다 
+하지만 중간 연산 결과는 또 다른 스트림이다
+즉, 필터 후에 또 다른 요소 스트림이 있는 것이다
+-종단 연산에서 요소(element)를 처리하고 소모한다 ( forEach(element -> System.out.println("element- " + element)); 이부분.. )
+요소(element)를 가지고 콘솔창에 출력한다 
+reduce는 종단 연산이다 뭘 하는 거였지? (.reduce(0,(number1, number2) ->  number1 + number2);)
+하나의 결과로 줄이는 것이다
+즉, 스트림을 입력값으로 받아 하나의 결과로 줄이는 것이다
+전체를 통째로 소모하여 간단한 결과를 되돌려주는 것이다
+이것이 종단 연산이다
+
+• 중간연산 종단연산 차이점
+즉, 중간 연산과 종단 연산의 차이점은 
+-중간 연산의 결과는 일반적으로 다른 스트림을 출력한다는 것이고
+-종단 연산의 결과는 스트림 전체를 소모하거나 하나의 값만 되돌려준다는 것이다
+
+중간 연산의 예는 필터였지 sort, distinct, 그리고 다양한 것들은 나중에 다뤄보겠다 
+
+종단 연산을 예로 들면, 특정 스트림에서 최소 요소 찾기, 최대 요소 찾기, 총합 찾기, 각 요소를 소모하기, 또는 forEach를 이용해 뭔가를 하려고 한 것이다
+이것은 모두 종단 연산이다
+
+
+
+
+
+/*
+정리)
+이번 학습에서 함수형 프로그래밍의 기본 용어를 배워보았다
+람다 표현식을 배웠다
+함수 생성의 단축형이고 여러 줄의 코드를 가질 수 있다
+코드가 단 한 줄만 있으면 return은 필요 없었다 여기까지 람다 표현식이다
+
+그 후에, 스트림, 스트림의 중간 연산과, 종단 연산에 대해서도 알아봤다
+*/
