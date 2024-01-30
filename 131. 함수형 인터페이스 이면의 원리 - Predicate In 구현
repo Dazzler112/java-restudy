@@ -1,0 +1,141 @@
+
+이번 학습은 람다식이 실행될 때 화면 뒤에서 구체적으로 어떤 과정이 일어나고 있는지 알아보겠다
+	
+private static void printWithFPWithFiltering(List<String> list) {
+		list.stream()
+			.filter(element -> element.endsWith("at"))
+				.forEach(element -> System.out.println("element- " + element));
+	}
+element -> element.endsWith("at") 이런식의 메소드를 element hyohen이나 요소와 요소를 매핑으로 이은 람다식에서
+.endsWith("at")를 붙여준 이러한 경우, 화면 뒤에서는 실제로 어떤 과정이 일어나고 있을까?
+작동하는 원리가 실제로 무엇일까? 
+
+이러한 마법 같은 일은 'Functional Interface',
+즉 함수형 인터페이스라고 불리는 것에 기반을 두어 실행된다
+
+
+
+-----------------------------------------------------------------------------------------
+
+
+
+LambdaBehindTheScreensRunner 클래스파일
+
+
+
+
+package funtionalProgramming;
+
+import java.util.*;
+import java.util.function.*;
+
+
+class EvenNumberPredicate implements Predicate<Integer>{//짝수를 찾고 싶은 것이니 implements를 적고 이 경우 Predicate라 적어 Integer를 실행한다
+
+	@Override
+	public boolean test(Integer number) { //이것이 Predicate 안에서 봤던 test 메소드이다
+		//이제 이부분에서 테스트 메소드를 실행해볼 수 있다
+		//테스트로 하고싶은게 무엇이였지? 언제 홀수가 되는지 묻는다
+		
+		//그러므로 여기에 return을 적어 반환받을 코드를 작성한다
+		
+		return number %2 == 0;
+		//즉 참이라는 값이 출력되는 것은 이게 짝수이기 때문이다
+		//그게 아니라면 false, 즉 거짓이 반환된다
+	}
+	
+}
+
+public class LambdaBehindTheScreensRunner {
+	
+	
+	
+	public static void main(String[] args) {
+		//몇개의 값으로 이루어진 리스트 생성 //그리고 filter()를 적어주고 함수를 사용해 볼것이다
+		//홀수를 걸러내는 필터로 생성 후 반복문 생성
+		List.of(23, 43, 34, 45, 36, 48).stream()
+				.filter(n -> n % 2 == 0)
+				.forEach(e -> System.out.println(e));
+		//출력 ==> 34
+		//이코드를 실행하면 출력 결과가 34만 나올거라는걸 알고있지? 
+		//짝수들을 더 추가해 보자 출력되는 숫자 개수를 좀더 늘려보기 위해서 늘림
+		/*출력 ==>
+		  34
+		  36
+		  48
+		  */
+		//리스트가 선언되었고, 필터링 진행 후, forEach를 하고있다
+		//그렇다면 화면 뒤에서 어떤일이 벌어지고 있는걸까? 이코드가 어떻게 필터 메소드에 전송되는 걸까?
+		/*
+		필터 메소드에 대한 이 설명을(Returns a stream consisting of the elements of this stream 
+		that matchthe given predicate. This is an intermediateoperation.) 
+		대략적으로 살펴보면, 적힌 내용에 따르면 'stream of Integer'를 사용하고 있고, 여기서 필터는 
+		클래스의 형태인 Predicate를 허용한다고 이부분 글이 설명하고 있다 filter()를 ctrl+클릭해서 들어가보자
+		
+		그리면 filter()메소드에 들어올수 있고     
+		Stream<T> filter(Predicate<? super T> predicate); 이부분은 저 구체적인 메소드의 시그니처인 것이다
+		filter()메소드의 시그니처에 관해 설명해 보겠다 
+		이 필터는 'Predicate'라는 것이 가능토록 허용한다 그러면 Predicate가 무엇일까? 이번엔 Predicate에 ctrl+클릭 해서 정보를 보자
+		
+		@FunctionalInterface
+		public interface Predicate<T> {
+		
+		Predicate를 들어와 보면 Functional Interface라 적혀 있다
+		여기서 FunctionalInterface는 'test'라 불리는 것이다
+		 
+		 boolean test(T t);
+		 
+		 여기 있는 것들을 살펴보자 Predicate가 인터페이스로 존재하고, 이게 Predicate 가 인터페이스로 존재하고,
+		 이게 test라 부르는 메소드를 가지고있다 
+		 그리고 PredicateInterface를 살펴보면, 이게 실행되지 않은 유일한 메소드이다
+		 Predicate안에서 기본적으로 실행되지 않는 유일한 메소드이다
+		 그럼 이제, 어떻게 Predicate Interface와 일치하게 매핑된 것인지 알아보자
+		 만약 인터페이스를 허용하는 메소드를 가지고 있다면, 그 인터페이스에 대해서만, 그 인터페이스의 실행에 대한 대상만 파라미터로서 실행이 가능하다
+		 그렇다면 이런 일이 왜 발생하는 걸까?
+		*/
+		//여기서 한가지 작업만 더 해보자 이제 여기서 Predicate 인터페이스를 구현해 보도록 하겠다
+		//Integer를 사용할 것이니 이렇게 해보자 여기 술자들로 이루어진 리스트가 있다 즉,Predicate의 정수를 생성할 것이다
+		//이를 통해 구현하는 코드를 작성해 보겠다 main메소드 위로 가보자
+		
+		List.of(23, 43, 34, 45, 36, 48).stream()
+		.filter(new EvenNumberPredicate())//먼저 EvenNumberPredicate를 생성한 후, 다시실행해 보자
+		.forEach(e -> System.out.println(e));
+		/*출력==>
+		 34
+		 36
+		 48
+		 34
+		 36
+		 48
+		 위에 코드와 같이 두줄의 코드에서 같은 결과가 출력되는것을 이렇게 확인할 수 있다
+	    */
+		//정확히 말하면 로직을 이용할 때 이러한 현상이 발생한다 로직을 이용하고
+		//여기에 필터 메소드를 사용하면, 화면 두에서는 이런 일이 일어난다
+		//자바 컴파일러가 함수형 인터페이스를 실행한다
+		//함수형 인터페이스에서 가장 중요한 것은, Predicate처럼 딱 한 개의 메소드만 정의되지 않는다는 것이다
+		//기본적으로 람다형을 생성할 때에는 특정 메소드를( boolean test(T t); ) 실행해주는 작업을 한다
+		
+	}
+}
+
+-----------------------------------------------------------------------------------------
+
+
+
+
+/*
+정리)
+정리하면, 우리는 여기에서 실행되지 않은 유일한 메소드( n -> n % 2 == 0 )를 불러와  
+이 부분이 실행되도록 하는 것이다 그러므로 test 메소드에서 너가 여기서 정의한 로직대로
+실행되는 일이 일어날 것이다 이게 코드가 실행될 때 실제로 일어나는 일들이다
+필터링 후에 메소드에 값을 집어넣는 것이다 이 특정한 인터페이스를 Predicate라고 부르는데,
+그 이유는 이게 하는 작업이 평가를 진행한 후에 참인지 거짓인지를 판단하여 그 값을 반환하기 때문이다
+정리하면 Predicate 인터페이스는 test를 통과했는지 아닌지에 관련된 값을 반환한다
+
+이제 이 문제는 너에게 연습문제로 남겨두겠다 forEach Interface를 통일하게 사용해 주면 된다
+즉 List.of(23, 43, 34, 45, 36, 48).stream()
+		.filter(new EvenNumberPredicate())//먼저 EvenNumberPredicate를 생성한 후, 다시실행해 보자
+		.forEach(e -> System.out.println(e));
+여기서 forEach를 가져와 자세하게 어떤일이 일어나는지 알아보고, 이부분에서 코드가 실행되도록 진행해 봐라
+즉,forEach를 여기에 사용할 때 정확히 어떤 일이 일어나는지에 대해 알아보면 된다.
+*/
