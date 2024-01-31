@@ -1,0 +1,132 @@
+
+함수형 프로그래밍에 대한 내용을 시작하며, 
+함수형 프로그래밍은 메소드에 대해 1급 지위를 부여하는 것이라는 사실에 대해 이야기 했었다
+메소드를 변수에 저장할 수 있고, 메소드에 전달하거나 메소드로부터 값을 반환하도록 할 수 있었다
+이들 중 한 가지의 경우에는 매우 자주 사용했었다
+어떤 것을 자주 사용했는지 한번 기억을 떠욜려 봐라
+
+이번 단계에선, 다른 두 가지 경우에 대해 배워보려고 한다
+세 가지 경우에 관해 이야기하고 있었지?
+하나는 변수에 함수를 저장하는 것, 두 번째는 메소드를 전달하여 주는것, 세번째는 함수를 메소드로부터 반환받는 것
+우리는 지금까지 예전에 했던 학습중에 우리가 생성한 LambdaBehindTheScreensRunner를 가져와 보았다
+
+/*
+.filter(n -> n % 2 == 0)=> 여기서 메소드를 전달해 줄것이다 이것은 다른 무엇도 아닌 메소드이다, 
+그렇지? 람다는 다른 무엇도 아닌 ,메소드의 지름길이다
+그러므로 여기서 메소드를 전달, 즉 함수를 메소드로 전달하고 있다 filter 메소드의 정의에 대해 전달하고 있는 것이다 
+그러므로 이것은 //2.Passing functions to methods 이미 작업이 완료되었다
+
+너는 함수를 변수에 저장하거나, 함수를 메소드로부터 반환받는것이 가능하다 생각하냐?
+이 작업을 이 단계에서 어떻게 할 수 있는지 알아볼것이다
+*/
+-------------------------------------------------------------------------------------------------------
+
+예제 참조)
+LambdaBehindTheScreensRunner 클래스파일
+
+
+
+
+
+package funtionalProgramming;
+
+import java.util.*;
+import java.util.function.*;
+
+
+class EvenNumberPredicate implements Predicate<Integer>{
+
+	@Override
+	public boolean test(Integer number) { 
+		return number %2 == 0;
+	}	
+}
+
+
+class SystemOutConsumer implements Consumer<Integer> {
+
+	@Override
+	public void accept(Integer number) {
+		System.out.println(number);
+	}	
+}
+class NumberSquareMapper implements Function<Integer, Integer>{
+
+	@Override
+	public Integer apply(Integer number) {
+		return number * number;
+	}											
+}
+
+public class LambdaBehindTheScreensRunner {
+	
+	
+	public static void main(String[] args) {
+	  //1.Storing functions in variables => 하나는 변수에 함수를 저장하는 것
+    //2.Passing functions to methods => 두 번째는 메소드를 전달하여 주는것
+    //3.Returning functions from methods => 마지막 세번째는 함수를 메소드로부터 반환받는 것
+//		List.of(23, 43, 34, 45, 36, 48).stream()
+//		.filter(n -> n % 2 == 0) //=>이부분 마우스 오른쪽 버튼 누르고,Refactor 찾은다음 Extract Local Variable 클릭후, evenPredicate 라고 지역변수를 설정하여주자
+//    .map(n -> n * n)
+//		.forEach(e -> System.out.println(e));
+                          |
+                          V
+    Predicate<? super Integer> evenPredicate = createEvenPredicate();
+    //여기서 우리는 무엇을 하고자 했었나? //우리가 실행하고자 하는 코드를 포함하는 지역변수를 생성하려고 한다
+    //그러므로 여기에 또 다른 predicate 중 하나인 oddPredicate를 생성해 주도록 하자, ㅇㅋ? 즉,oddPredicate를 생성하고
+    Predicate<? super Integer> oddPredicate = n -> n % 2 == 1; //이 값이 ==1이라고 하자
+    //여기서 정의하고 있는것은 메소드, 즉 메소드의 코드이다
+    //우리는 현재 메소드의 정의를 생성하고 그 예시를 찾고 있다 이게 변수에 함수를 저장하는 방법이다 //1.Storing functions in variables
+    /*
+    다음으로, 메소드로 부터 함수를 반환받고 싶을 경우, 이 또한 가능하다 evenPredicate의 n -> n % 2 == 0을 선택해 준 다음,
+    마우스 오른버튼 누르고 Refactor => Extract Method를 눌러주고 메소드의 이름은 같은 값을 부여하겠다 이름은 createEvenPredicate()를 적고
+    EvenPredicate라고 불리는 메소드가 생성되어 여기 존재하는지 확인해보겠다
+    */
+  
+		List.of(23, 43, 34, 45, 36, 48).stream()
+		.filter(evenPredicate)
+		.map(n -> n * n)
+    .forEach(e -> System.out.println(e));
+		
+	
+
+
+
+    List.of(23, 43, 34, 45, 36, 48).stream()
+		.filter(new EvenNumberPredicate())
+		.map(new NumberSquareMapper())
+    .forEach(new SystemOutConsumer());
+
+	}
+
+    //여기 createEvenPredicate라고 하는 메소드가 생성되었다 그렇다면 여기서 반환하는 값은 무엇일까?
+    private static Predicate<? super Integer> createEvenPredicate() {
+    
+		return n -> n % 2 == 0;
+	  //한 함수를 반환하고 있고, 메소드 하나를 반환받는 것이다 ㅇㅋ? 
+  }
+}
+
+-------------------------------------------------------------------------------------------------------
+
+
+
+
+/*
+정리)
+	  1.Storing functions in variables => 하나는 변수에 함수를 저장하는 것
+    2.Passing functions to methods => 두 번째는 메소드를 전달하여 주는것
+    3.Returning functions from methods => 마지막 세번째는 함수를 메소드로부터 반환받는 것
+
+이 세 가지 경우에 일어나는 모든 마술은 함수형 인터페이스이기 때문에 가능하다 
+그러므로 여기 메소드를 위해 코드를 정의하고 있을지라도, ( Predicate<? super Integer> oddPredicate = n -> n % 2 == 1 )
+자바 안에서 predicate 인터페이스를 실행한다 여기서 같은 일이 벌어질 것이다
+
+자바는 이 함수형 인터페이스를 실행하도록 하는 implementation을 내부적으로 생성한다.
+    private static Predicate<? super Integer> createEvenPredicate() {
+		return n -> n % 2 == 0;
+    }
+
+이번 학습에선, 함수형 프로그래밍에서 함수는 1급 지위를 갖는다는 사실을 보여주려고 했다
+변수 안에 저장할 수도 있고, 메소드에 전달할 수도 있으며, 메소드로부터 반환받을 수 있다
+*/
