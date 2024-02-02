@@ -1,0 +1,172 @@
+
+
+코딩 예제: 강좌 이름의 길이 구하기
+
+이번 문제에서 여러분은 FunctionalProgrammingMagic클래스 안에서 getCourseNameCharacterCount() 함수를 완성해야 합니다. 
+이 함수는 강좌 이름 리스트를 받아서 각 강좌 이름의 문자 개수가 담긴 리스트를 리턴합니다.
+
+• 엣지 케이스:
+- 입력된 리스트는 null이 될 수 있습니다. 그런 경우에도 함수는 빈 리스트를 리턴해야 합니다.
+
+• 예시
+-문제를 더 잘 이해하기 위해 다음의 예시를 참고하시기 바랍니다.
+• 예 1
+입력:
+List<String> courses = List.of("Math", "English", "History", "Physics");
+출력:
+List<Integer> result = List.of(4, 7, 7, 7);
+• 예 2
+입력:
+List<String> courses = List.of(); (빈 리스트)
+출력:
+List<Integer> result = List.of(); (빈 리스트)
+• 예 3
+입력:
+List<String> courses = null; (null 리스트)
+출력:
+List<Integer> result = List.of(); (빈 리스트)
+
+
+• 참고사항
+- stream() 함수를 사용하여 리스트로부터 요소 수열(스트림)을 생성합니다.
+- map() 함수를 사용하여 주어진 함수를 스트림 안의 각 요소에 적용합니다.
+- String::length 메서드 참조를 사용하여 각 문자열의 길이를 얻습니다.
+- collect() 함수를 사용하여 스트림으로부터 결과를 얻습니다. 
+  Collectors.toList()는 입력된 요소들을 새로운List에 누적하는 컬렉터입니다.
+
+
+해당 코드는 기본 뼈대이다
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class FunctionalProgrammingMagic {
+
+    public static List<Integer> getCourseNameCharacterCount(List<String> courses) {
+        // TODO: Write code
+    }
+}
+
+해당 코드를 이용하여 지침을 완성하시오
+
+
+
+
+
+
+
+
+
+
+
+
+
+-----------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+힌트)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1. 입력된 리스트가 null인지 검사합니다. 만일 그렇다면 빈 리스트를 리턴합니다.
+2. 입력된 리스트가 null이 아니라면 리스트로부터 스트림을 생성해야 합니다.
+3. 스트림의 map() 함수를 사용하여 리스트의 각 요소에 변환을 적용합니다.
+4. 이 경우에 그 변환은 문자열의 길이를 얻는 것입니다. String::length 메서드 참조를 사용하면 됩니다.
+5. 각 문자열을 그것의 길이에 매핑한 후에 collect() 함수와 Collectors.toList()를 사용하여 
+   그 길이들을 수집하여 새로운 리스트에 담습니다.
+
+-----------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-----------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+해답)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class FunctionalProgrammingMagic {
+
+    public static List<Integer> getCourseNameCharacterCount(List<String> courses) {
+        //null이면 List.of를 반환하는데 빈 List를 만든다 ,이걸 반환해 주고
+        if(courses == null) {
+            return List.of();
+        }
+        //null이 아니라면 courses.stream을 호출한다 stream 함수는 이걸 stream으로 반환하고 이걸 가지고 매핑하면 됨
+        //각 이름을 길이랑 매핑해 주면 되는데 str -> str.length를 해주면 각 문자열에 length가 호출된다 이렇게 하는 방법과
+        //또 다른 접근 방법은 메소드 참조로 String::length를 이용한다
+        //이제 수집을 한다 collect를 호출 Collectors.toList(); 그리고 이걸 반환하면 된다
+        return courses.stream().map(String::length).collect(Collectors.toList());
+    }
+}
+-----------------------------------------------------------------------------------
