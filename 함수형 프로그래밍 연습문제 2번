@@ -1,0 +1,178 @@
+
+코딩 예제: N개의 첫 숫자들의 세제곱 구하기
+여러분에게는 미완성인 getCubesOfFirstNNumbers() 메서드가 포함되어 있는 
+미완성 상태의 Java 프로그램 FunctionalProgrammingMagic이 제공되어 있습니다.
+
+이 메서드는 정수 n을 입력값으로 받아서 첫 자연수 n개의 세제곱들이 담긴 리스트를 리턴합니다.
+
+• 엣지 케이스
+
+- n이 언제나 0보다 크거나 같다고 가정합니다.
+- 또한 만일 n이 0이라면 여러분의 코드는 빈 리스트를 리턴해야 합니다.
+
+• 입력 형식
+- 메서드의 입력값은 세제곱을 계산해야 하는 자연수의 개수를 나타내는 하나의 정수 n입니다.
+
+• 출력 형식
+- 메서드는 첫 자연수 n개의 세제곱이 포함된 List<Integer>를 리턴해야 합니다.
+
+• 지침
+1. IntStream.range()를 사용하여 1부터 n(n도 포함)까지의 정수 수열을 생성합니다.
+2. map() 함수를 스트림의 각 숫자에 적용합니다. 이 함수는 각 숫자의 세제곱을 계산해야 합니다.
+3. map() 함수는 IntStream을 생성하므로 여러분은 그걸 Stream<Integer>로 변환해야 합니다. 
+   다음 단계에서 사용하는 collect() 함수가 IntStream이 아닌 Stream<T>를 요구하기 때문에 그렇게 해야 합니다.
+   boxed() 함수를 사용하여 변환하십시오.
+4. 마지막으로 collect() 함수와 Collectors.toList()를 사용하여 세제곱된 숫자들을 수집하여 List<Integer>에 넣고 리턴하십시오.
+
+• 예시
+- 입력: n = 5 리턴 값: [1, 8, 27, 64, 125]
+
+• 예 2
+- 입력: n = 3 리턴 값: [1, 8, 27]
+
+• 예 3
+- 입력: n = 0 리턴 값: []
+
+
+해당 코드는 기본 뼈대이다
+
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.List;
+
+public class FunctionalProgrammingMagic {
+
+    /**
+     * This method generates the cubes of the first n natural numbers.
+     * @param n The number of natural numbers for which cubes are to be calculated.
+     * @return List<Integer> This returns a list of cubes of the first n natural numbers.
+     */
+    public static List<Integer> getCubesOfFirstNNumbers(int n) {
+        // Write your code here
+    }
+}
+
+해당 코드를 이용하여 지침을 완성하시오
+
+
+
+
+
+
+
+
+
+
+
+-----------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+힌트)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+힌트 1: 입력값 검증부터 시작합니다. 만일 입력값 n이 음수이면 IllegalArgumentException을 냅니다.
+힌트 2: IntStream.range()를 사용하여 1부터 n까지(n 포함) 정수 수열을 생성합니다.
+        range() 함수는 끝이 제외되므로 끝을 n + 1라고 하시기 바랍니다.
+힌트 3: map() 함수를 스트림에 적용합니다. 이 함수는 각 숫자의 세제곱을 리턴해야 합니다(e -> e * e * e).
+힌트 4: map() 함수를 사용하면 IntStream을 받게 됩니다. 
+        그러나 collect() 함수는 Stream<Integer>를 요구합니다. 
+        그러므로 boxed() 함수를 사용하여 IntStream을 Stream<Integer>로 변환하십시오.
+힌트 5: 마지막으로 collect() 함수와 Collectors.toList()를 사용하여 스트림을 List<Integer>로 변환합니다.
+
+
+-----------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-----------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+해답)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.List;
+
+public class FunctionalProgrammingMagic {
+
+
+    public static List<Integer> getCubesOfFirstNNumbers(int n) {
+
+        //먼저 IntStream.range를 호출하고 범위는 1에서 n까지로 명시하고 (1,n) 하지만 이렇게 하면 n-1까지 숫자를 생성한다 예를 들어 (1,5)라고 호출하면 숫자는 1에서 4까지 되는것이다
+        //그래서 +1을 해준다 이래야 1에서 n까지 호출 되겠지? 
+        //숫자가 생성되고, 숫자가 들어가 있는 스트림이 있으니 이제 매핑을 해야 하는데 각 숫자의 세제곱과 매핑을 해 준다 map(e->e*e*e)
+        //다음은 IntStream을 정수를 담은 Stream으로 변환해야 한다 이것은 boxed함수를 호출해 처리한다
+        //정수를 담은 Stream이 준비됐으니 이제 수집을 한다 collect함수호출 Collectors.toList
+        //마지막으로 이걸 반환해 주면 된다
+        return IntStream.range(1,n+1).map(e -> e*e*e).boxed().collect(Collectors.toList());
+    }
+}
+-----------------------------------------------------------------------------------
