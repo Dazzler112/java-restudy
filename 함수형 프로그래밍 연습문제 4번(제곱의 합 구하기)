@@ -1,0 +1,187 @@
+
+코딩 예제: 제곱의 합 구하기
+
+여러분은 FunctionalProgrammingMagic 클래스 안에서 정수 리스트를 입력값으로 받아서 
+그 정수들의 제곱의 합을 리턴하는 sumOfSquares함수를 구현해야 합니다.
+
+다음의 엣지 케이스를 고려하시기 바랍니다.
+1.입력된 리스트가 null이면 여러분의 함수는 0을 리턴해야 합니다.
+
+• 예시
+다음과 같은 예들을 고려하시기 바랍니다.
+예 1:
+입력:
+List<Integer> numbers = List.of(1, 2, 3);
+출력:
+long sum = sumOfSquares(numbers);
+System.out.println(sum); // Prints: 14
+
+예 2:
+입력:
+List<Integer> numbers = null;
+출력:
+long sum = sumOfSquares(numbers);
+System.out.println(sum); // Prints: 0
+
+예 3:
+입력:
+List<Integer> numbers = List.of();
+출력:
+long sum = sumOfSquares(numbers);
+System.out.println(sum); // Prints: 0
+
+• 참고사항
+- stream()메서드를 사용하여 컬렉션으로부터 요소 스트림을 만듭니다.
+- mapToLong() 메서드는 map() 메서드의 특수한 버전입니다. 
+  이 메서드는 LongStream(long 값들의 스트림)을 만들고 객체를 int로 변환하는 함수를 받습니다.
+- sum() 메서드는 스트림에 있는 숫자들의 합을 계산합니다.
+
+
+이것들은 Java의 Stream API에 있는 아주 강력한 메서드들로서, 
+우리는 그것들을 사용하여 객체 컬렉션에 복잡한 데이터 처리 쿼리를 수행할 수 있습니다. 
+그 메서드들을 사용하면 여러분의 코드를 아주 간단하게 만들 수 있습니다.
+
+
+
+해당 코드는 기본 뼈대이다
+
+import java.util.List;
+
+public class FunctionalProgrammingMagic {
+
+    public static long sumOfSquares(List<Integer> numbers) {
+        
+        // Check if the list is null. If so, return 0.
+
+        // Stream over the list of numbers, find squares and sum them up
+    }
+
+}
+
+해당 코드를 이용하여 지침을 완성하시오
+
+
+
+
+
+
+
+
+
+
+
+
+
+-----------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+힌트)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1. 입력된 리스트가 null인지 검사합니다. 만약 그렇다면 0을 리턴합니다.
+2. stream() 함수를 사용하여 리스트를 스트림으로 변환합니다.
+3. mapToLong() 함수를 사용하여 스트림에 있는 각 요소를 그것들의 제곱에 매핑합니다. 
+   어떤 숫자의 제곱은 그 숫자 자신을 곱하여 얻는다는 점을 기억하십시오.
+4. sum() 함수를 사용하여 모든 제곱 값을 합산합니다.
+5.sum()이 리턴하는 결과는 리스트에 있는 모든 정수의 제곱들의 합입니다. 이것을 출력값으로서 리턴합니다.
+6. 잊지 말고 리스트가 비어 있는 엣지 케이스를 처리하십시오. 여러분의 함수는 그 경우에도 0을 리턴해야 합니다.
+
+-----------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-----------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+해답)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import java.util.List;
+
+public class FunctionalProgrammingMagic {
+
+    public static long sumOfSquares(List<Integer> numbers) {
+        
+        //에지케이스 먼저 구현 numbers가 null이면 아까 본 조건대로 0을 반환한다
+        if(numbers == null) {
+            return 0;
+        }
+        //다음으로 numbers.stream을 호출하는데 우리가 매핑해야 하는건 Long타입이다 
+        //우리가 반환해야 하는 결과는 long이어야 하기 때문에 합은 long 타입 변수에 저장해야 한다 그래서 여기 mapToLong을 호출해야 한다
+        //그럼 이것의 결과는 Long이 된다 다음 number랑 뭘 패밍해 줘야 하지? number를 제곱해 줘야 하지, 그래서 number * number
+        //여기서 구현한 게 무엇이냐면 Long으로 구성된 Stream을 만든 것이다, 각 값들은 List 숫자들의 제곱들이다
+        //마지막으론 제곱들을 다 더해 줘야 한다, 그래서 sum을 호출해 주고 이것을 반환해 준다
+        return numbers.stream().mapToLong(number -> number * number).sum();
+    }
+
+}
+
+-----------------------------------------------------------------------------------
