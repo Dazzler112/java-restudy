@@ -1,0 +1,143 @@
+
+지난 학습에선 'MultiThreading'의 필요성에 대해 이해하고, Thread가 왜 필요한지에 대해 알아봤다
+오늘은 직접 Thread 몇 개를 생성해 보도록 하겠다 
+기본적인 단계에선 Thread를 생성하는 두 가지 방법이 존재한다
+
+첫 번째 방법은 Thread라 불리는 클래스를 확장하는 방법이다 
+//extends Thread
+
+그리고 두 번째 방법은 'Runnable'이라 불리는 인터페이스를 실행하는 방법이다
+//implements Runnable
+
+이번 단계에선 Thread를 확장하는 방법과 Thread class 의 예시를 생성하는 내용에 집중하여 보도록 하겠다
+
+
+---------------------------------------------------------------------------------------
+
+
+ThreadBasicsRunner 클래스 파일
+
+
+
+
+package multiThreading;
+
+
+//Task1이란 클래스 생성후 Thread를 확장해준다
+class Task1 extends Thread {
+	
+	//그리고 Thread의 괄호 안에 메소드 실행을 위한 코드가 필요하다
+	//이 메소드 정확한 사용을 위해 public void run()을 적어준다
+	
+	public void run() {//SIGNATURE
+		//public void run()이부분 너가 반드시 기억해 줘야 할 부분이다 signature는 정확히 이 코드식과 일치해야 한다	
+		//이게 너가 작업하기 위해 필요한 정확한 signature이다 그리고 이 괄호 안에 너가 정확히 어떤 작업을 실행할 것인지 적어주면 된다
+		
+		//아래의 Task1을 붙여넣기 
+		//지금 Task1의 코드를 복사해서 Thread에 넣어주고 있다 정리하면 이 thread 안에는 "Task1 Done"이라는 문구를 복사해 넣어줬고,
+		//이 반복구 속에서 이러한 것들을 출력한다
+		
+		//Task를 실행하려면 어떻게 해야할까? //task 병렬 처리를 통해 실행하려면 어떻게 해야 할까?
+		//어떻게 Thread를 생성하고 이 코드를 병렬 형식으로 실행할 수 있을까? //지금부터 알아보도록 하자 //다시 아래 Task1으로..
+		System.out.print("\nTask1 Started");
+		for(int i = 101; i <= 199; i++ ) 
+			System.out.print(i + " ");
+		
+		System.out.print("\n Task1 Done");
+	}
+}
+
+
+public class ThreadBasicsRunner {
+	
+	public static void main(String[] args) {
+
+		//Task1
+		
+		//여기서 Thread에 대해 다음의 작업을 해볼것이다 어떻게 하는 것일까? 러너 클래스 위로생성..
+//		for(int i = 101; i <= 199; i++ ) {
+//			System.out.print(i + " ");
+//		}
+//		System.out.print("\n Task1 Done");
+		
+		//여기 이 부분에 지금 task를 생성하고 싶은 것이 맞지? 그러므로 task를 생성하려면
+		/*
+		Task1 인스턴스명 이라 적어주고 새로운 예를 들어보도록 하겠다 Task1 class의 새로운 예시를 생성해 준 다음,
+		이를 실행하려면 task1.run()을 적어주면 된다 
+		
+		가장 중요한 것은 run메소드를 불러온다는 점이다 사실 꼭 불러와야 하는 메소드는 아니다
+		너에게 명확하게 전달하고 싶은 것은 여기에 필요한 것은 start 메소드라는 점이다 초보 프로그래머들이 하는 실수중 하나가
+		task1.run()이라 적어 코드를 실행하려 한다는 것인데 이 코드는 병렬 처리를 실행해 주지 않는다
+		task1.run()이라 적으면 그냥 보통으 메소드처럼 실행이 될 것이다, Thread 형식으로 실행되지 않고 말이다
+		
+		그러므로 정리하면, Task.run()이라 적으면 어떤일이 일어나지?
+		보다시피 이렇게 Task1의 실행이 시작되고 완료된 것을 확인할 수 있다 그다음 Task2가 실행되어 201을 시작으로 숫자들 출력, 완료
+		마지막으로 3이 실행시작/완료되었다 이게 보통의 코드 실행 과정이다, 맞지?
+		
+		만약 Task1을 Thread 형식으로 실행하고 싶다면, start()라 적어주고, 이런 식으로 실행을 해주어야 한다
+		너가 눈치챘을 만한 중요한 것 중 하나는 Task1이 생행됨과 동시에 Task2의 요소중에도 실행되어 여기 이렇게 출력이 된 것을 확인할 수 있다
+		(Task1 Strated 201 101 202 203 102 204 103 .....) 201, 202 ,204와 같은 요소들이 말이다
+		그러므로 Task1의 요소들만 출력된 것이 아니다 이부분에서 확인해 보자 //아래로...
+		*/
+		//Task1이 수행하는 작업은 무엇이었지? 101 부터 199범위 안의 숫자를 출력하는 것이었다
+		//그러므로 Task1의 수행이 끝나기도 전에 Task2의 수행이 함께 진행되고 있는 것이다 위의 과정을 더욱 명확하게 하기 위해
+		//다음과 같이 Task1/2/3 Kicked Off 라 적을것이다 이렇게 적으면 Task2의 실행이 시작된다 이제 코드를 실행해 보도록 하겠다
+		//Thread안에서 Task1 Kicked Off 가 나오고 Task1 Started문구가 출력되었다 그리고 Task1의 실행에 의한 숫자들이 줄력되기 전에 Task2가 출력된 것 또한 확인할 수 있다
+		/*
+		여기서 발생한 일들을 정리해보면, 여기 존재하는  이 코드는Task1 task1 = new Task1();
+		이 코드와
+		//Task2
+		System.out.print("\nTask2 Kicked Off");
+		for(int i = 201; i <= 299; i++ ) {
+			System.out.print(i + " ");
+		}
+		System.out.print("\nTask2 Done");
+		
+		병렬로 작동한다 task1.start()를 적어 작동하는 순간, 다른 코드와는 병렬적으로 작동하므로
+		Task2 코드 또한 작동이 시작된 것이다 여기 보는 일이 이러한 과정으로 생긴 일이다
+		Task1 started라 출력되었고 이어서 101과 102가 출력되었다 여기서 155까지 출력된 후,
+		Task2의 실행이 시작되었다 그리고 Task2안에 몇몇 요소들은 Task1에서 병렬적으로 생성된 것을 알 수 있다
+		201,209,208등 숫자들이 모두 다른 코드와 병렬적으로 함께 작동하는 것이다 
+		
+		그러므로 Task1과 Task2는 서로 병렬을 이루어 실행된다
+		*/
+		//Task1 - 101 to 199
+		System.out.print("\nTask1 Kicked Off");
+		Task1 task1 = new Task1();
+		task1.start();  //run() -> start()
+		
+		System.out.print("\nTask2 Kicked Off");
+		//Task2
+		for(int i = 201; i <= 299; i++ ) 
+			System.out.print(i + " ");
+		
+		System.out.print("\nTask2 Done");
+		
+		System.out.print("\nTask3 Kicked Off");
+		//Task3
+		for(int i = 301; i <= 399; i++ ) 
+			System.out.print(i + " ");
+		
+		System.out.print("\nTask3 Done");
+		
+		System.out.print("\nMain Done");
+
+	}
+}
+
+---------------------------------------------------------------------------------------
+
+
+
+
+/*
+정리)
+이번 학습에선 Thread를 사용하는 방법에 대해 알아보았다
+Thread의 클래스를 확장시킴으로써 새로운 thread를 생성하고 
+public void run이란 메소드도 실행했다
+
+예를 들어 Task1이란 예시를 생성하여 task1.strat()라고 적음으로써 Thread를 실행하였다
+그리고 Thread를 실행하여 작성한 코드들이 서로 병렬적으로 작동하는 것 또한 확인하였다  
+
+Task2도 병렬적으로 실행하는 방법에 대해 다음시간에 계속 학습해 보겠다
+*/
