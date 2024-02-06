@@ -1,0 +1,150 @@
+
+지난 학습에선 Thread를 실행하는 방법에 대해 알아보았다 맞지?
+Thread의 클래스를 확장하거나 Runnable 인터페이스를 사용해서 간단한 thread를 실행하는 방법에 대해 배워보았다
+그리고 start 메소드를 예시에 사용하여 Thread 클래스를 확장하는 방법으로 코드를 실행하거나, 
+Runnable 인터페이스를 사용할 때, 추가적인 작업을 통해 start 메소드를 사용하여 코드를 실행할 수 있다는 점에 대해서도 알아볼 수 있었다
+이런 것들 이외에도 thread의 상태에 대한 이야기들까지 다뤄 봤다,
+이번 학습에선 이런 thread에서 우선순위를 부여하는 방법에 대해 알아보겠다
+
+
+-------------------------------------------------------------------------------------------
+
+
+package multiThreading;
+
+//extends Thread
+//implements Runnable
+
+class Task1 extends Thread {
+	
+	public void run() {//SIGNATURE
+
+		System.out.print("\nTask1 Started");
+		for(int i = 101; i <= 199; i++ ) 
+			System.out.print(i + " ");
+		
+		System.out.print("\n Task1 Done");
+	}
+}
+
+class Task2 implements Runnable {
+	@Override
+	public void run() {
+		System.out.print("\nTask2 Started");
+		for(int i = 201; i <= 299; i++ ) 
+			System.out.print(i + " ");
+		
+		System.out.print("\n Task2 Done");
+	}
+	
+}
+
+public class ThreadBasicsRunner3 {
+	
+	public static void main(String[] args) {
+		
+		//• NEW;
+		//• RUNNABLE;
+		//• RUNNING;
+		//• BLOCKED/WAITING;
+		//• TERMINATED/DEAD;
+
+		
+		//여기서 Task1보다 Task2에게 실행의 우선순위를 부여하고 싶다고 해보겠다 어떻게 해야 할까?
+		//이에 대해 이번 단계에선 자세히 다뤄볼 것이다 Thread 클래스에는 setPriority()라 불리는 메소드가 있다
+		
+		//Task1 - 101 to 199
+		System.out.print("\nTask1 Kicked Off");
+		Task1 task1 = new Task1();
+		
+		task1.setPriority(1);//이를 이용해서 구체적인 task에 대해서 우선순위를 설정할 수 있다 //순위 10->1
+		//여기 setPriority ctrl+클릭해 들어가 메소드에 대해 살펴보기 위해 들어가주면, 이에대한 문서들을 확인할 수 있다
+
+		/*
+		Changes the priority of this thread. 여기 thread의 우선순위를 변경해 준다는 내용이 적혀있다
+		우선순위의 범위는 ( * @see   #MAX_PRIORITY  * @see  #MIN_PRIORITY ) MAX_PRIORITY와 MIN_PRIORITY 사이에 존재해야 하는데,
+		그렇다면 MIN_PRIORITY의 값은 무엇일까? MIN_PRIORITY룰 ctrl+클릭으로 확인해 보도록 하자
+		public static final int MIN_PRIORITY = 1; MIN_PRIORITY의 값은 1,
+		public static final int NORM_PRIORITY = 5; NORM_PRIORITY 값은 5,
+		public static final int MAX_PRIORITY = 10; MAX_PRIORITY 값은 10이다
+		
+		이게 어떤 임의의 thread가 가질 수 있는 우선순위의 범위다 기본적으로 thread에는 NOROM_PRIORITY의 값,즉 5가 주어진다
+		그리고 MIN_PRIORITY 와 MAX_PRIORITY사이의 값은 아무거나 선택해서 저장할 수 있다
+		
+		그리고 여기서 짚고 넘어가야 할 중요한 내용이 한 가지 더 있다 
+		우선순위 분배는 그저 request, 즉, 추천 순위 정도에 해당한다
+		만약 어떤 thread의 우선순위가 10이라면, 이건 그냥 추천 정도일 뿐이다
+		그러므로 위와 같은 상황이라고 해서 항성 이 thread가 항상 상위의 우선순위에 있는 것을 의미하는 것은 아니다
+		그냥 힌트 정도일 뿐이다 request는 반영이 될 수도, 안 될 수도 있다
+		*/
+		//그럼 Task1의 우선순위르 설정하는 것으로 시작해 보자 10이라는 우선순위를 설정하고 싶다고 해보겠다
+		/*
+		어떤 일이 생길지 한번 보자 Task1이 시작되고 Task2의 실행이 완료된 것을 확인할 수 있다 (  Task1 Done245 )
+		그리고 Task1은 Task2보다 먼저 실행이 완료되었다 몇 번 더 실행을 해보도록 하겠다
+		여기 이 상황에선 Task1은 무려 Task3이 실행되기 전에 이미 완료가 된 것을 알 수 있다 ( Task1 Done392 ...Task3 Done )
+		심지어 메인 코드가 완료되기 전에도 말이다 다시 실행..
+		Task1 Kicked Off
+		Task2 Kicked Off
+		Task1 Started101 102
+		위와 같은 구체적인 상황에서 Task1은 Task2 3보다 먼저 실행이 완료 되었다, 이 상황에선 그러므로 Task1이 매우 높은 우선순위를 차지한 것이다
+		그래서 Task2의 실행이 시작되기 전의 시점,즉 매우 매우 빠른 시점에서 실행이 완료된 것이다
+		그에 비해 여기서 Task1이 앞에서보다 낮은 우선순위를 부여받았지만 그런데도 3나 2의 실행이 완료되기 전에 실행이 완료된 것을 알 수 있다  Task1 Done
+		*/
+		//보다시피, 우선순위는 추천순위 정도, 즉 request의 의미만 갖는다는 것을 알 수 있지?
+		//이번엔 Task1에 낮은 우선순위를 부여하고, Task2에 더 높은 우선순위를 부여하도록 하겠다
+		//정리하자면 Task2에 1보다 높은 우선순위를 부여하는 작업을 진행하였다
+		
+		task1.start(); 
+		
+		System.out.print("\nTask2 Kicked Off");
+		
+		
+		Task2 task2 = new Task2();
+		Thread task2Thread = new Thread(task2);
+		
+		task2Thread.setPriority(10);
+		//어떤 결과가 나올지 실행해보자
+		/*
+		보다시피 Task2가 시작되었고, Task2는 실행이 완료되고, 이후에 Task2의 실행이 완료되었다
+		실제로는 우선순위를 설정한 내용이 반영되지 않았다 다시 실행한 상황에도 같은 일이 일어났다
+		!처음으로 Task2의 실행이 1보다 먼저 완료가 되었다  
+		Task2 Done188 395 396 397 189... Task3 Done197  Main Done198 199 Task1 Done
+		그리고 또 실행, 
+		Task2 Done 
+		Task1 Done 
+		Task3 Done
+		Main Done
+		2 1 3 메인의 순서대로 실행이 완료되었다
+		이번에는 이 코드를 100번 돌리면 Task2가 더 높은 우선순위를 갖도록 추천하여 설정하면 
+		전체 횟수의 반 정도에선 이 추천사항이 수용될 것이다
+		*/
+		
+		task2Thread.start();
+		
+		
+		System.out.print("\nTask3 Kicked Off");
+		//Task3
+		for(int i = 301; i <= 399; i++ ) 
+			System.out.print(i + " ");
+		
+		System.out.print("\nTask3 Done");
+		
+		System.out.print("\nMain Done");
+
+	}
+}
+
+-------------------------------------------------------------------------------------------
+
+
+
+
+/*
+정리)
+이번 학습에선 우선순위에 대한 아이디어를 소개했다
+1부터 10 사이의 숫자로 우선순위를 설정하는 것과 우선 순위의 설정은
+그저 추천 사항에 불과하다는 사실 또한 직접 확인하였다
+
+단순하게 힌트로써 제공될 뿐이지, 명령은 아닌 것이다
+그러므로 상황에 따라 반영되지 않을 수도 있었다
+*/
