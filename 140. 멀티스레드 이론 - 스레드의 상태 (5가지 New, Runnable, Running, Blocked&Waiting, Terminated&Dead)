@@ -1,0 +1,152 @@
+
+이번 시간엔 Thread의 다양한 상태에 대해 이야기를 해보도록 하자
+
+프로그램을 실행시켜 보면 보다시피 이러한 결과가 출력된다
+/*
+Task1 Kicked Off
+Task2 Kicked Off
+Task1 Started101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 124 125 126 127 128 129 130 131 132 133 134 135 136 137 138 139 140 141 142 143 144 145 146 147 148 149 150 151 152 153 154 155 156 157 158 159 160 161 162 163 
+Task2 Started
+Task3 Kicked Off201 202 203 204 205 164 206 301 207 165 208 302 209 166 210 303 211 167 212 304 213 168 214 305 215 169 216 306 217 170 218 307 219 171 220 308 221 172 222 309 223 173 224 310 225 174 226 311 227 175 228 312 229 176 230 313 231 177 232 314 233 178 179 180 181 182 183 184 185 186 187 234 315 235 188 236 316 237 189 238 317 239 190 240 318 241 191 242 319 243 244 245 192 246 320 247 193 248 321 249 322 194 323 250 324 195 325 251 326 196 327 252 328 197 329 253 330 198 331 254 332 199 333 255 334 
+ Task1 Done335 256 257 336 337 338 339 340 341 342 343 344 258 259 345 346 260 347 261 348 262 263 349 264 350 351 265 266 352 353 267 354 268 269 355 270 356 357 271 272 358 273 274 359 360 275 276 361 362 277 278 279 280 281 282 283 284 285 286 287 363 364 288 289 365 366 290 291 292 293 294 295 296 297 298 299 367 368 
+ Task2 Done369 370 371 372 373 374 375 376 377 378 379 380 381 382 383 384 385 386 387 388 389 390 391 392 393 394 395 396 397 398 399 
+Task3 Done
+Main Done
+*/
+이 결과는 thread의 상태에 대해 이야기 할 때 매우 유용하게 사용될 것이다, 여기서 새로운 thread란 무엇이 될까?
+----------------------------------------------------------------------------------------
+
+
+
+package multiThreading;
+
+//extends Thread
+//implements Runnable
+
+class Task1 extends Thread {
+	
+	public void run() {//SIGNATURE
+
+		System.out.print("\nTask1 Started");
+		for(int i = 101; i <= 199; i++ ) 
+			System.out.print(i + " ");
+		
+		System.out.print("\n Task1 Done");
+	}
+}
+
+class Task2 implements Runnable {
+	@Override
+	public void run() {
+		System.out.print("\nTask2 Started");
+		for(int i = 201; i <= 299; i++ ) 
+			System.out.print(i + " ");
+		
+		System.out.print("\n Task2 Done");
+	}
+	
+}
+
+public class ThreadBasicsRunner3 {
+	
+	public static void main(String[] args) {
+		
+		//• NEW;
+		//• RUNNABLE;
+		//• RUNNING;
+		//• BLOCKED/WAITING;
+		//• TERMINATED/DEAD;
+
+• NEW 1-1
+여기서 Task1을 생성하고 나면 Task1이 생성되는 순간, task1Thread란 것이 사용될 준비가 된다
+하지만 아직 실행은 되지 않았다, 아직 실행하라는 명령을 내리지 않은 것이다 하지만 준비는 끝난 상태이다
+이러한 상태를 'NEW'라고 한다 여기 있는 Task2또한 같은 상태이다
+		//Task1 - 101 to 199
+		System.out.print("\nTask1 Kicked Off");
+		Task1 task1 = new Task1();
+		task1.start(); 
+		
+		System.out.print("\nTask2 Kicked Off");
+• NEW 1-2
+이줄 이후에서 Task2의 Thread는 사용될 준비는 끝났지만, 아직 코드의 실행은 사용자가 요구하고 있지 않는다
+이러한 상태를 'NEW'라고 부른다 이 Thread는 NEW의 상태이고, 코드를 실행할 준비는 끝났지만 실제로 사용자는 
+아직 코드 실행을 명령하지 않은 상태이다, 그러므로 start메소드의 실행 전의 Thread는 NEW라고 부른다
+
+• TERMINATED/DEAD 
+그다음 Thread의 상태는 Terminated라 부른다 어떤 상태여야 Terminated라 부르는 것일까?
+위에 Task1의 실행이 완료되어 Done이라고 적혀있다 그러므로 이 지점 이후의 task1Tread는 죽어서 효능이 없는 상태이다
+task2Thread 또한 Task2 done의 실행이 끝나고 나서 같은 결과를 보여주게 된다 보다시피 Thread들의 실행이 완료된 것이다
+그러므로 NEW는 코드의 실행조차 시작하지 않은 단계이고, Terminated 혹은 Dead는 실행이 모두 끝난 상태를 뜻한다
+
+여기서 흥미가 생기는 것들이 이 중간에 존재하는 이 상태들이다 //• RUNNABLE; //• RUNNING; //• BLOCKED/WAITING;
+Task2 Started 다음이 출력될 때는 어떤 Task가 실행되고 있는 것일까? 
+
+• RUNNING
+여기서 실행의 상태에 있는 Task는 Task1이다 Task1은 이 특정 지점에서의 상태를 'Running'이라고 부른다
+이 지점에서 실행되고 있는 것이다 Task2가 201을 출력하고 있을 때도 'Running'의 상태에 머물고 있다, 맞지?
+그러므로 이 Thread는 이러한 특정 지점 혹은 시점에서 Running이라는 상태를 띄고 있는 것이다 Task2가 201이라는 숫자를
+출력할 때, Task1은 그럼 어떤 상태에 있는 것일까? 
+
+• RUNNABLE
+어떤 명령이나 실행을 기다리고 있나? 아니다, 준비는 되어있다
+하지만 실행은 되고 있지 않았다 이러한 상태를 가르켜 'Runnable'이라고 한다 'Runnable'은 실행을 하려고 하기는 하지만,
+일 혹은 작업을 처리하고 싶기는 하지만 다른 Thread가 우선적으로 실행되고 있는 상태를 뜻한다
+그러므로 여기서 201이 Task2에 의해 실행되고 있을 때, Task1의 상태를 'Runnable'이라고 칭한다
+여기서 Task2의 상태는 Runnable이다 그리고 164라는 숫자가 출력될 때 Task1의 상태는 Running이다 이유는 출력되고 있는 것이 Task1에 해당한다
+그러나, Task2의 상태는 Runnable에 해당한다 이는 코드의 실행을 진행할 기회를 엿봐 그다음 숫자인 206을 출력할 순간을 노리고 있다
+301이 출력되는 상황 또한 같은 상황이라고 할 수 있다 
+
+Task3에 의해 301이 출력되는 경우, 여기서 이게 바로 메인 메소드이다, 맞지? 그러므로 Task3은 정확히 말하면 Thread가 아닌 execution에 해당한다
+그러므로 위의 현상은 메인메소드에 의해 실행된 것이다 301이 출력될 때, CPU를 사용하는 것은 main Thread가 된다
+그렇다면 이때 다른 두 Thread인 Task1과 2는 어떤 일을 하고 있을까?
+그냥 대기하고 있다 CPU를 이용할 차례가 올 때 까지 기다리고만 있는다 이 둘의 상태는 Runnable에 해당한다
+
+• BLOCKED/WAITING
+그리고 소개할 마지막 상태의 이름은 'Blocked'이다
+Thread의 상태를 blocked라고 하는데 예를 들어 외부 서비스의 응답을 기다리고 있거나 데이터베이스를 이용하고 있는데
+만약 여기서 데이터베이스가 느리다면, 사용자는 차단당하게 된다
+작업을 실행할 상황이 되지 않기 때문에 외부 서비스로부터 데이터가 들어오기를 기다리고 있기 때문이다
+또 다른 선택지도 사용자가 필요한 데이터를 Thread가 제공하기를 기다리는 방법이다
+
+이렇게 해보자 Thread3은 Thread1의 데이터에 영향을 받는다 그러므로 Thread3은 Thread2의 실행이 완료되기를 기다리고 있는다
+이런 상황에서 blocked상태에 놓이게 된다 이제 Thread의 5가지 상태에 대해 정리해 보도록 하겠다
+Thread가 처음 생성될 때의 상태를 뜻하는 New가 첫 번째 상태이다 
+그러나, 사실 start메소드를 사용하여 코드를 실행하는 상태는 아직 아니다, start메소드를 사용한 후의 Thread는 
+다음 세 가지의 상태 중 하나의 상태를 띄게 된다 Runnable, Running 그리고 Blocked이다,
+
+-Runnable과 Running 그리고 Blocked의 특징
+‣ Runnable의 경우 코드의 실행이 가능한 준비 상태를 의미한다 그러나, 이 특정 시점에 다른 Thread가 이미 실행 중인 경우이다
+‣ Running은 이 Thread가 실행 중인 그 상태를 의미한다 그러므로 상태가 Running이 되는 것이다
+‣ Blocked는 외부 인터페이스나 데이터베이스 등으로부터 어떤 입력을 위해 대기하고 있거나, 실행이 완료되지 않은 다른 Thread로부터
+  데이터를 입력받아야 하는 상황을 뜻한다 이게 blocked의 상태일 때를 의미한다
+
+• TERMINATED/DEAD 
+마지막 상태는 Treminated 혹은 Dead이다
+이 두 경우 모두 실행이 완료되었을 경우를 뜻한다
+
+		Task2 task2 = new Task2();
+		Thread task2Thread = new Thread(task2);
+		task2Thread.start();
+		
+		
+		System.out.print("\nTask3 Kicked Off");
+		//Task3
+		for(int i = 301; i <= 399; i++ ) 
+			System.out.print(i + " ");
+		
+		System.out.print("\nTask3 Done");
+		
+		System.out.print("\nMain Done");
+
+	}
+}
+
+----------------------------------------------------------------------------------------
+
+
+
+
+/*
+정리)
+여기까지 5가지의 Thread 상태에 대해 알아보았다
+*/
