@@ -1,0 +1,121 @@
+
+지난 몇 개의 과정에선, Thread를 생성하고 실행하는 방법에 대해 알아보았다
+이런 식으로 Thread를 실행했을 때에 생기는 중요한 결핍 중 하나는 
+Thread의 실행에 대해서 그 어떤 통제도 불가능 하다는 점이다,
+어느 특정 시점에서 얼마나 많은 Thread가 실행되고 있는지 알 수 없다
+예를 들어, 세 개의 Thread만 어떤 시점에서 실행하고 있게 만들고 싶다고 해보자
+
+이러한 조작은 Thread의 실행을 start 메소드를 이용하여 확립할 경우에는 매우 어렵다
+
+------------------------------------------------------------------------------
+
+package multiThreading;
+
+//extends Thread
+//implements Runnable
+
+class Task1 extends Thread {
+	
+	public void run() {//SIGNATURE
+
+		System.out.print("\nTask1 Started");
+		for(int i = 101; i <= 199; i++ ) 
+			System.out.print(i + " ");
+		
+		Thread.yield();
+
+		System.out.print("\n Task1 Done");
+	}
+}
+
+class Task2 implements Runnable {
+
+	@Override
+	public void run() {
+		System.out.print("\nTask2 Started");
+		
+		for(int i = 201; i <= 299; i++ ) 
+			System.out.print(i + " ");
+		
+		System.out.print("\n Task2 Done");
+	}
+	
+}
+
+public class ThreadBasicsRunner5 {
+	
+	public static void main(String[] args) throws InterruptedException {
+		
+		//• NEW;
+		//• RUNNABLE;
+		//• RUNNING;
+		//• BLOCKED/WAITING;
+		//• TERMINATED/DEAD;•
+
+		//Task1 - 101 to 199
+		System.out.print("\nTask1 Kicked Off");
+		Task1 task1 = new Task1();
+		
+		task1.setPriority(1);
+		
+		task1.start(); 
+		
+		System.out.print("\nTask2 Kicked Off");
+		
+		Task2 task2 = new Task2();
+		Thread task2Thread = new Thread(task2);
+		task2Thread.setPriority(10);
+		task2Thread.start();
+		
+		task1.join();  /or/ task1.wait();
+		task2Thread.join();
+		
+		System.out.print("\nTask3 Kicked Off");
+		//Task3
+		for(int i = 301; i <= 399; i++ ) 
+			System.out.print(i + " ");
+		
+		System.out.print("\nTask3 Done");
+		
+		System.out.print("\nMain Done");
+
+	}
+}
+------------------------------------------------------------------------------
+또 다른 문제도 있다 예를 들어 Task1과 Task2중 하나가 완료될 때까지 기다리고 싶다고 해보자
+task1.wait();	
+task2Thread.join();
+Thread를 이용한 기본적인 것으로는 이 상황에 맞는 코드를 작성하는 것이 불가능하다
+그러므로 Task1 또는 Task2가 실행이 완료될 때까지 기다리는 작업을 하고 싶다고 해보자
+( task1.wait();	 task2Thread.join(); )이런 식으로 코드를 작성하면, Task1과 Task2가 모두 완료될 때까지 기다렸다
+여기 이렇게 실행하는 결과가 생길 것이다
+하지만 만약 다음과 같이 예를 들어 다음줄인 		System.out.print("\nTask3 Kicked Off");줄을
+Task1 혹은 Task2 중 하나가 완료된 후에 실행할 수 있도록 하는 코드를 작성하고 싶다면, System.out.print("\nTask3 Kicked Off"); 줄로 와서
+여기 System.out.print("\nTask3 Kicked Off"); 이런식 으로 코드가 실행되도록 하는 것은 불가능 하다
+또한 Thread를 실행하는 과정은 매우 지루한 과정이다 맞지?
+만약 100개의 task를 실행하고 싶다면, 이와 같은 코드를 모두 작성한 후에 시작을 실행해 주면 된다
+다시, 이 모든 코드를 작성하고, 실행을 눌러 주면 된다
+		Task2 task2 = new Task2();
+		Thread task2Thread = new Thread(task2);
+		task2Thread.setPriority(10);
+		task2Thread.start();
+이 코드를 묶음의 형식으로 처리하는 방법은 없다 
+
+
+• Executor Service 소개
+마지막으로, 가끔 Thread가 실행한 task의 결과를 반환하고 싶은 경우가 생길 수 있다
+우리가 지금까지 배운 이야기한 내용으론 불가능한 내용이다
+여기서 Executor Service, 즉 실행기를 사용할 수 있다
+Executor Service는 지금까지 나눈 이야기 이 모든 기능을 아우를 수 있는 기능들을 제공한다
+다수의 Thread를 한 번에 실행할 수 있고, Thread의 상태를 알 수 있도록 도와주며,
+Thread와 사용자가 다음과 같은 논리를 실행할 수 있도록 도와준다 
+Thread1 혹은 Thread2 혹은 Thread3가 완료되면 알려주도록 할 수 있다
+이들 중 어떤 Thread가 먼저 실행이 완료되었는지 알수도 있다
+또한 모든 Thread가 실행이 완료될 때 까지 기다리도록 단 한 문장으로 코드를 작성할 수 있다
+이 모든 것들이 Executor Service로 구현 가능한 것들이다
+
+
+
+/*
+다음 학습에선 Executor Service에 대한 내용을 시작하도록 하겠다
+*/
