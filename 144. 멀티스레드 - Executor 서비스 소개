@@ -1,0 +1,118 @@
+
+이번학습에선 프로그램을 운용하는 방법과 Executor Service를 실행하는 방법에 집중해 보도록 하겠다
+
+
+
+-------------------------------------------------------------------------------------------
+
+
+package multiThreading;
+
+import java.util.concurrent.*;
+
+//여기선 Executor Service를 이용해 정확하게 같은 작업을 처리해 보려고 한다
+//그리고 지금 같은 패키지 안에 있기 때문에 이 task들에도 접근이 가능하다
+
+//그럼 Executor Service를 생성하는 것으로 시작해 보자
+public class ExecutorServiceRunner {
+
+	public static void main(String[] args) {
+		//Executor Service를 생성해 주려면 ExecutorService executorService = 을 적고 등호 옆엔 가장 기본적안 기본값을 입력해 주도록 하겠다
+		//클래스에 Executors라고 불리는 정적 메소드가 있다	그리고 가장 기본이 되ㅣ는 버전은 newSinglThreadExecutor()를 생성해 주는 것이 된다
+		ExecutorService executorService = Executors.newSingleThreadExecutor();
+		//그렇다면 SingleThreadExecutor는 한번에 하나의 Thread를 실행하도록 하는 기능을 제공한다
+		//그러므로 특정 시점에서 ExecutorService는 단 하나의 Thread만 실행이 가능한 것이다
+		
+		//이제 다음으로 Thread를 실행해 보도록 하겠다
+		//executorService.execute()를 적어주고 execute()인자에 실행하고자 하는 task를 입력해주면 된다,
+		//예를 들어 Task1을 실행하고 싶다고 해보겠다 혹은, 새로운 Thread를 생성하여 new Thread(new Task2())라 적는 것도 가능하다
+		
+		executorService.execute(new Task1());
+		executorService.execute(new Thread(new Task2()));
+		
+		//그러므로 여기서 Task1과 Task2가 생성되었고, ExecutorService를 이용해 실행해 보려고 한다
+		//여기서 우리는 newSingleThreadExecutor를 사용해 줄 것이다 즉,한번에 한개의 Thread만 실행할 수 있다
+		//어떤일이 생기는지 확인해보자
+		
+		/*실행결과==>
+		Task1 Started101 102 103 104 105...
+		Task1 Done
+		Task2 Started201 202 203 204 205...
+		Task2 Done
+		
+		보다시피 Task1의 실행이 시작되었고, Task1이 여기에서 실행이 완료되었다
+		Task2도 실행이 시작하고, 완료되었다
+		*/
+		
+		System.out.print("\nTask3 Kicked Off");
+		//Task3
+		for(int i = 301; i <= 399; i++ ) 
+			System.out.print(i + " ");
+		
+		System.out.print("\nTask3 Done");
+		
+		System.out.print("\nMain Done");
+		
+		executorService.shutdown();
+		/*작동원리==>
+		여기서 어떤 일이 일어난 건지 설명해 보도록 하겠다
+		ExecutorService에서 newSigleThreadExecutor를 이용해 새로 생성해 줄 때,
+		한 번에 하나의 Thread만 실행하고 있다 여기서 syso를 적어보도록 하자 ThreadBiasicRunner에서 해준 것과 같은 작업을 해주면 된다
+		Task3의 코드가도 위에 적어보도록 하자
+		
+		그리고 중요한것을 안적었는데 executorService.shutdown()을 적어주어야 한다는 거싱다
+		그렇지 않으면 이 프로그램이 멈추지 않고 계속돌아가는 상황이 벌어질 것이다 적지 않았을때 정지버튼이 활성화 돼있다
+		executorService.shutdown()을 적으면 실행이 완료되고 나면 ExecutorService가 완벽하게 작동이 정지될 것이다
+		
+		여기까지 진행한 내용을 정리해 보겠다 
+		executorService.shutdown()을 추가해 주었고, executorService가 정확히 어떤 시점에 실행이 되고 있는지 알아내기 위해서
+		main메소드에 코드도 추가해 주었다, 맞지? 
+		
+		Task1 Started
+		Task3 Kicked Off101 102 301 302...
+		Task3 Done
+		Main Done166 167 168...
+		Task1 Done
+		Task2 Started201 202 203 204...
+		Task2 Done
+		이제, 여기 보다시피 Task1이 시작되었고, Task3으로 시작되었다는 것을 알 수 있다
+		그리고 나서 Task3의 실행이 완료되었고, Task1까지 실행이 완료된 다음에 Task2의 실행이 시작되었다는 사실도 알 수 있다
+		*/
+		
+		/*
+		원리정리==>
+		정리하자면, executorService에서 우리가 실행하려는 것은 딱 두 가지이다 맞지?
+		Task1과 2를 executorService를 통해 실행하고, Task3는 main메소드에 실행이 되고 있다
+		즉 정확히 말하면 Task3는 executorService를 통해 실행이 되는것이 아니다
+		executorService는 어느 지점에서든 하나의 작업만 수행 가능한데 
+		그 이유는 여기서 사용하는 것이 newSingleThreadExecutor이기 때문이다 
+		그러므로 Task1의 실행이 시작되면, Task1의 실행이 끝난 후에만 Task2의 실행이 시작되고,
+		이의 결과가 여기 보는 이것과 같다
+		Task1 Started
+		Task3 Kicked Off101 102 301 302...
+		Task3 Done
+		Main Done166 167 168...
+		Task1 Done
+		Task2 Started201 202 203 204...
+		Task2 Done
+		그러므로 Task1이 시작하고 끝나고 나면 Task2가 시작되고, 끝나게 되는 것이다
+		*/
+	}
+
+}
+
+-------------------------------------------------------------------------------------------
+
+
+
+
+
+/*
+정리)
+여기까지 ExecutorService가 가능하게 하는 작업이었다
+ExecutorService에 대한 첫 번째 단계에선 
+ExecutorService를 생성하고 몇 가지의 task를 수행하는데 이를 사용하였다 
+ExecutorService에서 한 개의 Thread만 갖는 가장 기본적인 버전을 사용했다,
+
+다음 단계에선 여러 개의 Thread를 이용하면 ExecutorService가 어떻게 반응하는지 한번 알아보겠다
+*/
