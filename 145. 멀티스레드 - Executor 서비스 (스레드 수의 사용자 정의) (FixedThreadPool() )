@@ -1,0 +1,171 @@
+
+이번 학습에선 ExecutorService에서 복수의 Thread를 이용하는 방법에 대해 배워도록 하겠다
+어떻게 하는 것일까?
+
+
+-----------------------------------------------------------------------------------------
+
+
+package multiThreading;
+
+import java.util.concurrent.*;
+
+
+//여기 constructor를 허용하는 Thread를 생성해서 이 constructor안에 간단한 매개체를 전달하도록 해보자
+class Task extends Thread {
+	//Thread 사이의 차이를 주기 위해 클래스 이름을 사용하는 대신 constructor,즉 생성자를 만들어 보도록 하자
+	
+	private int number;
+
+	public Task(int number) {
+		this.number = number;
+	}
+	
+	public void run() {//SIGNATURE
+
+		System.out.print("\nTask " + number + " Started");
+		//1-2
+		//이 작업을 해 줌으로써 실행되고 있는 Thread의 다양성과 차이를 만들어 줄 수 있다
+		//그리고 여기서 number를 사용해 보도록 하겠다
+		//몇 번째의 task가 실행이 시작되었는지 알 수 있다 그리고 이 부분에서도 같은 방법으로 " + number + "을 적어주겠다
+		
+		for(int i = number* 100; i <= number*100+99; i++ ) 
+			System.out.print(i + " ");
+		//1-1
+		//즉, 이코드 설명은 만약 number에 해당하는 숫자가 1이라면 반복 구문은 100부터 199까지 반복을 진행할 것이다 
+		//만약 number에 해당하는 값이 2라면, 200부터 299까지 반복을 진행하겠지
+		//이 작업을 해줌으로써 실행되고 있는 Thread의 다양성과 차이를 만들어 줄 수있다 
+		//그리고 위의 syso을 i를 사용해 보도록 하겠다
+		System.out.print("\n Task " + number + " Done");
+		//1-3
+		//이 작업은 사용자가 다량의 Thread를 매우 매우 간단하게 사용할 수 있도록 해준다
+		
+		/*Task 클래스 코드리뷰==>
+		정리하자면, 여기서 constructor argument, 
+		즉 생성인자를 생성해 주었고, 이를 여기서 출력하는 모든 서술에 사용해 줄 것이다
+		*/
+		//그럼 시작해 보도록 하자
+	}
+}
+
+
+public class ExecutorServiceRunner2 {
+
+	public static void main(String[] args) {
+
+//		ExecutorService executorService = Executors.newSingleThreadExecutor();
+		
+		//여기에 .newFixedThreadPool을 적고 구체적으로 몇 개의 Thread가 필요한지 적어주면 된다
+		//예를 들어,Thread가 2개가 필요하다고 해보자 그러므로 newFixedThreadPool(2)라 적어주겠다
+		ExecutorService executorService = Executors.newFixedThreadPool(5);
+		//이제 실행해 보도록 하자
+		/*실행 결과==>
+		Task1 Started
+		Task3 Kicked Off
+		Task2 Started
+		Task3 Done
+		Main Done
+		Task1 Done
+ 		Task2 Done
+ 		보다시피 Task1이 시작되었고, Task2의 실행이 끝나기도 전에 Task2가 시작되어 실행중이라는 것을 확인할 수 있다
+ 		어느 시점에서든 두 개의 Thread가 실행 중이라는 것을 알 수 있다
+ 		
+ 		더 많은 개수의 Thread로 코드 실행을 진행해보기 전에, 코드를 조금 변경하자 새로운 task예시를 만들어 보도록 하자
+ 		현재 Task1과 2에서 차이를 만들기 위해 5,6개의 작업을 실행하고자 한다면, 이들을 차별화할 방법은 존재하지 않는다
+ 		그러므로 6개의 task를 개별적으로 생성해야 한다 하지만 이를 대신해 다음과 같은 방법을 사용해 보도록 하자
+ 		클래스 위로 생성...
+		*/
+		executorService.execute(new Task(1));
+		executorService.execute(new Task(2));
+		executorService.execute(new Task(3));
+		executorService.execute(new Task(4));
+		executorService.execute(new Task(5));
+		executorService.execute(new Task(6));
+		executorService.execute(new Task(7));
+		//여기서 새로운 task를 생성하려는 것이 아니다 1의 새로운 Task를 생성하고자 한다고 해보자
+		//이제 task를 추가해 보도록 하자 3과 4를 이렇게 추가해 줄 것이다 그리고 이 작업을 간단하게 유지하기 위해
+
+		//즉, 여기서 우리는 서로 다른 4개의 task를 생성하고 있고, 크기 2의 ThreadPool로 이를 실행해 주고 있다
+		//어떤 일이 일어나는지 살펴보도록 하자
+		/*실행결과 ==>
+		Task 1 Started
+		Task 2 Started
+		Task 2 Done
+		Task 3 Started
+		Task 1 Done
+		Task 4 Started
+		Task 3 Done
+		Task 4 Done
+		보다시피 Task1이 시작되었고,Task2가 시작되었다는것 또한 확인할 수 있다
+		즉 두 가지 모두 실행되었고, 이후 Task2가 실행완료, 이어서 task3이 시작됨과 동시에 task1이 완료되었으며
+		4가 실행되었다 여기 task들을 몇 개더 추가하면 어떤 결과가 나올지 확인해 보도록 할것이다
+		
+		task5와 6 그리고 7까지 추가해 주도록 하겠다
+		그리고 나서 실행해 보면, 
+		
+		Task 1 Started
+		Task 2 Started
+		Task 1 Done
+		Task 3 Started
+		Task 2 Done
+		Task 3 Done
+		Task 5 Started
+		Task 4 Done
+		Task 6 Started
+		Task 5 Done
+		Task 7 Started
+		Task 7 Done
+ 		Task 6 Done
+ 		
+		Task2가 실행이 시작됙, 이어서 Task1 실행이 완료된 후, 이 시점에 실행 중인 
+		task가 1개뿐이므로 Task3의 실행이 시작된다 그리고 나서 Task2의 실행이 끝나고, 이어서 4가 시작되었다
+		3이 끝나고 5가 실행중이고 이후 1개의 task만 실행중인 상태가 된다
+		그러므로 아까와 같은 상황이니 Task5가 실행이 시작된다 Task5의 실행이 완료되면 또 한개의 task만 실행중인 상태가 된다
+		그러므로 7이 시작되어 두개의 task가 실행중이 되고 한개만실행중.. 0개가 실행중인 상태가 되어 
+		결론적으로 ExecutorService의 실행이 완료된다
+		*/
+		
+		//그럼 이번에는 ThreadPool의 값을 5로 증가 시켜 보도록 하겠다
+		//이는 즉, 5개의 Thread를 사용하라는 의미가 된다 그럼 무슨 일이 일어날까?
+		
+		/*실행결과 ==>
+		Task 1 Started
+		Task 4 Started
+		Task 3 Started300 301 
+		Task 2 Started302 400 
+		Task 5 Started
+		...
+		Task 4 Done384 245 
+		Task 6 Started385..
+		Task 5 Done
+		Task 7 Started
+		Task 3 Done..
+		Task 2 Done..
+		Task 7 Done
+	 	Task 6 Done
+		Task 1 Done
+		
+		보다시피 task1의 실행이 시작되었다 그리고 4 3 2 5가 실행되어 다섯 개의 task가 실행되고,
+		한개가 실행이 완료되었다 즉, 현재 4개가 실행 중인 상태, 이어서 5개가 실행 중, 4개가 실행중 5개가 실행 중인 상태로 변화한다
+		다시 말해 그 어떤 시점에서도 다섯 개가 한 번에 실행되는 Thread의 최대 개수이다.
+		*/
+		executorService.shutdown();
+	}
+
+}
+
+-----------------------------------------------------------------------------------------
+
+
+
+
+/*
+정리)
+이번 학습에선 ThreadPool의 크기를 조정하는 방법과,
+한 번에 실행 가능한 Thread의 개수를 조절하는 방법에 대해 알아보았다
+정리하면, newFixedThreadPool는 특정 개수를 지정하여 
+한 번에 실행 중인 Thread의 개수를 지정하는 ExecutorService를 생성하도록 허용한다
+따라서 특정 시점에서 이 많은 Thread만 최대로 활성화된다.
+
+ExecutorService에 대한 내용은 다음 시간에 더욱 자세히 배워보도록 하겠다
+*/
