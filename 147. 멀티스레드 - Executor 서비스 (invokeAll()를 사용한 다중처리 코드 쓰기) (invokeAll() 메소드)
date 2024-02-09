@@ -1,0 +1,207 @@
+
+CallableTask에 대해 지난 시간에 배운 내용을 간단하게 복습하고 
+다수의 Callable을 실행하는 방법과 ExecutorService에서 다수의 결론 도출을 기다리는 것에 대해 알아보자
+
+class CallableTask implements Callable<String>{
+
+	private String name;
+
+	public CallableTask(String name) {
+		this.name = name;
+	}
+	
+	@Override
+	public String call() throws Exception {
+		Thread.sleep(1000);
+		return "Hello" + name;
+	}
+}
+public class CallableRunner2 {
+
+	public static void main(String[] args) throws InterruptedException, ExecutionException {
+		
+		ExecutorService executorService = Executors.newFixedThreadPool(1);
+		Future<String> welcomeFuture = 
+				executorService.submit(new CallableTask("in1Minutes"));
+
+		System.out.print("\n new CallableTask(\"in1Minutes\") executed");
+
+		String welcomeMessage = welcomeFuture.get();
+
+		System.out.print(welcomeMessage);
+		
+		System.out.print("\n Main completed");
+	}
+
+}
+지난시간에는 CallableTask를 생성하고 나서 Callable을 실행하고, "Hello"와 여기 적은 이름을 
+함께 결과로 반환하는 call()메소드를 실행하였다
+이를 짧은 시간 동안 sleep 모드로 전환할 수 있도록 하는 방법도 배웠다 
+이는 ExecutorService를 이용하여 가능하게 했고, ExecutorService에서의 반환값은 Future라고 불렀다
+Future라는 것은 이후에 특정 시점에서 결과가 도출될 것을 약속하는, 일종의 계약 개념이다
+get()메소드를 Future에 사용하게 되면, 여기서 결과를 기다리고 있다는 것을 의미한다
+CallableTask가 실행을 완료하는 경우에만, 그리고 여기에서 결과를 돌려받게 되면, 남아있는 나머지 코드가 실행될 것이다
+그러므로 여기 보는 것이 첫 번째로 출력될 문장이다 
+"new CallableTask executed"
+task가 이부분( executorService.submit(new CallableTask("in1Minutes")); ) 에 전송되었고,
+"new CallableTask executed"라고 첫 번째 문장이 출력되었다
+그다음으론 println을 사용해 더 명확히 해보도록 하겠다 
+/* 
+new CallableTask("in1Minutes") executed Hello in1Minutes
+
+Main completed
+*/
+결과로 new CallableTask가 실행되었음을 알 수 있고, 다음으로 "Hello in1Minutes"이 출력되었다
+이게 결과이고, 이로써 main이 완료되었다
+
+즉, 이 줄의 실행은 get()의 실행이 완료될 때까지 대기 상태에 머물러 있다, 결과가 여기 생길때 까지 말이다
+
+
+이제 우리가 하려는 것은 여기서 Future<String> welcomeFuture = executorService.submit(new CallableTask("in1Minutes"));
+두개 이상의 task를 제출하고 ExecutorService에서 이 다량의 task들이 실행이 완료되도록 기다리는 것이다 어떻게 해야 할까?
+
+task를 여러 개 만드는 것부터 시작해 보자
+
+
+-----------------------------------------------------------------------------------
+
+
+CallableRunner2 클래스 파일
+
+
+
+package multiThreading;
+
+import java.util.concurrent.*;
+
+class CallableTask implements Callable<String>{
+	
+
+	private String name;
+
+	public CallableTask(String name) {
+		this.name = name;
+	}
+	
+	
+	@Override
+	public String call() throws Exception {
+		Thread.sleep(1000);
+		return "Hello " + name;
+	}
+
+}
+
+public class CallableRunner2 {
+
+	public static void main(String[] args) throws InterruptedException, ExecutionException {
+		
+		ExecutorService executorService = Executors.newFixedThreadPool(1);
+		
+		//여기서 우리는 한 개의 task를 전송한다 새로운 클래스를 하나 더 만들어 준다 //MultipleCallableRunner 클래스 파일로....
+		Future<String> welcomeFuture = 
+				executorService.submit(new CallableTask("in1Minutes"));
+
+		System.out.print("\n new CallableTask(\"in1Minutes\") executed ");
+
+		String welcomeMessage = welcomeFuture.get();
+
+		System.out.println(welcomeMessage);
+		
+		System.out.print("\n Main completed");
+	}
+
+}
+
+-----------------------------------------------------------------------------------
+
+
+
+
+
+-----------------------------------------------------------------------------------
+
+
+
+MultipleCallableRunner 클래스파일
+
+
+
+package multiThreading;
+
+import java.util.*;
+import java.util.concurrent.*;
+
+public class MultipleCallableRunner {
+	
+	public static void main(String[] args) throws InterruptedException, ExecutionException {
+		//한 개의 task를 전송해 주도록 할 것이다 다른 클래스파일에 이부분 코드를 붙여넣어주고
+		//executorService를 종료해 주도록 하겠다 //!!종료해 주어야 한다는 점을 꼭 기억해 줘야 한다!! //그렇지 않으면 프로그램이 영원히 실행될 것이다
+		ExecutorService executorService = Executors.newFixedThreadPool(3);
+		
+		//여기에 submit()메소드를 이용하여 불러내 보도록 하겠다
+		//덧붙여 submit() 메소드에서, ExecutorService에 다른 메소드들 몇 개가 또 존재한다
+		//실행할 task의 목록을 작성해 보도록 하겠다
+		//List.of()를 적은 다음, CallableTask를 몇 개 생성해 보도록 하겠다
+		//CallableTask에 "in1Minutes", "Layer", 그리고 "Adam"이 포함된다고 해보자 그리고 리스트로 만들어 보도록 하자
+		List<CallableTask> tasks = List.of(new CallableTask("in1Minutes"), new CallableTask("Layer"), new CallableTask("Adam"));
+
+• invokeAll()
+
+		//이제 다음으론 ExecutorService에 .invokeAll()이라는 메소드가 포함되어 있는데 이 메소드에 Collection을 전달해 보도록 할것이다
+		//다시 말해 여기 tasks를 전달해 주도록 할 것이다
+		List<Future<String>> results = executorService.invokeAll(tasks);
+		
+		//이는 모든 task를 불러내서 단 한 개의 Future을 반환하는 것이 아니라, Future의 리스트를 반환하게 될 것이다
+		//executorService.invokeAll(tasks);에 ctrl+1키를 눌러 지역변수에 해당하는 설명을 배정하라는 뜻을 가진 'Assign statement to the local variable'을 눌러주면
+		//List가 있는 것을 확인할 수 있다
+		//그러므로 이 모든 task를 실행하면, 결과들로 이루어진 리스트를 결과로 얻게 될 것이다
+		//즉 모든 결과를 여기( List<Future<String>> invokeAll )에 얻게 된다 또다시 ctrl+1키를 눌러 예외 처리에 해당하는 'Add throws declaration'을 눌러 InterruptedException의 예외처리를 진행해 준다
+		//invokeAll()이 InterruptedExceptiond의 예외를 떠넘겨 준다
+		//그러므로 여기서 main또한 예외를 떠넘기도록 하는 것이다
+		//이제 결과를 반환받아 보도록 하겠다 invokeAll명을 results로 변경해주도록 하고 
+		/*실행 원리==>
+		invokeAll()은 여기서 모든 task가 실행을 완료하도록 대기한 후, 
+		결과를 얻어낸 후에 이 리스트 안에 넣어주는 역할을 한다
+		*/
+		
+		
+		//이젠 리스트를 반복문으로 만들어 볼 것이다 for(Future result:results)라 적어주겠다
+		for(Future result : results) {
+			System.out.println(result.get());//result.get()부분에 예외가 나오니 떠넘겨주자
+		}
+		
+		//ExecutorService를 종료한다고 해서 프로그램 전체가 종료 되는것은 아님!
+		//오히려 모든 Thread의 실행이 완료된 후에 excutorService가 종료되도록 한다
+		executorService.shutdown();
+	}
+	//이제 이 코드를 실행해 보도록 하고 결과가 어떻게 나올지 확인해 보도록 하자
+	/*실행결과==>
+	Hello in1Minutes
+	Hello Layer
+	Hello Adam
+	
+	Hello in1Minutes, Hello Layer ,Hello Adam 이 결과이다
+	1초의 일시 정지 시간이 존재하기 때문에, 모든 것들이 실행이 완료되도록 기다릴 수 있다
+	이 세 개의 task( new CallableTask("in1Minutes"), new CallableTask("Layer"), new CallableTask("Adam") )가 
+	실행을 완료하고 나서야 결과가 출력된다 
+	보다시피 이 코드가 읽고 사용하기가 훨씬 쉽다는 것을 눈으로 확인할 수 있다
+	이 부분의 코드가 더 빨리 작동하길 원한다면  newFixedThreadPool();를 3라고 적어주면 된다
+	이렇게 적으면 어떤 일이 발생할까?
+	
+	그 결과로 이전보다 속도가 더 빨라진 것을 확인할 수 있다 
+	세 개의 Thread에서 코드를 실행하니 이전과 비교했을 때 속도가 매우 매우 빨라졌다는 사실을 눈으로 확인할 수가 있다
+	
+	ThreadPool의 숫자를 이렇게 저젛게 바꾸어 가며 그에 따라 결과가 어떻게 나오는지 지켜보는 것도 좋은 학습일 것이다
+	이유는 다양한 것들을 동시에 불러내어 다양한 것들의 조합을 만들 수 있기 때문이다
+	*/
+}
+
+-----------------------------------------------------------------------------------
+
+
+
+
+/*
+다음 학습에선 ExecutorService와 관련되어 중요하게 다루어지는 또 다른 것에 대해 배우도록 하겠다
+*/
