@@ -1,0 +1,133 @@
+
+
+MultiThreading에 대한 이번 파트에선 Thread를 생성하는 방법에 대한 기본적인 내용으로 시작했었다
+
+Thread를 생성하는 두 가지 방법에 대해 살펴보았다 
+1. Thread를 상속받는 방법과, 
+2. Runnable 인터페이스를 실행하는 방법이다
+
+Thread가 가질수 있는 다양한 상태에 대해서도 알아보았다 
+
+또한 Thread에 대해 각각 다른 우선순위를 부여하는 방법에 대해서도 알아보았다
+
+그리고 Thread가 실행을 완료하는 동안 대기하도록 하여 Thread 사이에서 소통이 이루어지도록 해보았다
+Thread를 실행할 때, 가장 기본적인 방법으로 이해해도 쉽지 않다는 점에 대해 이해했으며,
+이 지점에서 ExecutorService와 ExecutorService에서 몇 개의 Thread를 동시에 실행하여
+task를 진행할 것인지에 대해서도 알아보았다
+그리하여 Thread를 다양한 크기로 생성해 보았다 크기 1,3,5에 해당하는 Thread를 만들어서
+ExecutorService를 사용하는 와중에 다양한 task를 수행할 수 있도록 해보았다
+------------------------------------------------
+예)
+ExecutorService executorService = Executors.newFixedThreadPool(5);
+		executorService.execute(new Task(1));
+		executorService.execute(new Task(2));
+		executorService.execute(new Task(3));
+		executorService.execute(new Task(4));
+		executorService.execute(new Task(5));
+		executorService.execute(new Task(6));
+		executorService.execute(new Task(7));
+------------------------------------------------
+
+
+
+
+ExecutorService가 Thread에서 결과를 얻는 지점 또한 설정할 수 있다는 사실도 배웠다
+여기서 Future라는 개념을 추가로 학습했다
+Future를 이용해 get() 메소드를 불러주면, 결과를 반환받기 위해 기다리기만 하면 된다
+---------------------------------------------------------------------------
+예)
+public class CallableRunner {
+
+	public static void main(String[] args) throws InterruptedException, ExecutionException {
+
+		ExecutorService executorService = Executors.newFixedThreadPool(1);
+		Future<String> welcomeFuture = 
+				executorService.submit(new CallableTask("in1Minutes"));
+
+		System.out.print("\n new CallableTask(\"in1Minutes\") completed");
+
+		String welcomeMessage = welcomeFuture.get();
+
+		System.out.print(welcomeMessage);
+		
+		System.out.print("\n Main completed");
+	}
+
+}
+---------------------------------------------------------------------------
+
+
+
+
+
+
+그리고 이 파트의 마지막에선 다량의 task를 한번에 처리하는 방법과, 모든 task의 처리가 끝날 때까지
+기다리도록 하는 invokeAll()에 대해 배웠다
+---------------------------------------------------------------------------
+예)
+package multiThreading;
+
+import java.util.*;
+import java.util.concurrent.*;
+
+public class MultipleCallableRunner {
+	
+	public static void main(String[] args) throws InterruptedException, ExecutionException {
+
+		ExecutorService executorService = Executors.newFixedThreadPool(3);
+		
+		List<CallableTask> tasks = List.of(new CallableTask("in1Minutes"), new CallableTask("Layer"), new CallableTask("Adam"));
+		
+		List<Future<String>> results = executorService.invokeAll(tasks);
+
+		for(Future result : results) {
+			System.out.println(result.get());//result.get()부분에 예외가 나오니 떠넘겨주자
+		}
+
+		executorService.shutdown();
+	}
+}
+---------------------------------------------------------------------------
+
+
+또한 한 개의 task의 실행이 완료되는 것을 기다린 후,
+결고를 얻어 invokeAny()에 사용하는 방법도 알아보았다 
+---------------------------------------------------------------------------
+예)
+package multiThreading;
+
+import java.util.*;
+import java.util.concurrent.*;
+
+public class MultipleAnyCallableRunner {
+	
+	public static void main(String[] args) throws InterruptedException, ExecutionException {
+
+		ExecutorService executorService = Executors.newFixedThreadPool(3);
+		
+		List<CallableTask> tasks = List.of(new CallableTask("in1Minutes"), new CallableTask("Layer"), new CallableTask("Adam"));
+
+		String result = executorService.invokeAny(tasks);
+
+		System.out.println(result);
+		executorService.shutdown();
+
+	}
+
+}
+---------------------------------------------------------------------------
+
+
+
+
+/*
+정리)
+MultiThreading은 매우 흥미로운 개념이다
+이유는 우린 항상 작업 속도가 빠르기를 바라고,
+병렬 구조로써 가능한 많은 task를 실행할 수 있기를 바라기 때문이다
+
+그러니까 만약 두 개 이상의 Thread를 생성하여 사용하고자 한다면,
+ExecutorService가 그 작업을 매우 간단하고 쉽게 처리해 줄 것이다
+
+이러한 부분에 대한 자바의 Threading은 완벽하지 않지만 충분한 해답을 제공한다
+*/
