@@ -1,0 +1,118 @@
+
+이 학습에선 예외 사항에 대한 기본 내용을 배우고, 어떤 경우에 주로 발생하며, Stack Trace가 무엇인지에 대해 알아보도록 하겠다
+
+
+
+----------------------------------------------------------------------------------------------------
+
+
+
+package exceptionHandling;
+
+public class ExceptionHandlingRunner {
+	
+	public static void main(String[] args) {
+		//이제 여기 예외적인 상황이 발생하도록 만들고 싶다고 해보자 어떻게 할까?
+		//가장 간단한 방법은 String str = null; 적은후 작동을 명령해주면 된다 
+		//여기 str.length();를 적어 어떤 일이 생기는지 지켜보도록 하겠다 실행 ㄱ
+		method1();
+		System.out.println("Main Ended");
+		
+		
+		/* 출력결과==>
+		Exception in thread "main" java.lang.NullPointerException: Cannot invoke "String.length()" because "str" is null
+		at onlineJavaStudy/exceptionHandling.ExceptionHandlingRunner.main(ExceptionHandlingRunner.java:10)
+		
+		NullPointerException이라고 출력이 되어있다 이클립스에선 NullPointerException에서 줄의 번호를 클릭해 주면, 
+		몇 번째 줄에서 오류나 예외의 상황이 새긴 건지 알 수 있는 특징이 있다
+		
+		이 프로그램을 돌렸을 때 stack trace라는 것을 찾을 수 있었는데 
+		정확히 어떤 줄의 코드가 예외를 발생시킨 것인지 알 수가 있다
+		그리고 어떤 이유로 오류가 생겼는지도 알려준다 
+		
+		그러므로 여기서 생긴 예외에 대한 조치를 취하지 않으면, 이 예외가 calling method로 떠넘겨지게 된다
+		
+		즉, 여기에 생긴 예외가 제대로 처리되지 않는 것이다 설명해 드리자면 어떤 임의의 사용자가 main 메소드를 불러내는데,
+		그게 여기 보이는 runner이다 여기에서 예외가 발생하고 있다 그래서 그 결과로 프로그램의 실행이 실패하였다
+		이 실패의 내용이 아마 결론으로 출력이 될 것이다
+		*/
+		//몇 가지 더 살펴 보도록 하겠다  String str = null;  str.length(); 이 두줄의 코드 모드를 선택하여 refactor누르고 Extract Method를 선택해준다 메소드 명은 method1()으로 하겠다
+	}
+
+	//이 메소드를 method1이라 불러주도록 하겠다 이로써 main 코드는 method1을 불러내고 있고, method1에서 null pointer exception에서 예외가 발새아고 있다
+	//이제 어떤 일이 발생하는지 살펴보도록 하겠다
+	
+	/*실행결과==>
+	Exception in thread "main" java.lang.NullPointerException: Cannot invoke "String.length()" because "str" is null
+	at onlineJavaStudy/exceptionHandling.ExceptionHandlingRunner.method1(ExceptionHandlingRunner.java:35)
+	at onlineJavaStudy/exceptionHandling.ExceptionHandlingRunner.main(ExceptionHandlingRunner.java:9)
+	
+	아까와 같이 NullPointerException이 출력되었지만, 이번에는 여기 stack trace가 여기 생긴 것을 확인할 수 있다
+	정리하자면 main이 이것을 불러내는 기능을 하고, method1 즉 35번째 줄에서 예외적인 상황이 일어나고 있다 이를 통해 정확히 어느 부분에서 오류가 생긴 것인지 확인할 수 있다
+	보다시피, main에서 method1을 실행할 때, 9번 줄의 코드를 실행하던 중에 NullPointerException의 오류가 생겨난 것이다 
+	이 모든 정보를 stack strace에서 확인할 수 있다 
+	이제 조금 더 깊이 있는 내용으로 들어가 보도록 하겠다
+	*/
+	
+	
+	//아래 두줄 코드를 마우스 오른쪽 버튼 눌러 refactor > Extract Method 눌러준다음 이메소드를 method2라 불러주겠다
+	private static void method1() {
+		method2();
+		System.out.println("Method1 Ended");
+	}
+
+	//불러오고, method2가 결론적으로 예외적인 상황을 만들어낸다 실행해 보도록 하자
+	/*실행결과==>
+	Exception in thread "main" java.lang.NullPointerException: Cannot invoke "String.length()" because "str" is null
+	at onlineJavaStudy/exceptionHandling.ExceptionHandlingRunner.method2(ExceptionHandlingRunner.java:55)
+	at onlineJavaStudy/exceptionHandling.ExceptionHandlingRunner.method1(ExceptionHandlingRunner.java:49)
+	at onlineJavaStudy/exceptionHandling.ExceptionHandlingRunner.main(ExceptionHandlingRunner.java:9)
+	*/
+	//여기 entire stack의 흔적 전체를 확인할 수 있다 그리고 보다시피 main,method1,2가 있고 이중 method2가 오류를 생산해냈다는 것을 알 수 있다
+	//여기서 예외에 대해 이해하고 넘어가야 할 중요한 것이 있다
+	//예외를 처리한 후에 어떤 코드를 작성할 때, 다시 위의 main메소드 부터... syso Main Ended라 적어주고  method1에는 Method1 Ended적어주고  method2()에는 Method2 Ended라 적어주겠다
+	//이제 이것을 실행해주면, syso중 그 어떤 것도 실행되지 않았다는 것을 알 수 있다
+	//왜 실행되지 않은 것일까?
+	/*이유==>
+	왜냐하면 main이 method1을 불러내고, method1이 method2를 불러내는 구조인데
+	method2가 이 줄에서 예외적인 상황을 만들어 내고 있기 때문이다 
+	그렇다면, 예외가 생겨나고 제대로 처리가 되지 않는다면, 어떤일이 생기게 될까?
+	
+	이 오류를 서로 떠넘기는 상황이 생긴다
+	여기 method2에는 예외를 처리하기 위해 노력하고 있고, 이부분에선 예외에 대한 어떤 처리도 하고 있지 않으니, method1으로 이를 보내주게 된다
+	그리고 method1도 이 예외 상황을 어떻게 처리해야 하는지 방법을 찾지 못했다면, main으로 또다시 떠넘겨 주겠지
+	그러나 main 또한 처리방법을 찾지 못했을 수도 있다
+	그래서 또다시 이 오류를 넘기게 되면, 이 특정한 메소드에 존재하는 subsequent lines가 더 이상 실행이 되지 않을 것이다
+	method2에서 발생한 예외적인 상황으로 method1과 main에 존재하는 그 어떤 코드도 실행될 수 없게 됐다
+	이는 다양한 상황에서 문제가 되는 상왕이 된다
+
+	*/
+	private static void method2() {
+		String str = null;
+		str.length();
+		System.out.println("Method2 Ended");
+	}
+}
+
+----------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+/*
+정리)	
+먼저 이 영상의 목적은 너에게 두 가지 중요한 것들을 납득시키기 위한 것이었다
+1. 첫 번째는 예외 상황이 생겼을 때 이를 제대로 처리해 주지 않으면 이 특정 메소드에서 이후에 적힌 모든 코드는 실행될 수 없단는 점이었다
+2. 또한, calling 메소드에서 예외를 처리해주지 않을 경우, calling 메소드 이후에 이러한 예외를 발생시키는 코드 또한 실행이 되지 않는다
+
+이러한 실행 과정은 call chain을 타고 올라간다 
+	
+정리하면 method2에서 예외가 발생했고, 이게 method1에까지 영향을 주는 것이다 method1에 떠넘겨지게 되면, method1은 또 main을 불러내고, 다시 main에 떠넘겨지게 된다
+그리고 마지막엔 결국 main이 최종적으로 이 상황에 대한 지배권을 갖게 되고, 처리가 불가능할 경우, 내다 버리는 상황이 오게 된다
+이게 우리가 프로그램을 실행했을 때 결과로 얻은 값이다
+
+넘어가서, 어떤 코드를 실행하고자 할 때 stack trace라는 흔적을 얻게 된다고 말했다
+이는 어떻게 오류가 생겨났는지 그 과정에 대해 알아볼 때 매우 유용하게 사용할 수 있다
+*/
