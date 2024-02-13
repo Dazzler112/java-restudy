@@ -1,0 +1,123 @@
+
+지난 학습에선 stack trace가 무엇인지, 메소드에서 예외가 발생한 후의 코드는 실행이 되지 않는다는 것,
+그리고 call chanin에 의해 오류가 위까지 타고 올라간다는 사실에 대해 알아보았다
+
+이번 학습에서는, 예외를 다루는 방법들에 대해 집중해 보도록 하겠다
+
+
+--------------------------------------------------------------------------------------
+
+
+package exceptionHandling;
+
+//여기서 method2로 들어가 보도록 하겠다
+public class ExceptionHandlingRunner2 {
+
+	public static void main(String[] args) {
+		method1();
+		System.out.println("Main Ended");
+
+	}
+
+	private static void method1() {
+		method2();
+		System.out.println("Method1 Ended");
+	}
+
+	
+	
+	/*
+	 String str = null; str.length(); 이부분을 보면 예외 상황을 떠넘기고 있는 것을 확인할 수가 있는데, 이 예외의
+	 상황이 method1으로 떠넘기고 싶지 않은 상황이라 해보겠다 그러려면 어떻게 해야 할까? 이 실행의 과정이 체인을 타고 올라가지 않으려면
+	 어떻게 해주어야 하지? try catch block 이라는 것을 추가해 주면 된다
+	 여기서 try catch block 구문은 매우 간단하게 사용할 수 있다, try를 적어주어 코드 진행의 시작을 알리고,
+	 예외적 상황을 해결하고 나서 이 코드의 진행을 마무리 지어주면 된다, 그다음 이어서 catch를 적고
+	 괄호 안에 Exception.ex 를 적어주는데 Exception은 자바에 존재하는 클래스의 하나에 해당한다
+	 
+• Exception 클래스 설명 ------------------------------------------- 
+	 Exception을 ctrl+클릭해서 들어가고 설명을 봐보면
+	  * The class {@code Exception} and its subclasses are a form of
+	  * {@code Throwable} that indicates conditions that a reasonable
+	  * application might want to catch.
+	  여기서 볼 수 있듯이, class exception과 이의 자식 클래스는 throwable의 종류 중 하나로, 합리적인 애플리케이션이 잡고 싶어 할 만한 상태를 나타내는 역할을 한다
+	  복잡한 내용이 나열되어 있다, 맞지?
+	  ---------------------------------------------------------- 
+	  
+	  catch블록 여기서 ex.printStackTrace()를 적도록 할 것이다.
+	  즉 어떤 예외의 상황이 발생하면, 전체 stack trace를 결과로 출력하고자 하는 것이다
+	  
+	  전에 배운 내용을 하나 떠올려 보자면 예외 사항에 대해서 다룰 때, 여기서 아무 작업도 해주지 않는다면 어떤지 생각해 보자
+	  다시 말해 이 부분에 아무 처리도 하지 않은 상태로 프로그램을 진행하도록 하는 것이다 
+	  어떤 결과가 생길 것 같니?
+	 */
+	
+	private static void method2() {
+		try{
+			String str = null;
+			str.length();
+			System.out.println("Method2 Ended");
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+	}
+	/*실행결과==>
+	Method1 Ended
+	Main Ended
+	
+	"Method1 Ended"와 "Main Ended"가 출력되었다
+	즉, 이 상황를 설명하자면 main이 method1을 불러내고, method1은 method2를 불러내며, 
+	method2에 서는 예외가 발생하지만 어떤 처리도 해주지 않고 있다 이는 예외 상황이 눈 깜짝할 사이 잡아먹혀 버린 것이다
+	예외 상황이 막혀버렸다 그러므로 아무도 예외가 발생했다는 사실에 대해 알 수 없는데, 이는 오류가 이미 method2에서 처리가 되었기 때문이다
+	결론적으로 method1은 예외적인 상황이 발생했다는 것 조차 모르게 됐다
+	그래서 결과로 "Method1 Ended"와 "Main Ended"가 출력된 것이다
+	
+•try catch 작동 원리 ------------------------------------------
+	그게 우리가 여기서 확인할 수 있는 결과지만, 이 방식의 처리는 올바르다 할 수 없다
+	우린 대부분 예외가 발생했을 때 표출하여 알리려고 한다 어떤 코드가 작업이 잘못 실행이 되면,
+	ex.printStackTrace();를 이용하여 오류를 알리는 것이 합당하다 그러므로 이에 대한 생각을 바탕으로
+	
+	java.lang.NullPointerException: Cannot invoke "String.length()" because "str" is null
+	at onlineJavaStudy/exceptionHandling.ExceptionHandlingRunner2.method2(ExceptionHandlingRunner2.java:44)
+	at onlineJavaStudy/exceptionHandling.ExceptionHandlingRunner2.method1(ExceptionHandlingRunner2.java:13)
+	at onlineJavaStudy/exceptionHandling.ExceptionHandlingRunner2.main(ExceptionHandlingRunner2.java:7)
+	이 부분의 log를 살펴보면, 최소한 예외가 신고된 것을 알 수 있다 이러한 특정한 시나리오에선 
+	method1에서 예외가 발생했다는 사실을 전송하려 알리려는 목적이 아니다
+	
+	그러므로 이 try catch block에선 method2 의 try block 안에 존재하는 코드들이 무작위로 예외의 상황을 떠넘기고,
+	catch block 여기서 잡힌 다음, ex.printStackTrace(); 이 부분의 코드에서 오류가 처리될 것이다
+	그리고 이후에는 다시 예외를 넘기는 일은 일어나지 않기 때문에 여기서 예외의 상황은 다른 메소드로부터 숨겨지게 될 것이다
+	그러므로 method2가 예외를 발생시키고 method2가 이를 다시 수습하는 것이다
+	그렇기 때문에 여기서 method1은 예외 상황 자체를 알 수 없어 method2가 정상적으로 문제없이 작업을 완료했다 받아들인것이다
+	그리하여 다음 코드를 넘어가 다음 줄의 코드를 실행하고, 이러한 흐름은 method1이 실행을 완료하면 바뀌게 되어 Main Ended가 완료되는 결과가 최종적으로 나온다
+	----------------------------------------------------------
+	
+	Method1 Ended Main Ended 가 잘 출력이 되었다 main 메소드에 포함된 것 중 어떤 것이 추궁한다고 해도
+	이미 예외가 되는 상황은 해결이 되었기 때문에 예외가 생겼다는 사실이 세어나가는 일은 없을 것이다
+	여기서 우리는 이 stack trace를 결과로 출력하는 작업만 결론적으로 진행하게 되는데,
+	이유는 이 상황을 지켜보는 사용자가 예외적인 상황이 발생했었다는 사실을 알 수 있도록 하기 위함이다
+	이와 같은 결과가 프로그램에 영향을 주어 실패하는 결과가 갑자기 나오지는 않지만, 이 log를 보고 있는 사람들로 하여금
+	어떻게 하여 예외와 같은상황이 생겼는지 파악하는 것이 가능하다
+	*/
+}
+
+--------------------------------------------------------------------------------------
+
+
+
+
+
+
+/*
+정리)
+이번 학습에선 예외적 상황을 다루는 기본에 대해 배웠다
+try catch block 을 이용해서 말이다 그러므로 너도 원하는 코드를 적어준 다음,
+예외적인 사항을 예방하도록 try를 넣어주고, catch 부분을 통해 예외상황을 처리해 준다
+또한 예외적 상황을 넘기고 나선 그 다음 줄의 코드가 작동하지 않는다는 점에 대해서 배웠는데
+이는 "Method2 Ended"가 출력되지 않는 것을 보아 알 수 있다
+
+추가로 메소드 안에서 예외적 상황을 해결하려고 하면, 이 예외들이 calling method에게는 보이지 않게 된다
+그러므로 method2가 여기서 예외가 발생한 것을 해결해 주었기 때문에 method1과 main은 예외가 발생했다는 사실 자체를 인지하지 못한다
+그래서 코드의 다음 줄들이 지속하여 삭제한 것이다 
+
+다음 학습에선 예외의 상황을 다루는 방법에 대해 더 자세한 내용을 알아보도록 하겠다
+*/
