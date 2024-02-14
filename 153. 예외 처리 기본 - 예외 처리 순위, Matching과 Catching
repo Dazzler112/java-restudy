@@ -1,0 +1,211 @@
+
+이번 예문에선 try catch block의 구문에 대해 더 깊이 들어가 보도록 하겠다 
+이해하고 넘어가야 할 매우 중요한 것 중 하나가 예외들 안에서도 나름 체계가 존재한다는 점이다
+즉, 다양한 종류의 예시들이 존재하고, 각각의 예시들 사이에 마치 계급이 주어지는 것이다
+
+예를 들어 NullPoninterException를 열었다고 해보자 NullPoninterException은 예외 중 하나에 해당한다
+
+public class NullPointerException extends RuntimeException {
+    @java.io.Serial
+    private static final long serialVersionUID = 5162710183389028792L;
+
+    /**
+     * Constructs a {@code NullPointerException} with no detail message.
+     */
+    public NullPointerException() {
+        super();
+    }
+
+그리고 나면 NullPointerException이 RuntimeException을 상속하고, RuntimeException이 Exception에 상속을 해준다
+
+public class RuntimeException extends Exception {
+    @java.io.Serial
+    static final long serialVersionUID = -7034897190745766939L;
+
+    /** Constructs a new runtime exception with {@code null} as its
+     * detail message.  The cause is not initialized, and may subsequently be
+     * initialized by a call to {@link #initCause}.
+     */
+    public RuntimeException() {
+        super();
+    }
+즉, NullPointerException이 RuntimeException의 자식 클래스에 해당하고, RuntimeException은 
+Exception의 자식 클래스에 해당하는 것이다
+
+정리하자면 이에 따라 Exception이 부모클래스, 즉 슈퍼 클래스가 되고, 전체적으로 NullPoninterException의 슈퍼클래스가 된다, 맞지?
+그러므로 예외를 처리하는 작업을 진행할 때, 다수의 multiple catch block들이 특정 예외들이 처리하도록 유도하는 것도 한  방법이다
+
+	String str = null;
+			str.length();
+여기서 이 코드가 NullPointerException을 넘기는 상황이 발생했다 NullPointerException이 
+catch block과 이 예외적 상황이 일치하는 상황이 되었는데, 이는 NullPointerException이 Exception의 자식 클래스에 해당하여 생기는 일이며,
+Exception의 예외 상황들의 숲 안에 존재한다 NullPointerException을 다른 방식으로 다루고 싶다면,
+NullPointerException을 위한 별도로 분리된 catch block을 가지고 오면 이를 실현할 수가 있다 그러므로 NullPointerException ex를 적어준다음,
+다음의 내용을 출력해 보도록 하겠다
+private static void method2() {
+		try{
+			String str = null;
+			str.length();
+			System.out.println("Method2 Ended");
+		}catch (NullPointerException ex) {
+			System.out.println("NullPointerException");
+			ex.printStackTrace();
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+	}
+/*출력==>
+NullPointerException
+Method1 Ended
+Main Ended
+*/
+이로써 NullPointerException이 언제 실행되는지 알 수 있다 NullPointerException이 출력되었다는 사실을 확인할 수 있다
+정리하면 이게 실행된 catch block에 해당한다 어떤 특정한 예외가 발생하게 되면, 즉 NullPointerException이 구체적인 예외에 해당한다, 맞지?
+예외적 상황은 포괄적인 것으로, Exception안에는 NullPointerException이나 ArrayInedexOutOfBoundException등
+정말 다양한 범위와 종류들의 예외들이 존재한다 이것들 이외에도 정말 다양한 예외들이 존재한다
+
+그러니까 여기서 만약 구체적으로 어떤 예외가 생긴다면, 가장 구체적인 대상에 해당하는 catch block과 관련하여 어떤 일이 생기게 된다
+NullPointerException이 작동하게 되고, NullPointerException이 일치하게 되어 실행되는 것이다
+
+• catch block 정리
+이제 이 두가지 사항을 정리해 보자면 
+1. 첫 번째로 다수의 catch blocks를 가질 수 있고 다양한 예외 사항들을 해결할 다양한 계획들이 존재할 수 있다
+예외적인 상황이 생긴다면, 예외 증에서 가장 구체적인 것이 아마 일치할 것이다
+
+이번에는 다른 시나리오를 살펴보도록 하겠다 String str = null; str.length(); 이부분에 다음과 같은 코드의 조각을 적어준다고 해보자
+그러고 나서 아까와는 다른 예외가 생기도록 조종해 보도록 하겠다 이해되지?
+'int[] i = {}'을 적어준 다음, 등호 옆에 두 가지의 요소를 초기설정을 해주도록 하겠다
+그리고 여기에 예외가 발생하도록 해주겠다 int[] i = {} 아래에 int number = i[3];을 적어주도록 하겠다
+	private static void method2() {
+		try{
+			int[] i = {1, 2};
+			System.out.println("Method2 Ended");
+		}catch (NullPointerException ex) {
+			System.out.println("NullPointerException");
+			ex.printStackTrace();
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+	}
+두 개의 요소 중 세 번째 인덱스를 갖는 요소, 즉, 네번째 요소에 접근하고자 하는 코드를 작성한 것이다 
+어떤 일이 일어나게 될까? 어떤 부분이 예외를 야기하게 할까?
+/*출력==>
+java.lang.ArrayIndexOutOfBoundsException: Index 3 out of bounds for length 2
+	at onlineJavaStudy/exceptionHandling.ExceptionHandlingRunner2.method2(ExceptionHandlingRunner2.java:49)
+	at onlineJavaStudy/exceptionHandling.ExceptionHandlingRunner2.method1(ExceptionHandlingRunner2.java:13)
+	at onlineJavaStudy/exceptionHandling.ExceptionHandlingRunner2.main(ExceptionHandlingRunner2.java:7)
+Method1 Ended
+Main Ended
+*/
+예외가 발생했다
+여기서 ArrayIndexOutOfBoundsException라는 예외가 생성되었다 어떤 exception block이 실행되고 있지?
+catch(Exception ex){ 이게 실행되고 있는 excepton block이다 해당블록에서 확인해 보도록 하자
+
+	private static void method2() {
+		try{
+			int[] i = {1, 2};
+			System.out.println("Method2 Ended");
+		}catch (NullPointerException ex) {
+			System.out.println("Matched NullPointerException");
+			ex.printStackTrace();
+		}catch(Exception ex){
+      System.out.println("Matched Exception");
+			ex.printStackTrace();
+		}
+	}
+syso()를 적어주고, "Matched Exception"를 출력해 주도록 해주겠다
+이제 이 부분의 코드를 실행해 보자
+/*출력==>
+Matched Exception
+java.lang.ArrayIndexOutOfBoundsException: Index 3 out of bounds for length 2
+	at onlineJavaStudy/exceptionHandling.ExceptionHandlingRunner2.method2(ExceptionHandlingRunner2.java:49)
+	at onlineJavaStudy/exceptionHandling.ExceptionHandlingRunner2.method1(ExceptionHandlingRunner2.java:13)
+	at onlineJavaStudy/exceptionHandling.ExceptionHandlingRunner2.main(ExceptionHandlingRunner2.java:7)
+Method1 Ended
+Main Ended
+*/
+"Matched Exception"이 출력된 것을 알 수 있다 그러므로 ArrayIndexOutOfBoundException은 NullPointerException이 아니다
+즉, Exception의 자식 클래스에 해당하는 것이다 이사실을 여기서 확인해 보자
+
+/*
+public class ArrayIndexOutOfBoundsException extends IndexOutOfBoundsException {
+    @java.io.Serial
+    private static final long serialVersionUID = -5116101128118950844L;
+
+    /**
+     * Constructs an {@code ArrayIndexOutOfBoundsException} with no detail
+     * message.
+     */
+    public ArrayIndexOutOfBoundsException() {
+        super();
+    }
+ArrayIndexOutOfBoundsException를 여기서 찾아보면, IndexOutOfBoundsException를 상속하는데,
+또는 RuntimeException을 상속하고, 또 이는 Exception이 상속한다 발생하는 예외적 상황의 구체적인 형식에 따라 이를 해결하기 위한 구체적인 방법이 존재한다
+만약 catch(Exception ex){ 이부분이 존재하지 않았다면, 어떤 일이 발생했을까? 이 예외적 사황이 해결될 수 있을까?
+어떤 상황이 벌어질지 확인해보자
+
+출력==>
+Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: Index 3 out of bounds for length 2
+	at onlineJavaStudy/exceptionHandling.ExceptionHandlingRunner2.method2(ExceptionHandlingRunner2.java:49)
+	at onlineJavaStudy/exceptionHandling.ExceptionHandlingRunner2.method1(ExceptionHandlingRunner2.java:13)
+	at onlineJavaStudy/exceptionHandling.ExceptionHandlingRunner2.main(ExceptionHandlingRunner2.java:7)
+stack trace의 전부가 불러져 온다는 것을 확인할 수 있다
+ArrayIndexOutOfBoundsException를 불러오는 것이기 때문에, 또 너는 NullpointerException를 다루는 방법에 대해서만 정의한 경험이 있기 때문에
+여기서 발생한 예외상황은 처리가 어렵다
+어떤 일이 생길까? calling메소드에 떠넘기게 된다 이 부분이 calling 메소드에 떠넘겨지고, ( 	public static void main(String[] args) { )
+그래서 이 예외가 나오게 된 것이다
+그래서 위의 결과에 의해 그 다음의 줄들이 실행되지 않는 것 또한 알 수 있다 stack trace만이 출력되었다는 사실을 알 수 있다
+이 시점에서 만약 이것을 가능하게 하고 싶다면 어떻게 해야 할까?
+catch(Exception ex){ 이 예외 상황을 제 자리로 돌려보내고 ArrayIndexOutOfBoundsException를 처리하는 구체적인 예외를 가지고 오면
+이 부분에 넣어줄 수 있다
+*/
+
+ArrayIndexOutOfBoundsException을 적어준다 그리고 실행해보자
+
+	private static void method2() {
+		try{
+//			String str = null;
+//			str.length();
+			int[] i = {1, 2};
+			int number = i[3];
+			System.out.println("Method2 Ended");
+		}catch (NullPointerException ex) {
+			System.out.println("Matched NullPointerException");
+			ex.printStackTrace();
+		}catch (ArrayIndexOutOfBoundsException ex) {
+			System.out.println("Matched ArrayIndexOutOfBoundsException");
+			ex.printStackTrace();
+		}catch(Exception ex){
+			System.out.println("Matched Exception");
+			ex.printStackTrace();
+		}
+	}
+/*출력결과==>
+Matched ArrayIndexOutOfBoundsException
+java.lang.ArrayIndexOutOfBoundsException: Index 3 out of bounds for length 2
+	at onlineJavaStudy/exceptionHandling.ExceptionHandlingRunner2.method2(ExceptionHandlingRunner2.java:49)
+	at onlineJavaStudy/exceptionHandling.ExceptionHandlingRunner2.method1(ExceptionHandlingRunner2.java:13)
+	at onlineJavaStudy/exceptionHandling.ExceptionHandlingRunner2.main(ExceptionHandlingRunner2.java:7)
+Method1 Ended
+Main Ended
+*/
+보다시피 여기서 실행이 되는 block은 ArrayIndexOutOfBoundsException이라는 것을 파악할 수 있다
+그러나 특정한 예외가 존재하지 않는 상태에서 Exception catch block을 가지고 있다면,'catch all'의 상황이 벌어지는데, 이유는
+세상 어떤 예외든 예외와 일치하기 때문이다
+
+
+
+
+
+/*
+정리)
+이번 학습에선 예외들 사이에도 서열이 존재한다는 점과,
+NullPointerException과 ArrayIndexOutOfBoundsException이 Exception의 자식 클래스에 해당한다는 것에 대해 배웠다
+또한 어떤 예외가 존재하는 경우, 이와 다른 종류의 예외를 해결할 수 있다고 해도, 처리 방식이 맞지 않게 된다는 것도 알게되었다
+그래서 ArrayIndexOutOfBoundsException가 발생했는데 NullPointerException만 해결이 가능하다면, 
+여기서 이 예외는 처리가 불가능해진다 예외가 그 짝과 잘 매칭이 되려면,
+적어도 정확히 그 예외가 일치하거나 그의 상위 클래스가 되어야 한다
+ArrayIndexOutOfBoundsException의 경우를 예로 들자면, 이 예외를 해결하기 위해선 정확히 
+ArrayIndexOutOfBoundsException 거나 IndexOutOfBoundException 혹은 RuntimeException 혹은  Exception이 되어야 한다,
+이 중 하나의 catch block과 일치하면 된다
+*/
