@@ -1,0 +1,97 @@
+
+예외에 대해 이해하고 있어야 할 가장 중요한 것 중에서 예외 사항들 사이의 서열 관계와 예외 구분하는 
+checked exception과 unchecked exception이 있다,
+이번 단계에선, checked exception과 unchecked exception에 대해 이해하는 첫 발자국을 디뎌 보도록 하겠다
+
+	private static void method2() {
+		//여기 이 부분의 코드는 NullPointerException을 떠넘기고 있다
+		//하지만 여기선 이 부분을 해결하라고 압박하고 있지는 않다
+		//그러나 특정한 예외를 처리할 것을 강요받는 경우도 존재한다
+		String str = null;	
+		str.length();
+		System.out.println("Method2 Ended");
+	}
+
+해당 내용을 설명하기 위해 새로운 클래스를 만들어 주겠다
+
+---------------------------------------------------------------------------------------
+
+
+
+package exceptionHandling;
+
+public class CheckedExceptionRunner {
+	
+	public static void main(String[] args) {
+	
+//		try {
+//			someOtherMethod();
+//			Thread.sleep(2000); //2초동안 sleep 모드로 들어간다는 코드 //이 코드는 아무 일도 하지 않을 것이다
+//		//하지만 코드를 작성하는 중 이부분을 살펴보면, Unhandled exception type InterruptedException 이라고 적힌 것을 확인할 수 있다
+//		//주어진 제시문을 읽어보도록 하겠다
+//		/*
+//		 public static native void sleep(long millis) throws InterruptedException;
+//		 throws InterruptedException이라고 적혀있다 
+//		 즉, 이 메소드는 이 코드 안에서 예외가 생겨날 여지가 있다는 것을 의미한다 어떤 종류의 예외일까? InterruptedException이다
+//		 그리고 어떤 메소드가 특정 예외를 생성한다고 하는 것은 이를 강제적으로 해결하거나, 떠넘기는 것도 가능하다
+//		 이제부터 처리해 보도록 하겠다, ㅇㅋ?
+//		 위에 try문을 적어서 열어주고, catch를 적고, 다루게 될 예외의 상황을 적어준다
+//		 여기서 다루는 예외 상황이 무엇이었지? InterruptedException e 를 여기 적어주겠다
+//		 그리고 catch블록 안에 e.printStackTrace()를 적어준다 이렇게 하면 오류가 해결될까?
+//		*/
+//		//이 식을 실행하면, 처음에 2초동안 대기하다 프로그램 실행이 끝날 것이다
+//		//숫자를 5000으로 바꾸어 준다면, 프로그램은 5초동안 대기하다 실행이 끝나겠다
+//		//try문에 다른 메소드를 불러와 보도록 하겠다 someOtherMethod()라 적어보도록 하겠다(없는 메소드니 만들어 줘야함)//someOtherMethod()로...
+//			} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
+		
+		//그러고 나서 someOtherMethod2()를 여기 불러주도록 하겠다 main 메소드를 불러주고 있는데도 이에대한
+		//별다른 불평을 보여주고 있지는 않는다 RuntimeException을 넘겨 버렸음에도 불구하고 main은 '상관없다'라는 태도를 보여주고 있다
+		//왜 그런 껄까? someOtherMethod라 적는다면 main은 이에 불만족스런 반응을 보일것이고, 이에 대해 main이 불평을 보이면서
+		//취급할 수 없는 예외의 종류인 InterruptedException라는 설명을 덧붙이고 있다 왜그런 것일까?
+		//InterruptedException과 RuntimeException은 어떤 차이를 보이는 것일까? 다음단계에서 이부분에 대해 알아보곘다
+		someOtherMethod2();
+		someOtherMethod();
+	}
+
+	private static void someOtherMethod() throws InterruptedException{
+		//Thread.sleep() 이 부분을 이 아래에서도 진행할 수 있도록 한다 해보자
+		//위에처럼 Unhandled exception type InterruptedException 이라고 설명하고 있는 것을 알 수 있다
+		//첫 번째 선택지는 try catch block을 사용하는 것이었다 맞지? 그리고 다른 옵션으로 이 예외사항을 처리하고 싶지 않으니, 떠넘기는 방법 또한 존재한다고 했었다
+		//떠넘기는 선언을 하는 것은 매우 간단하다 throws InterruptedException라고 적어주면 된다
+		//이는 이 코드가 까다로워서 찝찝하고 어려움을 느끼고 있으니,이 오류를 떠넘기고 싶다는 것을 의미한다
+		//만약 확실치 않은 코드를 갖고 있다면, Thread.sleep도 어려운 코드에 해당한다 첫 번째로 예외를 직접 다룰 수 있다고 했다 이 예외를 처리하고 넘어가는 것이 try catch이다
+		//그리고 두 번째 방법은 이 오류에 대한 걱정이나 고민을 하고 싶지 않으니,이 오류와 마주치는 누구든 해결이 아닌 떠넘기는 방법으로 오류를 벗어날 것이다 
+		//이 오류는 매우 까다로우니, 조심히 다루어야 한다 즉, 이것을 불러내는 사람이 누구이든지 간에 다루는 동안 조심성을 잃지 말아야 하고,어려움과 까다로움이 동반되리라는 것을 인지해야 한다
+		
+		//여기서 이해하고 넘어가야 할 중요한 것은, 왜 이 메소드에 대해서만 해결할 것을 강요하고 있는지이다
+		Thread.sleep(2000);
+		
+		//다른 예시를 들어보겠다 다른 메소드를 생성해 보도록 하겠다 someOtherMethod를 복사해 붙여넣기 해 주겠다
+	}
+	
+	private static void someOtherMethod2() throws RuntimeException{
+		//throws InterruptedException를 지워주도록 하고 throws RuntimeException이라 적어 상위 단계로 미루어서 예외처리를 해 보겠다
+		//RuntimeException은 예외들의 서열에 대해 배울 때 나왔던 것 중 하나였다, 맞지?
+		//someOtherMethod2가 RuntimeException에게 오류에 대한 처리를 떠넘기게 된다, 그리고 이제 main메소드의 이 코드에(try catch block) 대해 주석을 달도록 하겠다 //main메소드로...
+	}
+}
+
+---------------------------------------------------------------------------------------
+
+
+
+
+
+/*
+정리)
+이번 학습에선 어떤 메소드들은 처리하기 매우 까다롭다는 점과, 처리하기 어렵다는 점을 예외로 떠넘김으로써
+사용자들에게 알려준다는 사실을 알게 되었다 그래서 몇몇 메소드는 RuntimeException을 떠넘기며, 어떤 메소드는 InterruptedException을 떠넘기기도 하고,
+Thread.sleep과 같은 메소드는 InterruptedException을 떠넘기는 모습을 보일 것이다
+자바에는 소개한 것 이외에도 정말 많은 메소드가 존재하는데, 이들 모두 예외상황을 떠넘김으로써
+현재 처리하기가 껄끄럽다는 사실을 알려준다 가끔 이러한 예시 중 몇 개는 당장 철치할 것을 강요하기도 한다
+이는 try catch block을 이용하거나, 같은 예외의 상황을 선언함으로써 대응할 수 있다
+여기서 질문은 어떤 종류의 예외들이 해결을 강요하고 어떤 예외들의 처리는 무시해도 괜찮은가 인데
+이것에 대한 답은 다음학습에서 알아보도록 하겠다
+*/
