@@ -1,0 +1,70 @@
+
+지난 학습에선 어떤 예외들의 경우에는 떠넘기는 것이 불가능하고
+InterruptedException과 같이 바로 처리할 것을 강요한다는 점에 대해 배웠었다
+그러나 RuntimeException은 떠넘기는 것이 가능하여 calling 메소드는 예외를 처리할 것을 강요받지 않는다
+이에 대해 이해하기 위해, 예외들 사이에서 발생하는 서열 및 계급을 의미하는 Exception Hierarchy를 알아야 한다
+
+
+
+                                                                                              Exception Hierarchy
+//Pre-defined Java Classes
+class Error extends Throwable {}
+class Exception extends Throwable {}
+class InterruptedException extends Exception {}
+class RuntimeException extends Exception {}
+class NullPonterException extends RuntimeException {}
+
+자바 안에는 정의되지 않은 예시의 세트가 존재하는데 NullPointerException, ArrayIndexOutOfBoundException, 그리고 InterruptedException과 같은 예외를 살펴봤었다
+이들이 exception hierarchy에 해당하는 부분들이다
+예외 처리와 관련해서 슈퍼클래스, 즉 가장 상위 클래스를 차지하는 것이 Throwable, 즉 떠넘기는 것이다
+Throwable을 상속할 수 있게 하는 두 개의 중요한 클래스가 있다 오류를 뜻하는 error, 그리고 예외를 뜻하는 exception이다
+
+- Error는 프로그래머가 처리할 수 없는 오류를 의미한다 이러한 종류의 오류에 대해서는 손을 쓸 수가 없다
+  예를 들어, 메모리를 모두 사용한경우나 JVM 메모리가 부족한 경우, 혹은 stack overflow에러에 대해 떠올려 보면 된다
+  여기서 반복이 일어나고 있고, stack overflow와 같이 어떤 것이 부족한 상황이 생기고 있다고 해보겠다
+  이런 상황들을 error라 부른다 
+
+- 다음으로 exception에 대해 알아보도록 할 것이다 ㅇㅋ?
+  다음 내용은 exception에 대한 내용이다 
+  Exception은 프로그래머들이 충분히 해결할 수 있는 것들이다
+  이러한 종류의 것들이 예외 처리에 있어서 정말 신경 써야 하는 부분이다
+  대체로 exception에 대해 이야기해보자면, 보통 두가지 종류가 있다,
+   ▷ RuntimeException과 RuntimeException의 자식 클래스에 해당하는 것들이 있고, (Unchecked Exception)
+   ▷ 다른 exception 중에선 RuntimeException의 자식 메소드에 해당하지 않는 것들이 있다 (Checked Exception)
+  
+  약간 나무에 비유하여 이를 이해할 수 있다 RuntimeException에 해당하지 않는 것 중에선 Exception이라는 항목에 해당하는 것들은 골라내야 첫 번째 분류를 하는 것이 가능하다
+  Exception이라는 항목 아래 RuntimeException이 아닌 것들은 checked exceptions이라고 부른다 
+  
+  예를 들어, 여기 InterruptedException을 들여다보도록 하겠다 InterruptedException은 checked exception에 해당하는데,
+  이는 예외를 직접적으로 상속하기 때문이다 InterruptedException과 InterruptedException의 자식 클래스는 모두 checked exception 이라고 청한다
+  만약 임의의 메소드가 예외를 떠넘겨 온다면, calling 메소드는 이를 해결하거나 또다시 떠넘기는 방법 둘 중에 선택하게 된다
+  RuntimeException이 아닌 것들에 대해 자바가 이야기하고 있다 RuntimeException이 아니거나 RuntimeException의 자식 클래스가 아닌 것들은 대상으로 이야기 하고 있다
+  여기서 자식 클래스에 해당하는 것들은 처리가 까다로운 편인데,(Checked = Risky) 이렇게 처리가 어려운 것들은 자식 클래스가 아닌 것들을 대상으로이야기 하고 있다
+  메소드가 떠넘기게 된다면 calling 메소드는 이를 처리해 주거나, 또 떠넘기는 것이 가능하다
+  RuntimeException 혹은 NullPointerException이나 ArrayIndexOutOfBoundException과 같이 RuntimeException의 자식 메소드에 해당한다면,
+  이는 모두 RuntimeExcption 혹은 이의 자식 클래스에 해당한다 
+  만약 메소드가 이것 중 어느 것이라도 넘기게 되면, 굳이 예외를 처리하려고 할 필요는 없다 calling 메소드가 여기서 '별로 까다로운 사항이 아니다' 라 이야기할 수 있다
+  이는 매우 무능력한 프로그래머들에게만 해당하는 사항이고, 사실 이만큼 무능력한 프로그래머들은 매우 적다 그러므로 이부분에 대해 크게 걱정하지 말자
+
+
+
+
+/*
+정리)
+오늘 이 학습에서 너가 가져가야 할 가장 중요한 내용은 
+예외 사이에서도 우열이 존재한다는 것과, 이 서열 관게에서 가장 상위에 해당하는 것이 Throwable이라는 것이다
+
+그리고 Throwable을 상속하는 데 있어 가장 중요한 두 가지가 있었다 Error 그리고 Exception이다
+메모리를 모두 소진한 out of memory에 대해선 따로 할 수 있는 처리가 존재하지 않는다
+그러니 이런 예외들이 생기지 않게 주의하여야 한다
+달리 어떻게 처리할 방법이 없기 때문이다 
+
+우리가 처리를 시도할 수 있는 것들은 Exception으로, exception 즉 예외에는 두 가지 종류가 존재한다
+ - 1. RuntimeException에 해당하는 것들과 이의 자식 클래스에 해당하는 것들이 하나이고,
+ - 2. 두 번째는 RuntimeException에 해당하지 않ㄴ아 checked exception이라고 불리는 것들이다 RuntimeException은 unchecked exception에 해당하여
+ RuntimeException의 자식 클래스에 해당하는 것들 또한 unchecked exception에 해당한다 
+ 메소드가 checked exception을 넘기는 경우, calling 메소드는 이를 처리하거나 또다시 떠넘기는 방법의 하나를 선택하는 것이 가능하다
+ 만약 어떤 메소드가 RuntimeExcetpion을 떠넘긴다면, calling 메소드는 이에 대해 아무 처리도 하지 않아도 된다
+
+여기까지가 너가 예외 서열에 대해 알고 있어야 할 내용 전부이다
+*/
