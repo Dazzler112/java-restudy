@@ -1,0 +1,129 @@
+
+지금까지 다른 누가 예외를 떠 넘겨 왔을 때 Java API 안에서 이를 어떻게 다루어야 하는지 알아봤다
+이제, 코드 안에 예외를 떠넘기는 것을 적는 방법에 집중해 보도록 하겠다
+코드 안에서 예외를 떠넘기려면 어떻게 해야 할까? 
+이 학습에선 작성한 코드에서 매우 간단한 예외를 넘기는 것에 집중해 보도록 하겠다,
+이 모든 것에 대한 이해를 높이기 위해 간단한 예시를 하나 설정해 보도록 하겠다
+
+
+-------------------------------------------------------------------------------------------
+
+
+● ThrowingExceptionRunner 클래스파일
+
+
+
+package exceptionHandling;
+//간단한 클래스로 시작해 보도록 하겠다 //클래스 생헝후, 일정 값들을 이 특정한 클래스에 저장하고 어떤 조율의 통화이고 그 양이 얼마인지 저장하도록 하겠다
+
+class Amount {
+//클래스 만든 후 블록 안에 private String currency;라 적어주겠다 이어서 private int amount를 적어주도록 하겠다
+	private String currency;
+	private int amount;
+	
+//그리고 이후에 field를 이용해 생성자를 만들어 보겠다 생성자를 만들어 보도록 하겠다 
+	public Amount(String currency, int amount) {
+		super();
+		this.currency = currency;
+		this.amount = amount;
+	}
+
+//이어서 원할 때 언제나 통화를 출력할 수 있도록 간단한 toString()으로 만들어 보겠다//public String toString()이라 적어주고 여기서 amount + "" + currency 로 반환받도록 하겠다
+	public String toString() {
+		return amount + " " +currency;
+	}
+	//이제 여기서(private int amount;) 문자형의 자료만 저장한다고 해 보겠다 BigDecimals와 같은 것은 고려하지 않도록 하겠다
+	//이상적으론 열거 방법을 사용하기 위해 여기에 Enum과 BigDecimal을 사용하는게 맞지만, 최대한 상황을 간단하게 가져가 보도록 하겠다
+	
+	
+	//이부분에 메소드를 만들어 주도록 하겠다 //하나의 통화에 또 다른 통화를 더해줄 것이다 어떻게 할 수 있을까?
+	//public void add()라 적고, 입력값은 괄호 안에 Amount other이라고 해주겠다
+//	public void add(Amount other) {
+//		//여기서 다음과 같은 작업을 하고자 한다 여기 존재하는 이 통화를 여기에 더해주는 것이다
+//		//this.amount = this.amount + other.amount;라 적어주면 된다//논리적으로 잘 적힌 코드니?//한번 생각해 보자 //이제 메인메소드로...
+//		
+//		this.amount = this.amount + other.amount;
+//	}
+	
+	
+	/*오류를 수정하기 위한 작업:
+	여기서 할 수 있는 작업 중 하나는 작성한 프로그램의 최종 버전에서 통화를 바꾸는 실행을 해주어서 이를 USD의 단위로 바꾸어 집어넣는 방법이다
+	하지만 이 상황에서 이 방법은 효율적이지 못하다고 해보자
+	일단 지금은 여기 public void add(Amount other) 예외 처리를 실행하여 정확히 이 부분과 같이 처리하지 못하도록 해보자
+	그러려면 어떻게 해야 할까? 	public void add(Amount other)메소드 블록 안에 if를 적어주고 ,괄호안에 this.currency.equals(other.currency)를 적어준다
+	그냥 편의상 other를 that으로 바꿔주자
+	*/
+	
+	//add 메소드 수정본
+	public void add(Amount that) {
+	if(!this.currency.equals(that.currency)) {
+		throw new RuntimeException("Currencies Don't Match");
+	}
+	this.amount = this.amount + that.amount;
+	}
+	/*코드 해석==>
+	this.currency가 that.currency와 같은 값을 가지면 이 숫자들을 더해준다는 것을 의마하게 된다
+	하지만 같지 않다면 어떠게 해주어야 할까? 예외를 넘기는 작업을 해주도록 하겠다// 그렇다면 예외는 어떻게 떠넘길 수 있을까?
+	throw new Exception("Currencies Don't Match"); 라 적어주는데, 보다시피 받아들여지지 않는다
+	exception이라 적을 때 코드가 받아들여지지 않는다는 것을 알 수 있다 지금으로썬RuntimeException을 사용하는 것에 행복을 느끼도록 하자 불평하고 있지는 않으니까, 맞지?
+	생각해 보자 Exception에 대해 불평이 있지만, RuntimeException에 대해선 따로 불편에 대한 언급이 없다 일단 이 내용은 뒤로 미뤄두도록 하자
+	지금 일단 이 코드가 예시를 넘기는 역할을 하는지 알아보겠다 //자바 실행해보자.
+	
+	Exception in thread "main" java.lang.RuntimeException: Currencies Don't Match
+	at onlineJavaStudy/exceptionHandling.Amount.add....
+	예시를 잘 넘겨주고 있다 이에 따라 그 누구도 일치하지 않는 통화는 넣지 못하게 되었다
+	즉, 사용자들이 올바르지 않은 작업을 하는 것으로 부터 예방하는 효과를 얻게 되었다 맞지 않는 경우에는 더하기가 불가능하다
+	지금 상태에서 application은 정확히 어떻게 이를 실행해야 하는지 모르고 있다
+	이런 상황에선 주로 main 메소드에서 이를 처리하여 UI에 올바른 메시지를 출력하는 작업을 거친다
+	또한, 올바른 exception trace, 즉 그 흔적을 log에 남겨서 어떤 사람이 이를 디버깅하고 있든지 간에 누군가 통화를 더하려는 시도록 했다는 것을 알게 된다
+	*/
+}
+
+
+public class ThrowingExceptionRunner {
+
+	public static void main(String[] args) {
+		//위에 클래스 생성하러 갈 것임...
+		
+		//클래스 생성하고 Amount amount1 = new Amount("USD")라고 생성해 주자
+		Amount amount1 = new Amount("USD", 10);
+		//이어서 amount2는 위와 같이 USD에 해당하나,값은 20으로 차이를 두겠다
+//		Amount amount2 = new Amount("USD", 20);
+		
+		//Amount amount2 = new Amount("USD", 20); => Amount amount2 = new Amount("EUR", 20);
+		Amount amount2 = new Amount("EUR", 20);
+		
+		//그리고 amount1.add()의 괄호 안에 amount2를 적어주면 된다 syo를 적어주고 괄호안에 amount1을 넣어주겠다
+		amount1.add(amount2);
+		System.out.println(amount1); 
+		//이제 실행해보자
+		/*실행결과==>
+		30 USD
+		
+		결과로 30 USD가 나왔다 Good
+		*/
+		//간단한 것 보단 무엇이든 복잡하게 가는 것을 좋아하는 친구가 있다 만약 이친구가 amount2의 통화 단위를 EUR로 하고 싶다 한다면 우리가 작성한 프로그램은 이를 어떻게 대처할까?
+	
+		/*EUR 출력결과 ==>
+		30 USD
+		통화의 단위가 바뀐 점을 무시하고 그대로 30USD가 출력되었다
+		이게 제대로 작동한 게 맞니? 아니다 맞지?
+		그러므로 이 부분에서 소비자들에게 본인들이 잘못 입력을 진행하고 있다는 것을 알려야 한다
+		*/
+		//다시 메인메소드위의 Amount 클래스로...
+		
+	}
+
+}
+
+-------------------------------------------------------------------------------------------
+
+
+
+
+/*
+정리)
+이번 학습에선 예외를 떠넘기는 방법에 대해 알아보았다 
+다음 단계에선 왜 새로운 예외에 대해 다룰 때 컴파일 오류가 생겼는지에 대해 이해해 보고,
+이 컴파일 오류를 처리하는 방법에 대해 알아보겠다
+*/
