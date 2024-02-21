@@ -1,0 +1,105 @@
+
+지난 학습에선 RuntimeException을 넘기면 제대로 작동이 된다는 사실을 살펴봤었다,
+그래서 메소드의 예외가 main으로 전달되는데, 
+
+여기서 커다란 application이 존재하고, 
+여기에서 예외가 올바르게 처리된다고 해보겠다
+
+지난 영상에서는 throw new Exception으로 넘기라고 코드를 작성했을 때 컴파일 오류가 생겼던 것을 확인할 수 있다
+
+ThrowingExceptionRunner2 클래스를 보겠다
+
+
+------------------------------------------------------------------------------------
+
+
+● ThrowingExceptionRunner2 클래스파일
+
+
+package exceptionHandling;
+
+class Amount {
+
+	private String currency;
+	private int amount;
+
+	public Amount(String currency, int amount) {
+		super();
+		this.currency = currency;
+		this.amount = amount;
+	}
+	
+	public String toString() {
+		return amount + " " +currency;
+	}
+
+
+	public void add(Amount that) throws Exception{
+	if(!this.currency.equals(that.currency)) {
+		throw new Exception("Currencies Don't Match " + this.currency + " & " + that.currency);
+		//컴파일 에어락 어떤 것에 관해 이야기하고 있지? 'Unhandled exception type Exception'이라 출력 되어있다
+		//여기서 checked exception을 넘기는 경우, (지금 현재 여기서 checked exception이란 RuntimeException과 RuntimeException의 자손 클래스가 아닌 것들을 묶어서 칭한다 ㅇㅋ?)
+		//checked exception을 넘기는 경우, 메소드가 signature에게 이 점을 알려야 한다 ( public void add(Amount that)옆에 throws를 적어줌)
+		//그러므로 여기에 throws Exception이라 적어주겠다 ㅇㅋ? //언젠가 checked exception을 넘기게 된다면, 너의 definition이 '예외를 넘길 거고, 꽤 까다로운 아이일 것이다'라는 사실을 알려야 한다
+		//메인메소드로..
+		
+		
+		//다음이 checked exception을 던지는 방법이다 RuntimeException이라 적으면, 이는 unchecked exception 이고,
+		//exception이라 적어주면, checked exception에 해당한다 이제 실행하면 어떻게 되는지 살펴보자 //메인메소드에서 출력결과 확인..
+		
+		//어떤 통화가 맞지 않는 것인지 추가하여 함께 출력하도록 this.currency + " " + that.currency 를 추가하여 적곘다 
+		//이렇게 해주면 일치하지 않는 통화를 적어넣은 사람에게 좀 더 명료한 정보를 제공할 수 있다 //다시 메인메소드로 출력결과 확인...
+	}
+	this.amount = this.amount + that.amount;
+	}
+
+}
+
+
+public class ThrowingExceptionRunner2 {
+
+	public static void main(String[] args) throws Exception{
+
+		Amount amount1 = new Amount("USD", 10);
+
+		Amount amount2 = new Amount("EUR", 20);
+		
+		amount1.add(amount2);
+		//여기서 또 다른 일 또한 발생하는데 여기 컴파일 에러가 생겼고, 여기에(add메소드) throws를 적는 순간 뭘 해야 할까?
+		//add 메소드가 checked exception을 넘겨준다 이는 이 특정한 메소드 ,그리고 여기 존재하는 main 메소드에는 두가지 옵션이 있다 맞지?
+		//여기(main 매소드) try catch block을 넣어주거나 throws Exception이라고 적어주는 방법이 있다 주로 큰 단위의 application의 경우에는 try catch block을 이용하여 알맞은 예외에 대해 로깅이 일어나는지 확인해 준다
+		//하지만 지금은 'throws exception'을 사용해 보도록 하겠다 //다시 위의 add메소드로....
+		System.out.println(amount1); 
+		
+		/*출력결과 ==>
+		Exception in thread "main" java.lang.Exception: Currencies Don't Match
+		at onlineJavaStudy/exceptionHandling.Amount.add....
+		같은 예외가 발생했다, 보다시피 'Currencies Don't Match', 즉 통화가 일치하지 않는다고 출력되었다
+		java.lang.Exception이 적혀있고, 여기서 추가하여 다른 정보도 함께 알릴 수 있다 //add메소드 계속..
+		*/
+		
+		/*Exception 내용 수정후 출력결과==>
+		Exception in thread "main" java.lang.Exception: Currencies Don't Match USD & EUR
+		at onlineJavaStudy/exceptionHandling.Amount.add...
+		Currencies Don't Match USD & EUR가 출력되어 일치하지 않는 두 통화가 USD와 EUR이라고 출력이 되었다
+		*/
+	}
+
+}
+
+------------------------------------------------------------------------------------
+
+
+
+
+
+
+/*
+정리)
+이번 학습에선 unchecked exception을 던졌을 경우에 이 예외를 밖으로 던지는 것은 걱정할 필요가 없다는 것을 배웠다
+하지만 만약 checked exception을 넘긴다면, 무엇을 불러내든 throws를 앞에 붙여주어야 하고 이 예외를 처리하거나 넘겨주어야 한다
+
+다음 학습에선 스스로 예외를 만들어서 정의하는 방법에 대해 알아보도록 하겠다
+여기 throw new Exception("Currencies Don't Match " + this.currency + " & " + that.currency); 이 부분에서
+예외를 넘겨주고 있는데 이렇게 하는 대신, 통화가 예외와 일치하지 않는다고 알려주는 것이 더 좋을 것 같다
+*/
