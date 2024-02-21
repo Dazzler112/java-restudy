@@ -1,0 +1,119 @@
+
+
+이번 학습에선, custom exception을 만드는 것에 대해 알아보도록 하겠다
+
+throw new Exception("Currencies Don't Match " + this.currency + " & " + that.currency); 여기 이 코드에 관해 설명해 보도록 하겠다
+custom exception을 만들어 보도록 하겠다
+
+
+---------------------------------------------------------------------------------------------
+
+
+● ThrowingExceptionRunner3 클래스파일
+
+
+package exceptionHandling;
+
+class Amount {
+
+	private String currency;
+	private int amount;
+
+	public Amount(String currency, int amount) {
+		super();
+		this.currency = currency;
+		this.amount = amount;
+	}
+	
+	public String toString() {
+		return amount + " " +currency;
+	}
+
+
+	public void add(Amount that) throws CurrenciesDoNotMatchException{
+	if(!this.currency.equals(that.currency)) {
+//		throw new Exception("Currencies Don't Match " + this.currency + " & " + that.currency);
+		//그리고 여기 이것을 대신하여 throw new CurrenciesDoNotMatchException();이라 적어줄 것이다
+		throw new CurrenciesDoNotMatchException("Currencies Don't Match " + this.currency + " & " + that.currency);
+		
+		//CurrenciesDoNotMatchException이 Exception의 자손 클래스에 해당하므로 이렇게 적어주어도 괜찮다 하지만 더욱 구체적으로 하기 위해, add 옆의 throws에 CurrenciesDoNotMatchException이라 적어주고 메인 메소드 throws도 CurrenciesDoNotMatchException로 바꿔 주겠다
+		//그리고 실행해 보도록 하겠다
+		
+		//그리하여 이처럼 "Currencies Don't Match " + this.currency + " & " + that.currency 메시지를 출력할 수 가 있다 ㅇㅋ?
+		//그리고 나서 실행하면 메인 메소드로..
+	}
+	this.amount = this.amount + that.amount;
+	}
+
+}
+
+//custom exception은 어떻게 만드는 것일까? 여기 간단한 클래스를 생성해 보도록 하겠다 클래스 명은 CurrenciesDoNotMatchException이라 적어주겠다
+//그리고 나서 간단한게 이어서 extends Exceptino이라 적어주기만 하면 된다 //add 메소드로....
+class CurrenciesDoNotMatchException extends RuntimeException{
+	//CurrenciesDoNotMatchException()에 여기 String msg를 적어주겠다 다시 말해 생성자를 공식적으로 만드는데
+	//일반적으로 이는 단순히 super(msg);를 적음으로써 실현할 수 있다, 예외 안에 메소드가 존재하여( public Exception(String message) { super(message); } ) <- 이 메시지를 충분히 감당할 수 있기 때문이다
+	//그리하여 에외 시 메시지를 전달할 수 있게 된다 //add 메소드로...
+	public CurrenciesDoNotMatchException(String msg) {
+		super(msg);
+	}
+	
+	//그러므로 원한다면 RuntimeException을 extends할 수가 있다 이 경우, unchecked exception을 만드는 것이 된다 이는 throw가 필요 없다는 것을 의미한다 //main메소드로..
+}
+
+public class ThrowingExceptionRunner3 {
+
+	public static void main(String[] args) {//throws CurrenciesDoNotMatchException{ <=커스텀 예외를 RuntimeException으로 바꾼 경우 throws가 필요 없다
+									//그러므로 RuntimeException을 넘기려 한다면 이 안에 throws를 앞에 붙일 필요가 없다는 것이다 그러므로 add메소드에 throws를 지워줘도 코드는 컴파일에 문제를 겪지 않을 것이다
+									//그러므로 checked exception을 넘길 때는 예외를 처리해주어야 하고, RuntimeException이나 unchecked exception을 넘긴다면 처리해 주어야 할 필요는 없다
+
+		Amount amount1 = new Amount("USD", 10);
+
+		Amount amount2 = new Amount("EUR", 20);
+		
+		amount1.add(amount2);
+
+		System.out.println(amount1); 
+		/*커스텀으로 바꾼 후 출력결과==>
+		Exception in thread "main" exceptionHandling.CurrenciesDoNotMatchException
+		at onlineJavaStudy/exceptionHandling.Amount.add..
+		
+		Good! 여기 보다시피 CurrenciesDoNotMatchException를 함께 던져주었다
+		다시 말해, 우리만의 예외를 만들어 내어 정의했다 누군가 이를 catch block에서도 사용할 것이다 이 예외를 누군가 해결하고 싶다면,
+		이를 catch block 안에 넣어 처리를 시도할 수 있다
+		그러므로 main에서 CurrenciesDoNotMatchException를 따로 해결하고 싶을 경우, 그렇게 해주면 된다
+		이게 우리가 지금 함께 제공하기 위해 준비한 것들이다
+		
+		*/
+		//그 다음으로 다음의 작업을 해보도록 하겠다 여기 에외의 종류만으론 충분하지 않지? 안에 메시지를 담아보도록 하겠다 //CurrenciesDoNotMatchException 클래스로...
+	
+		/*커스텀 안에 메시지 넣은 출력결과 ==>
+		Exception in thread "main" exceptionHandling.CurrenciesDoNotMatchException: Currencies Don't Match USD & EUR
+		at onlineJavaStudy/exceptionHandling.Amount.add(ThrowingExceptionRunner3.java:23)
+		CurrenciesDoNotMatchException이 출력되었고, Currencies Don't Match USD & EUR이 이어서 출력되었다 구체적인 디테일도 전달이 가능하다
+		
+		또한 추가로 RuntimeException을 extend해주는 것도 가능하다(CurrenciesDoNotMatchException클래스 throws를 Exception에서 RuntimeException으로...)
+		*/
+	}
+
+}
+
+---------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+/*
+정리)
+이번 학습에선 CurrenciesDoNotMatchException로부터 custom exception을 스스로 생성하고,
+checked exception과 unchecked exception에 대해서도 생성을 진행해 보았다 
+그리고 이에 따라 생기는 차이들에 대해서도 알아보았다
+보통은 checked exception으로 만들 건지 unchecked exception으로 만들 건지는 꽤 어려운 선택이다
+이를 결정할 때 가장 크게 고려해야 하는 것은 이 프로그램을 사용할 사용자 대상, 즉 소비자이다
+
+즉, 다시 말해 소비자가 이 exception에 대해 어떤 일을 할 것인지가 중요하다
+만약 너의 소비자가 예외를 처리해 주기를 바란다면, 이 예외가 생겨싿는 것에 대해 알기를 바란다면 checked exception을 생성함으로써
+사용자에게 압박을 넣어주어야 한다 하지만 만약 소비자가 이에 대해 할 수 있는 일이 없다면, 이런 상황에서는 주로 RuntimeException을 사용하게 되는 편이다
+*/
