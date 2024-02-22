@@ -1,0 +1,71 @@
+
+finally로 코드를 작성하는 것이 조금 번거롭고 복잡했다는 것 기억하실 것이다
+정의를 쪼개고, catch와 finally를 사용해주고, null에 관해 확인해 주는 등 다양한 작업이 필요했다
+이런 종류의 코드는 작성하기 매우 번거로운 편에 속하는데, 작성하면서 확인해 주어야 하는 것들도 많다
+자바 7에서는 try-with-resources라고 불리는 것이 새롭게 소개되었는데 세세한 것들부터 함께 살펴보도록 하겠다
+try-with-resources는 어떻게 생성하는 것일까?
+
+기존 finally클래스를 복사해서 TryWithResouresRunner라는 클래스로 만들고 나서 try와 catch로 이루어진 문단을 삭제해 주도록 하겠다.
+
+
+--------------------------------------------------------------------------------------------------------
+
+
+🟢 TryWithResouresRunner 클래스파일
+
+
+
+package exceptionHandling;
+
+import java.io.*;
+import java.util.*;
+
+public class TryWithResouresRunner {
+
+	public static void main(String[] args) {
+		//이부분이 Scanner이고 scanner.close();를 해주려 한다 
+		//그리고 여기에서 예외가 잘 처리가 되고 있는지 확인하기 위해, 이 주위를 괄호로 묶어준후 ( try (Scanner scanner = new Scanner(System.in)){...int number = numbers[21];} )
+		//생성해 주면 된다, 사실 scanner.close()를 굳이 적어줄 필요가 없다 try라는 기능을 자료들에 사용할 떄는 구체적인 상황에 해당하므로, catch나 finally를 사용할 필요가 없다
+		//정말 굳이 catch를 사용하고 싶다면 가능하다
+		try (Scanner scanner = new Scanner(System.in)) {
+
+		int[] numbers = {12, 3, 4, 5};
+		int number = numbers[21];
+		
+		} //catch (Exception ex) {
+//			ex.printStackTrace();
+//			//catch문단을 시작해 주고, 예외가 생긴다면 어떻게 처리해줄 건지 적어준 다음,
+//		} finally {
+//			//finally 또한 이어서 사용해 줄 수 있다 
+//			
+//		} //하지만 이 두가지를 이용하는 것이 의무나 필수는 아니다 (주석으로 없애주겠음)
+	}
+	//위에서 사용해준 TryWithResources가 자동으로 실행이 모두 끝난 다음에 scanner.close를 불러주고,
+	//scanner.close를 불러주기 때문이다 
+	//이게 Java7에서 새로 등장한 기능 중 하나이다 자바7이 현재 그렇게 새로운 프로그램이 아니기는 하지만,
+	//그런데도 다수의 자바 개발자들이 알고 있는 기능은 아니다 만약 프로그램을 작성하던 중에 코드를 닫아줘야 한다면
+	//일반적으로 이런식으로도 이제 새롭게 코드 작성이 가능한 것이다
+	
+}
+
+--------------------------------------------------------------------------------------------------------
+
+
+
+
+/*
+Try-With-Resources방식 현재까지 정리 ==>
+중요한 부분들을 정리해 보자면, scanner가 Autoclosable이라는 클래스를 실행한다는 것이다
+	
+	public interface Closeable extends AutoCloseable {
+	....  
+	public void close() throws IOException; 
+	}
+	
+여기 closeable 부분을 살펴보자면, AutoCloseable라고 부르는 것을 실행하는 것을 알 수 있다 AutoCloseable의 인터페이스를 실행해 준다면
+그게 어떤 것들이든 TryWithResources로써 사용이 가능 하다 AutoCloseable에서 보다시피, close라 부르는 메소드가 있다는 것을 알 수 있다
+이는 코드에서 오류가 생겼을 때, closed가 이 특정한 변수에 대해 기능을 해준다
+그러므로 분명하게 close를 따로 불러낼 필요가 없다. 이러한 기능은 try catch문단을 생성하는 과정을 훨씬 간단하게 만들어 준다
+try 코드를 자료들과 사용하면, 입력값을 읽어내는 데 더욱 집중할 수가 있다
+그리고 exception management를 하는 방법에 대해서는 걱정할 필요가 없다
+*/
