@@ -1,0 +1,92 @@
+
+이 학습에선 Eclips와 관련해 매우 중요한 팁 중 하나인 Ctrl+1에 대해 알아보도록 하겠다
+
+
+-----------------------------------------------------------------------------------------
+
+
+🔵 EclipsTipsAndTricks 클래스파일
+
+
+package eclipsTips;
+
+import java.math.*;
+
+//2: class Test implements Comparable 이라는 인터페이스를 만들어 주도록 하겠다 그리하여 Comparable이 현존하는 인터페이스가 되고,<>여기서 String자료를 비교해 보도록 하겠다
+//그리고 보다시피 class Test에 와서 Ctrl + 1을 눌러주면, 실행되지 않은 메소드를 추가할 수 있다는 선택지를 제공한다
+//comparable 인터페이스는 실행되어야 하는 (public int compareTo(T o);) compareTo라는 메소드가 존재한다 그러니까 comparable interface를 실행해야 한다면 그게 어떤 인터페이스이든 간에 compareTo 메소드를 실행해 주어야 한다
+class Test implements Comparable<String> {
+
+	//결론적으로 이를 입력해 주거나, ctrl+1을 눌러서 unimplemented method를 추가해 주도록 한다
+	//기본적인 구조가 여기 존재하므로 implementation을 추가해 주면 된다 //다시 메인메소드로..
+	@Override
+	public int compareTo(String o) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
+}
+
+
+public class EclipsTipsAndTricks {
+	
+	public static void main(String[] args) throws InterruptedException {
+		//1: BigDecimal을 사용해 주도록 하겠다 BigDecimal의 새 예문을 생성해 주도록 하자
+		//BigDecimal bd = new BigDecimal();라고 적어주고 
+		//BigDecimal 에 import해주기 위해 ctrl+1을 눌러준다 이게 ctrl+1의 기본 사용 방법중 하나이다 
+		BigDecimal bd = new BigDecimal(25);
+		
+		//이제 Ctrl+1의 다른 기능들에 대해서도 알아보자 인터페이스를 실행하고 싶다고 해 보겠다
+		//그러므로 클래스를 생성해 주고, 인터페이스를 실행할 수 있도록 해보자 //메인메소드 위로 클래스 생성...
+		
+		//3: Ctrl + 1은 예외를 떠넘길 때도 사용이 가능하다
+		//여기에 Thread.sleep을 불러온다고 해보자 Thread.sleep은 thread에 포함된 메소드로, interruptedException이라는 것을 넘겨준다, 정리하면 sleep이 interruptedException을 넘기는 것이다 ( public static native void sleep(long millis) throws InterruptedException; )
+		//하는 일을 정확히 설명하자면, 프로그램이 여기 적은 숫자의 길이만큼 수면 상태에 들게 한다 적은 숫자의 단위는 밀리초에 해당한다 즉,이 thread는 1초 동안 잠들게 되겠다 그러나, 이는 interruptedException을 넘기는 것이다
+		//우리는 이걸 넘겨주어야 한다 이러한 상황에선 ctrl+1을 눌러 throw를 추가해 준다 보다시피 throw interruptedException이 method signature에 추가된 것을 확인할 수 있다
+		Thread.sleep(returnSomething());
+		
+		//4: Ctrl + 1 의 유용한 기능 중 하나로 클래스를 생성할 수 있다
+		//새로운 클래스를 생성하고 싶다고 해보자 DummyForTest라고 불리는 새로운 클래스를 생성하고자 한다고 해보겠다
+		//DummyForTest dt = new DummyForTest();라고 적고, dt.doSomething();라고 적어주겠다
+		//이 클래스는 실제로 존재하는 것은 아니지만, ctrl + 1을 눌러주고 create class DummyForTest라고 적어보도록 하겠다//결론적으로 클래스가 생성되었으므로 이 과정을 굳이 수동적으로 해줄 필요가 없다
+		DummyForTest dt = new DummyForTest();
+		
+		//또한 doSomething이라는 오류에 ctrl+1을 눌러서 'Create method 'doSomething'을 눌러줄 수 있다
+		//이 메소드 또한 너를 위해 생성되었다 
+		dt.doSomething();
+		
+		//이렇게 ctrl+1 혹은 cmd+1이라는 간단한 키를 눌러 다양한 일들을 처리할 수 있게 되었다
+		
+		//5: 마지막으로 너가 하는 작업에 대해 지역변수를 생성할 수 있다 sleep()에서 100* 45 * 456 이라는 거대한 계산을 한다고 해보겠다
+		//그리고 이를 실행하는 식을 작성하고자 한다고 해보겠다 Thread.sleep(100* 45 * 456); 드래그해 주고 ctrl+1누르면 나오는 'Extract to local variable'이라는 항목을 선택한다 
+		//그리고 나면 여기 새로운 지역 변수가 생성된다 (int millis = 1000 * 45 * 456;) 
+		//이후에 ctrl+z로 뒤로 물리고 ctrl+1은 상수를 추출하는 기능도 있는데 이를 진행해주면 여기 보다 시피 private static final int가 생성된다 ( private static final int MILLIS = 1000 * 45 * 456; )
+		//static 과 final에 관한 내용은 조금 뒤에 다루어 보도록 할 것이지만, 이는 너가 상수를 생성할 수 있게 해준다는 사실은 알아두자
+		//다시 ctrl+z를 눌러 초기화하자 그리고 원한다면 사실 메소드 추출도 가능하다 1000 * 45 * 456 에 ctrl+1을 누르고 'extract to a method'라는 선택지를 눌러주면 메소드가 생성된다
+	}
+
+	//메소드의 이름을 수정하는 것도 가능한데 returnSomething()으로 바꾸어 주겠다
+	private static int returnSomething() {
+		return 1000 * 45 * 456;
+	}
+}
+
+-----------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+/*
+정리)
+이 특별 학습에선 ctrl+1로 할 수 있는 모든 것들에 대해 알아보았다 
+여기서 설명한 몇 가지 내용이 이해가 가지 않았다고 해도 걱정할 필요가 없다
+특히 인터페이스와 예외에 관련된 내용이라면 더더욱 
+이 학습에서 전달하고자 했던 것은 ctrl+1혹은 cmd+1로 가능한 작은 마법들과 지름길을 소개하는 것이었다
+인터페이스와 예외에 대한 내용은 이 코스의 후반에서 이야기할 것이다 
+그때가 되면 오늘 설명한 모든 것을 이해하는데 문제 없을 것이다
+
+여기서 가져가야 할 것을 하나 고르자면, 바로 ctrl+1(cmd + 1)이다
+*/
