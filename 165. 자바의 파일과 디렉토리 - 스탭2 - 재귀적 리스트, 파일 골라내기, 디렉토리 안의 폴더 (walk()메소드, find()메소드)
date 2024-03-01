@@ -1,0 +1,183 @@
+
+
+지난 단계에선 간단한 코드를 적어 특정 폴더 안에 현존하는 모든 파일을 출력하는 방법을 알아보았다 
+그래서 현존하는 파일들과 디렉토리 모두의 리스트를 출력해 보았다, 하지만 가끔은 전체 디렉토리를 가져오고 싶을 때가 있다
+
+
+
+-------------------------------------------------------------------------------------------
+
+
+
+
+
+
+package files;
+
+import java.io.*;
+import java.nio.file.*;
+import java.nio.file.attribute.*;
+import java.util.function.*;
+
+public class DirectoryScanRunner2 {
+	
+	public static void main(String[] args) throws IOException {
+
+		Path currentDirectory = Paths.get(".");
+
+
+//		Files.list(currentDirectory)
+//		.forEach(System.out::println);
+
+이는 재귀적인 방법을 사용할 수 있다, 
+이러한 상황에선 Files.walk()라고 불리는것을 사용할 수 있다 여기에서 읽어낼 수 있듯이
+//● walk()메소드●
+		Predicate<? super Path> predicate = path -> String.valueOf(path).contains(".java");
+//		Files.walk(currentDirectory, 4).filter(predicate).forEach(System.out::println);
+		
+		/* walk()설명
+	    Return a {@code Stream} that is lazily populated with {@code
+	    Path} by searching for files in a file tree rooted at a given starting
+	    file.
+	    walk의 설명을 보자면 나태하게 퍼져 있는 Stream을 처음 주어진 파일을 뿌리로 하여 만들어진 파일 나무로부터 반환받을 수 있다는 내용이 적혀있다
+		*/
+		
+		//여기서는 같은 path에서의 디렉토리로 들어가는것이 목적이다, 맞지? 
+		//그러므로 path를 variable currentDirectory로 추출해 보도록 하곘다 (Paths.get(".") 를 local variable로..)
+		//여기 ( Path currentDirectory = Paths.get("."); )currentDirectory가 있다
+		//여기서 원하는 것은 Files.walk(currentDirectory)이고, 먗 단계 정도를 깊게 들어가야 하는지 구체화해 주어야 한다 일단 한 단계 아래로 들어가는 것으로 시작해 보겠다 ( Files.walk(currentDirectory, 1); )
+		//.forEach(System.out::println);을 적어서 같은 작업을 해주도록 할 것이다 //이제 실행하면 어떤일이 생길까?
+		/* (currentDirectory, 1)때의 실행 결과 ==>
+		.
+		.\.classpath
+		.\.project
+		.\.settings
+		.\bin
+		.\resources
+		.\src
+		list에서 했던 것과 정확히 같은 결과가 나온다 이윤느 한 단계 깊이 정도만 들어갔기 때문이다 
+		*/
+		//그렇다면 이번에는 두단계 깊이 들어가 보겠다
+		/*(currentDirectory, 2)때의 실행 결과 ==>
+		.
+		.\.classpath
+		.\.project
+		.\.settings
+		.\.settings\org.eclipse.core.resources.prefs
+		.\.settings\org.eclipse.jdt.core.prefs
+		.\bin
+		.\bin\files
+		.\bin\module-info.class
+		.\resources
+		.\src
+		.\src\files
+		.\src\module-info.java
+		한 단계 더 들어가는 것이 된다 
+		*/
+		//이번에는 4단계 깊이로 들어가보겠다
+		/* (currentDirectory, 4)때의 실행 결과 ==>
+		 .
+  		 .\.classpath
+		 .\.project
+		 .\.settings
+		 .\.settings\org.eclipse.core.resources.prefs
+		 .\.settings\org.eclipse.jdt.core.prefs
+		 .\bin
+		 .\bin\files
+		 .\bin\files\DirectoryScanRunner.class
+		 .\bin\files\DirectoryScanRunner2.class
+		 .\bin\module-info.class
+		 .\resources
+		 .\src
+		 .\src\files
+		 .\src\files\DirectoryScanRunner.java
+		 .\src\files\DirectoryScanRunner2.java
+		 .\src\module-info.java
+		 훨씬 많은 양의 파일들이 출력되고 있다, 맞지?
+		 .\bin, .\bin\files, .\bin\files\DirectoryScanRunner.class 그리고 방금 생성한 파일까지
+		*/
+		//그러므로 Files.walk()를 이용해 현재의 디렉토리로 들어가 볼 수 있다
+		
+		//이번에는 이 파일들을 걸러서 이곳에 현존하는 자바 파일들만 골라보도록 하겠다 그러려면 어떻게 해야 할까?
+		//함수형 프로그래밍에서 filter를 사용해주겠다, 그러므로 filter를 사용하고 predicate를 정의해 주겠다
+		//.filter(predicate) 여기에 직접적으로 predicate를 정의해 줄 것이다 지역 변수로써 가져오도록 하겠다
+		//정리하면 이 아래에 ( Predicate<? super Path> predicate; ) predicate를 생성할 것이다
+		//predicate = path -> String.valueOf(path)를 적어준다 path는 어떤 값이든 들어오는 값을 의미하고, path에서 얻고자 하는 값은 String이니 String.valueOf(path)라고 적어주자
+		//그리고 java를 포함하는지 확인하기 위해 contains('.java')를 이어서 적어주겠다 "."으로 끝나는 것은 좋은 옵션에 해당한다
+		//이 작업은 현재 디렉토리에 포함된 내용을 확인하고, predicate를 기준으로 걸러내는 일이다 여기서 이 predicate는 어떤 일은 하나?
+		//path변수로 가져와서 String.valueOf(path).contains(".java")라고 하고있다
+		//그러므로 지금은 path를 확인하고, path의 string값을 확인하여 ".java"를 포함하는지 확인하는 코드이다 실행해보자
+		/* predicate 출력결과 ==>
+		.\src\files\DirectoryScanRunner.java
+		.\src\files\DirectoryScanRunner2.java
+		.\src\module-info.java 
+		보다 시피 Java파일만 출력이 되었다
+		
+		정리하자면 현재의 디렉토리로 들어가 구체적인 조건을 만족하는 파일을 출력하는 작업을 해보았다 
+		*/
+		
+		
+		//●.find() 메소드
+		//원하는 파일을 찾아내는 다른 메소드도 존재한다 Files.find()라고 부른다
+		//처음에 두 가지의 parameter는 정확히 일치한다 currentDirectory를 적어주고, 어느 정도 깊이까지 스캔해 줄 것인지 적어주어야 한다
+		
+		//두 번째로는 matcher라고 부르는 것이 있다 이렇게 여기 matcher를 적어주고, 세미콜론을 찍어주도록 하겠다 이제 이 내용을 지역변수로 생성해 주도록 하겠다 ctrl 1 눌러서 지역변수로 설정해 줘라
+		//보다시피 matcher의 형태가 BiPredicate라고 나왔다 그러므로, 두 개의 parameter를 허용했다 이는 path와 file attributes이다
+		//그럼 이제 이 두 가지를 기반으로 predicate를 정의할 수 있다 (path, attributes)를 어떤 값과 매핑을 해줄 건데, 여기서 우리가 정의하는 것은 lambda expression이다 맞지?
+		//그러므로 이 lambda expression은 두 parameter를 허용한다 그래서 괄호 안에 두 가지의 변수의 이름을 적어주는 것이다 path와 attribute다 이제는 path와 attribute라는 이름을 사용할 수 있다 맞지?
+		//path를 기반으로 filter를 사용해 자바 파일만을 걸러내고 싶다면, predicate변수의 부분을 복사해서 사용하겠다 String.valueOf(path).contains(".java") 라 적겠다
+		//이러면 모든 파일이 반환될 것이다 그러고 나서 forEach문을 가져와 여기에서도 실행해 주도록 하겠다//그리고 코드를 실행해 보겠다
+		BiPredicate<Path, BasicFileAttributes> javaMatcher 
+		= (path, attributes) -> String.valueOf(path).contains(".java");
+	
+		BiPredicate<Path, BasicFileAttributes> directoryMatcher 
+		= (path, attributes) -> attributes.isDirectory();
+		
+		Files.find(currentDirectory, 4, directoryMatcher).forEach(System.out::println);;
+		/*find() 출력결과 ==>
+		.\src\files\DirectoryScanRunner.java
+		.\src\files\DirectoryScanRunner2.java
+		.\src\module-info.java
+		같은 결과가 나왔다 하지만 Files.find()메소드가 추가로 파일의 속성을 제공해 주었다 
+		*/
+		
+		//predicate를 정의하는 대신, 여기 javaMatcher를 적어주도록 하겠다 (뱐수명 matcher -> javaMatcher)
+		//그리고 javaMatcher 변수 아래에 javaMatcher변수를 복사 붙여넣기 해주자 matcher를 하나 더 생성한 것이다
+		//복사한 부분은 path를 쓰지 않도록 하겠다 attributes.isDirectory()라고 적어주겠다 즉, 현재 존해하는 디렉토리만 출력하도록 할 것이다
+		//directoryMatcher 라고 변수명 수정 후 Files.find(currentDirectory, 4, )여기에 directoryMatcher를 사용해 주겠다 그리고 실행..
+		/* javaMatcher 출력결과 ==>
+		.
+		.\.settings
+		.\bin
+		.\bin\files
+		.\resources
+		.\src
+		.\src\files
+		이제, 여기 현존하는 디렉토리만 출력이 되었다
+		또한 attributes는 또 다른 많은 attributes를 가지고 있다는 것도 알 수 있다
+		생성 시간을 기준으로 하여 필터링 하는 것도 가능하고, 파일의 크기에 따라, 마지막으로 접근한 시간에 따라, 그리고 마지막으로 수정된 시간에 따라서도 가능하다
+		
+		attributes.isDirectory();에 isDirectory()지우고 ctrl+spacebar를 하면 이 모든 기준을 필터링에 사용할 수 있다
+		*/
+	}
+}
+
+-------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+/*
+정리)
+파일에 대한 이 두번째 단계의 수업에선 walk()메소드를 사용하기 시작하여 디렉토리를 들여다보고, 자바 파일들을 출력해 보았다
+walk가 제공한 predicate는 우리에게 path를 제공할 뿐이었다 그러고 나서 String.valueOf(path)를 사용하여 (".java")를 포함한 항목들만 filter로 걸러 보기도 했다
+
+하지만 filter보다 find() 메소드가 더 나은 필터를 제공했다
+predicate는 path와 몇 개의 BasicFileAttributes를 정의한다 즉, 파일의 이름이나 path, 그리고 파일의 특성에 따라 필터링하는 것이 가능하다
+여기서는 directoryMatcher를 사용했었다 
+
+다음 단계에선, 파일에서 자료를 읽는 방법에 대해 알아보도록 하겠다
+*/
