@@ -1,0 +1,116 @@
+
+
+
+ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+
+
+🟢 FileReadRunner 클래스파일
+
+
+
+package files;
+
+import java.io.*;
+import java.nio.file.*;
+
+public class FileReadRunner {
+	
+	public static void main(String[] args) throws IOException {
+//import정리 = ctrl + shift + o
+		
+		Path pathFileToRead = Paths.get("./resources/data.txt");
+		
+		//이제부터 파일에서 자료를 읽어내 보도록 할 것이다 어디서로부터 파일을 읽어내야 할까? resources라는 폴더로 들어가 보도록 하겠다 전에 생성했던 그 폴더이다
+		//이 폴더에 마우스 오른쪽 키를 누르고 New -> Folder의 순서대로 들어가 여기 resources 폴더를 생성해 주었었다. 이번에도 resources에 마우스 오른쪽버튼 New->file순서로 들어가 이 파일을 data.txt라 불러주도록 하겠다 
+		//이 특정 파일에 매우 많은 자료가 있다고 해보자 123, 122와 같은 숫자와 문자형 자료, 그리고 Apple, Bat, Cat까지 말이다 어떤 값이 들어있든 상관은 없다 //data.txt 파일에 데이터 입력..		
+		//그러므로 이제 여기 요소들을 포함한 data.txt라는 파일이 생겼다 //전에 이야기했던 것처럼, 이 파일을 찾는 경로는 ./resources/data.txt가 될 것이다 
+		//그러므로 Paths.get(".");에 ./resources/data.txt라고 적어주겠다 이 경로를 pathFileToRead라는 변수명으로 정의하겠다 
+		//새로운 파일의 IO가 사진으로 들어오기 전까지는 파일을 읽거나 쓰는 것 자체가 매우 복잡했었다 매우 많은 Stream을 정의하고 ㅁ낳은 작업을 통해서야 이 작업이 최종적으로 가능했다
+//●NIO	
+		//하지만 이제 NIO를 통해 정말 쉽게 처리가 가능하다 이는 files의 또 다른 통계 메소드를 사용하면 가능하다
+		
+		//Files.readAllLines을 사용하여, 괄호 안에는 경로를 넣어주겠다 pathFileToRead을 넣어주면 된다 그럼 어떤 값이 반환될까? 모든 String의 목록을 반환해 줄 것이다 lines라 명을 적어주고 syso(lines)를 적어주도록 하겠다 //그리고 실행..
+//		List<String> lines = Files.readAllLines(pathFileToRead);
+//		System.out.println(lines);
+		/* 출력결과 ==>
+		[123,122, ftyvihnyu, Apple, Bat, Cat]
+		파일에서 모든 줄의 내용을 가져와서 리스트에 형식으로 출력해 주었다, 맞지? 정말 간단하지 않니?
+		*/
+		//이제 생각을 한번 해보자 과연 이 접근법이 이것을 시행하기에 좋은 접근법일까?
+		//예를 들어 너가 가진 자료가 만 줄의 코드 혹은 만 줄의 텍스트로 이루어져 있다고 해보자
+		//이 자료들을 한 번에 읽고 한 번에 출력하고 싶니? 그렇게 하면 무슨일이 일어날까?
+		//모든 것들은 메모리에서 한 번만 읽어진다
+		//즉, 여기서 현존하는 만 줄의 자료들은 스캔되어 메모리에 동시에 저장이 되는 것이다
+		//너가 가진 파일이 작은 파일이 아닌 이상, 이건 대부분의 상황에서 좋은 방법이 아니다
+		
+//●New IO		
+		//다른 방법으로는 무엇이 있을까?? 항상 그랬듯이, New IO가 대안을 제시한다
+		//Files.lines()을 적어주고, 경로를 구체화해주겠다 그리하여 pathFileToRead를 적어주겠다 Files.lines(pathFileToRead)적고 나면 어떤 결과가 나올까??
+		//Stream이 줄글로 반환될 것이다 Files.lines()를 살펴보도록하자
+		/* FIle.lines() 설명
+		  public static Stream<String> lines(Path path) throws IOException {
+		 이는 Stream의 형태로 반환되었고 (Stream<String>), 모든줄을 한 번에 읽어오는 것이 아니라, 각 줄의 Stream을 차례로 읽어올 것이다
+		*/
+		//이제 Stream을 이용해 진행하는 것이 가능하다 그러므로, forEach를 적어주고,소비자를 정의해 보도록 하겠다(System.out::println)이라고 적어주겠다 이는 각 줄을 한 줄 한 줄 출력해 줄 것이다
+//		Files.lines(pathFileToRead)
+//			 .forEach(System.out::println);
+		/* 출력결과 ==>
+		123,122
+		ftyvihnyu
+		Apple
+		Bat
+		Cat
+		이는 전체 파일을 한 번에 읽으려는 시도를 하지 않는 방법으로, 한 줄 출력하고 실행하고, 한 줄 출력하고..의 과정이 계속 반복될 것이다
+		이래서 많은 양의 자료를 다룰 때 이 방법이 훨씬 효율적인 것이다
+		*/
+		
+		//여기서 중요한 또 한 가지는 여기서 filter가 사용이 가능하다는 것이다  
+		//filter를 적고, 괄호 안에 predicate를 하나 정의해 주겠다 어떤 특정한 값들만 가져오고 싶다거나 
+		//map을 사용하는 것도 가능하다 모든 것들은 소문자로 변환하고 싶다고 해보자 (String::toLowerCase)라고 적어주겠다
+//		Files.lines(pathFileToRead)
+//		 .map(String::toLowerCase)
+//		 .forEach(System.out::println);
+		/* 출력결과 ==>
+		123,122
+		ftyvihnyu
+		apple
+		bat
+		cat
+		보다시피 모든 원소들이 소문자로 출력된 것을 확인할 수가 있다 
+		*/
+		
+		//이번에는 원소들을 필터링 한다고 해보자
+		//filter를 적고 'a'를 포함하는 문자열만 골라주도록 하겠다 (str -> str.contains("a"))
+		Files.lines(pathFileToRead)
+		 .map(String::toLowerCase)
+		 .filter(str -> str.contains("a"))
+		 .forEach(System.out::println);
+		/* 출력결과 ==>
+		apple
+		bat
+		cat
+		보다시피 이 줄 중 하나가 걸러진 것을 확인할 수 있다
+		*/
+//		그러므로 여기서 우리는 파일에서 자료를 읽어내는 방법과 map을 사용하는 방법
+//		그리고 이를 다양한 조각의 텍스트로 매핑하는 과정을 지켜보았다
+//		filter를 사용할 수도 있지만 이 자료들에 대해 다른 조작을 가하는 것도 가능하다
+	}
+}
+
+ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+
+
+
+
+/*
+정리)
+이 단계에선 파일에서 자료를 읽는 방법에 대해 알아보았다
+새로운 IO를 이용해 파일로부터 자료를 읽어오는 것은 쉬웠다
+
+간단한 파일이라면 readAllLines을 사용하는 것도 가능하고 
+
+아니면 line()메소드르 이용하여 Stream의 형식으로 읽어오면서 map, filter등 원하는 함수형 작업을 하는 것도 가능하고,
+이를 바로 콘솔에 출력하는 것도 가능하다
+
+다음 단계에선 파일을 적는 방법에 대해 배워보겠다
+*/
