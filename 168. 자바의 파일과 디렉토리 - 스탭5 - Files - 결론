@@ -1,0 +1,48 @@
+
+
+파일에 대해 배운 이 부분에선 디렉토리와 파일에 대해 사용할 수 있는 다양한 연산과 처리들에 대해 알아보았다
+
+처음엔 특수한 디렉토리에 따라 파일들을 목록으로 정리하는 방법에 대해 배우는 것을 시작으로,
+Path currentDirectory = Paths.get(".");
+Files.list(Paths.get(".")).forEach(System.out::println);
+
+
+재귀적으로 파일들에 접근해서 거르는 작업도 해봤다
+Files.walk(currentDirectory, 4).filter(predicate).forEach(System.out::println);
+
+
+Find()메소드를 실제로 사용하여 파일의 attribute들을 기준으로 필터링하여 디렉토리가 맞는지, 크기가 얼만한지와 같은 것들을 알아보는 방법에 대해서도 배웠다
+		BiPredicate<Path, BasicFileAttributes> directoryMatcher 
+		= (path, attributes) -> attributes.isDirectory();
+Files.find(currentDirectory, 4, directoryMatcher).forEach(System.out::println);;
+
+
+그러고 나서는 파일 안의 요소들을 스캔하는 방법과 파일 안의 자료를 읽는 방법에 대해 알아보았다
+readAllLines을 사용하여 자료를 읽어내면 모든 줄의 내용을 한 번에 출력하게 되어 큰 용량의 파일을 다룰 때 좋은 방법이 아니라는 것을 알 수 있었다
+
+여기서 Files.line()라는 것은 Stream을 준다는 것이다 그리고 Stream을 얻은 순간, 이 자료에 다양한 연산들이 가능해지는데, 그 예로 map,filter와 같은 것들이 가능했다
+List<String> lines = Files.readAllLines(pathFileToRead);
+		Files.lines(pathFileToRead)
+		 .map(String::toLowerCase)
+		 .filter(str -> str.contains("a"))
+		 .forEach(System.out::println);
+
+
+마지막으로 파일에 새로운 것을 적어넣는 방법에 대해 알아보았다
+새로운 요소들을 가져와서 파일에 집어넣는 방법을 말이다
+Path pathFileToWrite = Paths.get("./resources/file-write.txt");
+		List<String> list = 
+				List.of("Apple", "Boy", "Cat", "Dog", "Elephant");
+Files.write(pathFileToWrite, list);
+
+
+/*
+정리)
+new IO로 할 수 있는 일들에 대해 잘 보여주는 학습으로 유익한 시간을 보냈기를 바란다
+
+우리가 지금 까지 살펴본 기능들은 모두 자바7이나 자바8에서 소개된 것들이다
+자바 7에선 Java New IO와 Java.nio와 같은 것들이 소개되어 여기 제공된 패키지에 들어있다
+이것들은 스캔할 때의 경우 사용해 주었다 여기서 lambda expression과 predicate와 같은 것들, 즉 함수형 프로그래밍의 컨셉들도 이용했었다
+여기까지 파일에 대한 고급 소개였다 오래된 프로그래밍 관련 파일들을 훑어보면, Stream등 이러한 종류의 것들을 찾아볼 수 있을 것이다
+이런 것들을 걱정할 필요는 없다 너가 신경써야 하는 것은 자바에서 파일을 이용하여 프로그래밍을 하는 새로운 방법을 습득해 나가는 것 뿐이다.
+*/
