@@ -1,0 +1,94 @@
+
+
+지난 학습에선 동기화를 사용할 때 생기는 문제점에 대해 알아봤다 
+이번 단계에선 그에 대한 해결책을 찾아보려고 한다 
+lock에 대해 배우고 lock이 어떻게 동기화의 키워드에서 발생하는 문제들을 예방하게 해주는지 알아보도록 하자
+
+
+--------------------------------------------------------------------------------------
+
+
+🟢 BiCounter 클래스파일
+
+
+package concurrency;
+
+import java.util.concurrent.locks.*;
+
+public class BiCounter {
+	private int i = 0;
+	private int j = 0;
+	
+	//2: Lock lockForI라고 적어주도록 하겠다 이게 new ReentrantLock();과 같다고 등호옆에 적어준다
+	//ReentrantLock은 implementation의 lock에 해당한다 lockForJ도 생성해주자
+	Lock lockForI = new ReentrantLock();
+	Lock lockForJ = new ReentrantLock();
+	//그리고 나서 여기 lockForI를 얻어내려 한다 lockForI를 얻으려면 어떻게 해야 할까? //3: 다시 incrementI 메소드로..
+	
+	
+	//1: 전에 동기화 키워드에 관해 이야기 했듯이, 어떤 관점에선 모든 것들이 동기화되었다고 할 수 있고,
+	//이는 동기화된 메소드는 단 하나의 thread만이 허용된다는 것을 의미한다고 했었다
+	//Locks는 동기화된 코드를 여러 조각의 코드로 쪼갤 수 있도록 해준다
+	//Lock은 코드의 맨 처음에 lock을 사용하고 싶다고 알린 후, 마지막에 lock을 풀어주고 싶다고 적어주면 된다
+	public void incrementI () {
+		//여기에 적은 것처럼 이렇게 Get lock을 적어주고, 끝났으면 이렇게 Release Lock을 적어주면 된다
+		//lock이라는 것은 다음과 같은 것을 이야기할 수 있도록 해준다 '이러이러한 특성한 것에 대해 lock을 가지고 싶다'와 같은 말이다
+		//그리고 lock instances라는 것을 가질 수 있다 즉, 이 메소드에 대해 독립된 lock을 가질 수 있고 j 메소드를 위해 단독적으로 lock을 갖는 것이 가능하다
+		
+		/* lock이 허용하는 것 :
+		즉,Lock For I, Release Lock For I, Lock For J, Release Lock For J 등과 같이 적는 것이 가능하다
+		이는 두 개의 thread가 incrementI()와 IncrementJ()를 실행하고자 한다면, 두 가지 모두 실행하는 것이 허용된다는 뜻이다
+		그러나,만약 두 개의 thread가 incrementI()에 대해 대기하고 있다면, 하나씩만 실행이 가능하다
+		이게 기본적으로 Lock이라는 것이 허용하는 것들이다
+		*/
+		//그럼 이제 lock을 실행하여 보도록 하자//2:위에서 생성.. 
+				
+		
+		//3:lockForI.lock();라 적어주고, 여기에는 lockForI.unlock()이라 적어주도록 하겠다 아래 메소드에도 써주자
+		//후에 synchronized(동기화)를 지워줘야 한다 더이상 동기화 기능은 필요가 없기 때문이다 여기서 우리가 사용하고 있는 기능은 lock이다
+		/*지금 일어나고 있는 일:
+		여기서 일어날 일을 설명하면, lockForI.lock();이라고 적어주면, lock()이 콜이 lockI를 가지고 있지는 않은지 확인한다
+		만약 lockForI를 갖는 다른 thread가 존재하지 않는다면, 그래도 lock을 얻게 된다 이렇게 lock을 흡수해서 나아가 i++를 진행할 것이다
+		그러고 나서 나중에는 lock을 release해 주겠지 lockForI.lock();를 실행하는 경우, 또 다른 thread가 lock을 붙작고 있고, 
+		그러므로 release 될 때까지 기다려 주어야 한다 그래서 기본적으로 각 코드의 다른 부분에서 lock을 갖게 된다
+		lock의 의미와 효용 가치는 다음과 같다 하나의 동기화된 커다란 코드를 갖고 있는 것 대신, 여러 개의 작은 코드로 쪼개는 것이다
+		그리하여 thread는 이를 실행하고, 병렬구조를 통해 다른 thread 또한 이 public void incrementJ () 부분의 코드를 실행하고 있을지도 모든다
+		이게 lock이 제공하는 유연함이다 lock에 존재하는 다양한 메소드가 또 존재하는데 현재 존재하고 있는 다른 메소드들을 살펴보자
+		*/
+
+		
+		//4: lockForI.trylock(); trylock()등이 있는데 trylock()은 lock을 이곳과 저곳에서 사용하도록 해준다
+		//그러므로 만약 lock을 사용하지 못하게 된다면, false라는 값을 반환하여 이에 대해 반응하는 것이 가능하다
+		//또한 trylock을 Time과 TimeUnit과 함께 사용이 가능하다 
+		//기본적으로, 예를 들어 10초 동안 lock을 위해 대기하고, 이 이상은 기다릴 수 없다고 해보자
+		//이러한 가능성이 lock과 함께 존재하지만 가장 간단한 레벨에서 가장 흔하게 작성하는 코드는 다음과 같은 것들이 될 것이다
+		//lockForI.lock(), lockForI.unlock()과 같은 것들이 동기화 과정에 들어가지 않고도 이 코드를 동기화해주거나 thread-safe하게 해준다
+		
+		lockForI.lock();//Get Lock For I
+		i++; 
+		lockForI.unlock();//Release Lock For I
+
+	}
+	
+	public void incrementJ () {
+		lockForJ.lock();//Get Lock For J
+		j++; 
+		lockForJ.unlock();//Release Lock For J
+	}
+
+	public int getI() {
+		return i;
+	}
+	
+	public int getJ() {
+		return j;
+	}
+		
+}
+
+--------------------------------------------------------------------------------------
+
+
+/*
+다음 학습에선 atomic classes를 이용하여 이 부분을 더 발전시키는 방법에 대해 알아보도록 하겠다
+*/
