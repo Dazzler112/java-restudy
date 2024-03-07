@@ -1,0 +1,112 @@
+
+
+이 학습에선 concurrency, 즉 동시성에 대해 알아보도록 하겠다 
+Thread에 관해 이야기하며 동기화 의미하는 synchronized에 관해 이야기 했는데 
+이게 우리가 concurrency에 대해 이야기 한 전부이다 
+
+이번 파트에선 lock이라고 불리는 것에 대해 알아보도록 하겠다
+AtomicLong, AtomicInteger등 atomic operations의 실행과 이와 관련된 다양한 것들과, 
+몇 가지의 중요한 Concurrent Collections에 대해 알아보도록 하겠다
+ConcurrentHashMap, CopyOnWriteArrayList, CopyOnWriteArraySet과 같은 것들에 대해 이야기를 할 것이다
+
+이번 단계에선, 특정한 부분에 대한 기본을 다져보도록 하겠다 
+
+여기서 간단한 counter를 실행해 보려 한다 counter라는 것을 이해하는 것이 왜 중요한지 설명하도록 하겠다 
+automic operation이라는 것에 대해 알아보고, 우리가 주로 사용할 counter의 실행은 automic이 아닐거라는 사실에 이야기해 보도록 하겠다
+이게 기본적으로 이 단계에서 이야기해볼 구체적 내용이다
+간단한 counter 클래스를 생성해 보도록 하겠다
+
+--------------------------------------------------------------------------------------------------
+
+
+🟢 ConcurrencyRunner 클래스파일
+
+
+package concurrency;
+
+public class ConcurrencyRunner {
+
+	public static void main(String[] args) {
+		//2: 그러므로 해야 하는 작업은 다음과 같다 Counter counetr = new Counter();라 적고 
+		//이어서 counter.increment();에 이어서 syso(counter.getI());라 적으면 된다
+		Counter counter = new Counter();
+		counter.increment();
+		counter.increment();
+		counter.increment();
+		//counter에 대한 아주 완벽한 implementation은 아니지만, 이정도면 충분하다 이것을 세 번 실행해 주겠다 counter.increment();추가
+		System.out.println(counter.getI());
+		/*실행결과 ==>
+		3
+		보다시피 3이 결과로 출력되었다
+		이게 가장 기본적인 내용이다
+		*/
+		//3: 다시 Counter 클래스파일로....
+
+	}
+
+}
+
+
+--------------------------------------------------
+
+
+🟢 Counter 클래스파일
+
+
+package concurrency;
+
+public class Counter {
+	//1: 간단한 변수 counter를 만들어보자 int i 라고 만들겠다 그리고 i에 대한 메소드 증가를 위해 public void increment()라 적어주겠다
+	
+	int i = 0;
+	
+	//여기서 increment는 어떤 기능을 할까? i++이 된다 그러므로 i++라 적어주고, i의 값은 0이라고 초기 설정을 진행해 주도록하겠다
+	synchronized public void increment () {
+		i++; 
+		//get i 
+		//increment 
+		//set i 
+		
+		//3: 여기서 인식해줘야 하는 것은 i++인데 매우 간단한 계산식처럼 보인다, 맞지?
+		//하지만 사실, 깊게 들여다보면 세 가지 계산을 포함하고 있다 이 세 가지 연산이 무엇일까?
+		//1.첫 번째는 i의 값을 얻는 것이고,2. 두 번째는 increment, 즉 실행 3. 마지막은 i의 값을 설정해 주는 연산이다 
+		//이제 이 counter가 5개의 thread와 나누어 쓴다고 해보자 만약 이들 중 두 개가 메소드를 실행하려고 하고, 첫번째는 get i를 실행하고, 두번째 또한 get i를 갖는 것이다 그리고 현재i의 가치는 15라고 해보자
+		//현재 i의 가치는 15이고, 첫 번쨰 thread는 get i를 갖는다면, Thread1은 어떤 값을 갖게 될까? 15라는 값을 갖게 된다
+		//두 번째 thread의 경우에도 방금과 같이 get i를 갖는다고 했지 그럼 어떤 값을 갖게 될까? 동일하게 15이다 
+		//그러고 나서 첫 번째 thread가 increment를 한다 그렇다면 값은 어떻게 변할까? 16이 된다 그리고 이 값이 i로 설정되므로, 이 시점에서 i의 값은 16이 된다
+		//여기서 다른 thread는 i의 값을 15라고 갖고 있었으므로, 이는 16이 되고, 값은 16이라고 설정이 된다
+		//그러므로 두 개의 thread가 increment를 하였다고 해도, 값은 15에서 17로 변화한다 그렇다면 i에 저장된 값은 무엇이 될까? 16이 될 것이다
+		//정리하면 i++는 사실 thread-safe에 해당하는 연산이 아니다 이러한 관점에서 같은 연산을 여러 개의 thread에 실행하고 있으며, 몇 개의 업데이트를 놓쳤을 확률도 있다
+		
+		//● Thread-safety
+		/* Thread-safety ?
+		이를 not thread-safe라고 부르는데, Thread-safety란 임의의 메소드가 다양한 thread에 의해 한번에 안전하게 실행되는 것이다
+		그러나 이 메소드는 thread-safe에 해당하지 않는다 이유는 동기화 과정에서 i가 방향을 잃고 업데이트를 놓칠 확률이 존재하기 때문이다
+		즉, 여기서 동기화라는(synchronized) 키워드를 대면, 이 특정 메소드를 한 번에 하나의 thread만이 실행할 수 있게 된다
+		예를 들어 만약 두 개의 thread가 메소드를 실행하려 한다면,첫 번째로는 이를 실행하여 주고, 두 번째는 이 특정한 것을 위한 대기를 해주어야 한다
+		*/
+	}
+	//getter를 생성해주고 'Generate Getter and Setter'라는 메뉴로 들어가,i에 대해선 getter만 갖고 싶다고 설정해 주겠다 이작업이 i의 값을 얻는 데 도움이 될 것이다
+
+	public int getI() {
+		return i;
+	}
+	
+	//이 counter를 사용하는 것은 매우 간단하다, 맞지? //2: ConcurrencyRunner클래스 파일로..
+	
+}
+
+--------------------------------------------------------------------------------------------------
+
+
+
+
+
+/*
+정리)		
+이 학습에서 thread-safety의 컨셉에 대해 소개했다 i++처럼 간단한 연산조차도 thread-safe하지 않을 수 있다는 사실에 대해 이해할 수 있었다
+i++가 사실은 여러 개의 연산이 합쳐진 것이였으며, 사실 atomic 하지 않다 그러므로 다수의 thread는 다양한 계산을 실행할 수도 있으며, 그리하여 동기화 된 키워드를 사용하며
+단 한개의 thread만이 특정 시점에서 이 메소드를 실행하도록 해주어야 한다
+이게 바로 thread-safe이다
+그러나, 이러한 접근에도 몇 가지 문제점들이 있다 다음 학습에선 이러한 문제점들을 들여다보고, 해결책들을 찾아보도록 하겠다
+*/
