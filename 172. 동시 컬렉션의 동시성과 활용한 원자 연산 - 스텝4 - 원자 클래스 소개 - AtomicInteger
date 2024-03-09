@@ -1,0 +1,93 @@
+
+
+lock이 필요한 여러 중요한 이유 중 하나는, atomic operation이 아니었기 때문이다
+이는 세 가지 단계를 포함하는데 
+public void incrementI () {
+		lockForI.lock();//Get Lock For I
+		i++; 
+		lockForI.unlock();//Release Lock For I
+	}
+이게 i++를 사용할 수 없으며, thread-safe 인지에 의존하도록 만약 thread-safe 연산들이 더 있었다면 어땠을까?
+thread-safe 연산을 제공하는 클래스들이 있다면 어떨까?
+바로 여기서 원자성 클래스에 대한 아이디어가 등장하게 된다
+몇 개의 atomic classes에 대하여 이 영상에서 살펴보도록 하겠다
+
+
+------------------------------------------------------------------------------------------------------
+
+
+🟢 BiCounterWithAtomicInteger 클래스파일
+
+
+
+package concurrency;
+
+import java.util.concurrent.atomic.*;
+
+public class BiCounterWithAtomicInteger {
+	
+		//1: 여기 이 부분에서 int를 선언하고 있다 int를 대신해 AtomicInteger를 사용하면 어떨까?
+		//AtomicInteger는 공존하는 클래스에 해당한다 import java.util.concurrent.atomic.AtomicInteger;가 import되어 여기 있는 것을 확인할 수 있고, 이 값은 0이될 수 없다,
+		//이를 new AtomicInteger라고 하겠다 의문이 생길 것이다// 좋은 질문이다 한번 살펴보도록 하자
+		//AtomicInteger를 사용하여 J에도 생성해주자 그리고 여기 있던 lock을 없애줘도 괜찮다 AtomicInteger가 기본적인 atomic연산은 제공하기 때문이다
+		//그러므로 너의 메소드들이 그냥 기본적인 atomic연산을 하는 거라면 lock을 삭제해줘도 괜찮다는 것이다
+		private AtomicInteger i = new AtomicInteger();
+		private AtomicInteger j = new AtomicInteger();
+		
+		public void incrementI () {
+		//2:그리고 여기에서 i.incrementAndGet()을 적어주겠다	AtomicInteer는 atomic 연산자로써 증가 연산자를 제공하여 이 코드 조각이 thread-safe에 해당하는지 자동으로 확인한다
+		//그러므로 i.incrementAndGet()을 불러주는 순간, AtomicInteger에 의존하여 thread-safe 한지를 확인하게 된다 
+			i.incrementAndGet(); 
+		}
+		
+		public void incrementJ () {
+		//2-2: j++대신해 j.incrementAndGet()을 적어주고,//getJ로..
+			j.incrementAndGet(); 
+		}
+
+		public int getI() {
+		//2-1: 여기 이 부분도 같은 일이 벌어진다	여기를 보면 getI()는 i.get()이 되어야하고,//2-2: incrementJ ()메소드로...
+			return i.get();
+		}
+		
+		public int getJ() {
+		//2-2 계속.. : getJ()를 대신하여 j.get()을 적어준다	
+			return j.get();
+		}
+		/*1 ~ 2-2까지 정리:
+		정리하자면 locks에서의 의무를 가져와서 AtomicInteger라는 클래스에 이를 부여하고 있는 것이다
+		
+		그러나, 이러한 접근이 모든 것에 작동하는 것은 아니라는 것을 이해해야 한다
+		사실은 여기서 간단한 증가 연산자를 다루었기 때문에 AtomicInteger를 편리하게 잘 사용할 수 있었던 것이다
+		하지만 thread-safety가 필요한 다양한 연산의 과정들이 아마 존재하게 될 것이고,
+		이러한 종류의 상황에서는 lock을 사용해 주셔야 한다 하지만 이 경우에는 간단한 연산이었으니 AtomicInteger를 그대로 사용해 주도록 하겠다//위의 필드 AtomicInteger로..
+		*/
+		
+		/*AtomicInteger 설명 ==>
+		AtomicInteger 클래스를 살펴보면,
+		*An {@code AtomicInteger} is used in
+	    * applications such as atomically incremented counters
+		AtomicInteger가 '자동 숫자 증가'와 같은 응용 프로그램에 사용되었다는 것을 알 수 있다
+		
+		public final int incrementAndGet() {
+        return U.getAndAddInt(this, VALUE, 1) + 1;
+    	} 이게 우리가 사용한 것에 해당하고,
+    	* Atomically increments the current value,
+    	'자동으로 현재 값을 증가시켜 준다'라고 적혀있다
+    	보다시피, getAndSet()메소드가 몇 개 존재하고, getAndIncrement(0, getAndDecrement()와 같은 메소드들도 존재한다,
+    	그러므로 값을 감소시키는 것도 가능하고, getAndAdd()를 사용하는 것도 가능하다 AtomicInteger는 사용자에 정말 다양한 atomic 연산을 제공한다
+    	또한 AtomicInteger가 아니어도 다른 클래스들도 존재한다 AtomicInteger클래스에 ⇋ 버튼을 누르면 여기에 AtomicBoolean,AtomicIntegerArray, Long LongArray와 같은 것들이 있는 것을 알 수 있다
+    	또한, LongAdder와 LongAccumulator라고 불리는 클래스들도 있다 LongAdder에 대해선 이후 특정 강의에서 알아볼건데 더하기나 빼기를 atomic의 방법으로 할 수 있도록 도와준다
+		*/
+}
+
+------------------------------------------------------------------------------------------------------
+
+
+
+/*
+정리)
+이 학습에선 너에게 atomic classes라는 것을 소개 하려고 노력했다
+AtomicInteger와 예시들에 대해서도 살펴봤다
+몇 가지의 메소드와 java.util.concurrent.atomic 패키지 안에 소개된 atomic 클래스에 대해서도 알아봤다
+*/
