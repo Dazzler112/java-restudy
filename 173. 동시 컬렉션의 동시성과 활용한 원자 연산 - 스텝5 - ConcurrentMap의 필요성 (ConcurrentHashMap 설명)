@@ -1,0 +1,102 @@
+
+
+지난 단계들에선 동기화 키워드와 lock을 사용하는 방법, 그리고 AtomicInteger와 몇몇 개의 atomic에 대해서 알아보았다
+이번 단계에선 ConcuurentHashMap이라는 것에 대해 알아보려고 한다
+
+ConcurrentHashMap이라는 인터페이스를 들여다보고 ConcurrentHashMap을 이용한 간단한 예문을 실행해 보곘다
+ConcurrentHashMap은 Concurrent Collections의 부분에 해당하는 내용이다
+
+다양한 메소드를 동기화하는 것을 다양한 locks에 기반하여 발생한 선택지로써 locks의 등장은 
+thread-safety를 가능하게 하기 위한 새로운 알고리즘과 Concurrent Collections은 다른 종류의 알고리즘을 사용하여 
+다양한 시나리오에 사용할 수 있는 thread-safe code를 제공한다
+	Lock lockForI = new ReentrantLock();
+	Lock lockForJ = new ReentrantLock();
+이 중의 하나가 ConcurrentHashMap이라고 불린다 
+
+그러면 HashMap과 Hashtable의 문제가 무엇일까?
+HashMap은 thread-safe한다, 맞지?
+그렇다면 여기에 어떤 문제가 있을까? 이 학습에서 알아보도록 하자
+
+
+Collections에 관해 이야기 할 때 적어둔 이 코드를 보자
+HashMap을 사용하여 여기에 임의의 String에 어떤 구체적인 특징이 몇번 드러났는지 알아보려고 했었다
+이를 찾기 위해 우린 HashMap으로부터 특징을 얻어내서 null일 경우에는 값을 1을 주고,
+이외의 값의 경우에는 발생의 횟수에 대한 숫자를 증가시켰다 이게 이 코드를 실행할 때 사용하는 논리이다
+-------------------------------------
+Map<Character, Integer> occurrences  =  new HashMap<>();
+
+for(char character : characters) {
+
+			Integer integer = occurrences.get(character);
+			if(integer == null) {
+				occurrences.put(character, 1);
+			} else { 
+				occurrences.put(character, integer + 1);
+			}
+
+HashMap이 thread-safe하지 않다는 것은 알고 있을거다, 맞냐?
+그러므로 이건 어떤 짓을 해도 thread-safe하지 않다
+하지만 Hashtable을 사용하는 모습을 떠올려 봐라 그러므로 Hashmap 대신 Hashtable을 사용하는 경우,
+이 코드마저도 thread-safe하지 않게 될 것이다
+-------------------------------------
+
+-------------------------------------
+			Integer integer = occurrences.get(character);
+			if(integer == null) {
+				occurrences.put(character, 1);
+			} else { 
+				occurrences.put(character, integer + 1);
+여기서 어떤 작업을 하고 있냐?
+여기서 하나의 thread가 이를 읽어날 가능성이 존재하고,
+이 thread (occurrences)가 이 작업을 처리하기 전, 다른 thread가 특징을 읽어내기 위한 시도를 할 수 있고,
+그래서 여기서 최신 업테이트를 놓쳤을 수가 있다 여기서 중요한 점은 이 전체가 복잡한 논리의 형식을 띠고,
+그러므로 다른 thread가 이 코드의 다양한 부분을 실행하고 있을 가능성을 배제할 수 없다
+
+ConcurrentHashMap은 이런 식으로 atomic과의 연산과의 조화를 제공한다
+여기서 우리는 이게 존재하지 않는다면 초기 설정값을 1로 설정해 주고 있고,
+만약 존재한다면, 숫자를 증가 시켜 주고 있다
+그러므로 이런 식의 연산에는 Concurrent Collections가 기본적인 atomic 연산을 제공하고 있다
+ConcurrentMaps에 대해 이야기할 때 이에 대해 살펴보도록 하자
+-------------------------------------
+-------------------------------------
+ConcurrentMaps 인터페이스를 열어 주고, ConcurrentMap 인터페이스를 살펴보면 
+여기 한 가지 메소드가 존재하고 있는데 
+
+    @Override
+    default V computeIfAbsent(K key,
+            Function<? super K, ? extends V> mappingFunction) {
+        Objects.requireNonNull(mappingFunction);
+        V oldValue, newValue;
+        return ((oldValue = get(key)) == null
+                && (newValue = mappingFunction.apply(key)) != null
+                && (oldValue = putIfAbsent(key, newValue)) == null)
+            ? newValue
+            : oldValue;
+    }
+
+computeIfAbsent() 이다 
+computeIfAbsent() 메소드는 만약 key가 존재하지 않는다면, 만약 key가 현재 map에 존재하지 않는다면,
+mappingFunction에선 반환된 값의 기본값을 설정한다 ( Function<? super K, ? extends V> mappingFunction )
+람다식에 대해 이야기했을 때, 함수에 대해 살펴봤었다 
+그러므로 함수를 생성하고 여기에 참조 사항을 적어주면 어떤 값이 여기 환원되든지 간에 key가 존재하지 않는 경우 기본값으로 설정이 된다 
+그다음에는 너가 하고 싶은 연산, 아무거나 실행해 주면 된다
+			Integer integer = occurrences.get(character);
+			if(integer == null) {
+				occurrences.put(character, 1);
+			} else { 
+				occurrences.put(character, integer + 1);
+즉, 여기서 볼 수 있는 전체 연산식은 ConcurrentMap의 간단한 atomic 메소드로부터 제안을 받은 것이다
+Compute와 함께, 이것 말고도 다양한 연산들이 존재한다
+여기서 알아야 할 것은 이러한 연산들이 전부 atomic에 해당한다는 것이다, 불러내는 순간, thread-safe에 해당한다는 것을 신뢰할 수 있다
+확실하게 thread-safe에 해당하지 않는 여기 이 코드와는 다르다
+thread-safe가 결과로 나올 것이라는 책임감이 있어야 한다
+-------------------------------------
+
+
+
+
+
+이 단계에선 이런 종류의 코드가 thread-safe에 해당하지 않다는 것에 대해 알아보았다
+또한 ConcurrentHashMap에 존재하는 몇 가지 연산 중에서 이 코드를 thread-safe하게 만들 수 있는 연산들에 대해 알아보았다
+
+다음단계에선 이를 실행하는 것을 시도해 보도록 하겠다
