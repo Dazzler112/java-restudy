@@ -1,0 +1,52 @@
+
+
+지난 학습에선 ConcurrentHashMap이 atomic 연산의 기능들을 제공한다는 사실을 확인했다
+이는 Hashtable이나 HashMap에선 제공되지 않는다 그러나 ConcurrentHashMap의 장점은 이것뿐만이 아니다
+이번 학습에선 ConcurrentHashMap의 정말 중요한 장점을 또 하나 살펴보도록 하겠다 
+
+자바의 이전 버전에선 ConcurrentHashMap에서 thread-safe를 대신 하던 것은 Hashtable이었다
+Hashtable에서 동기화를 위해 뭘 사용하는지 모두 이미 알고 있다 모든 메소드가 Sychronized(동기화)되어있다
+
+                                  • Hashing
+
+                                    
+                                    |  /  |
+                                    |  45 |
+                                    -------                                                                    
+                                       ↑                                                                      
+                                    |  /  |                 |  /  |                               
+                                    |  58 |                 |  10 |                                                          
+                                    -------                 -------                                                 
+                                       ↑                       ↑
+|  /  |     |  /  |                 |  /  |     |  /  |     |  /  |     |  /  |                                                         
+|  13 |     |  15 |                 |  6  |     |  34 |     |  23 |     |  12 |                                                                                                                                      
+-------     -------                 -------     -------     -------     -------                                                                                            
+   ↑           ↑                       ↑           ↑           ↑           ↑                                       
+|     |  \  |     |  \  |  \  |  \  |     |  \  |     |  \  |     |  \  |     |       
+   0     1     2     3     4     5     6     7     8     9    10    11     12
+
+이는 이 bucket 중 아무거나 집어넣는다는 의미이다 예를 들면 6번 bucket에 값을 넣는다고 해보자
+그 순간, 전체 Hashtable은 잠기게 된다 아무 작업도 할 수가 없다
+다른 thread는 대기하는 수밖에 없다
+
+● ConcurrentHashMap이 접근하려는 방식
+ConcurrentHashMap은 이에 대해 매우 영리하게 접근한다
+HashMap을 다수의 지역으로 나누어 주변에 block들을 생성하자고 제안한다
+지금 설명은 너의 이해를 돕기 위해 매우 간단하게 이 방법을 설명한 것이다
+그러나, 지역들이 bucket들과 연결이 되지 않는 등의 문제가 생길 수 있다
+이러한 점을 미뤄두고, 이 전체 HashMap이 세 지역으로 나누어져 있다고 해보겠다
+
+● ConcurrentHashMap 장점
+그러므로 여기서 4번 지역까지를 하나로 취급하고(0~4), 9번또한 하나로 취급하고(5~9), 나머지 부분을 하나로 취급하도록 하겠다(10~12)
+ConcurrentHashMap을 사용하면, 하나의 지역을 삽입해 준다면, 다른 지역에 대해 undate와 retrieval이 모두 가능하다
+ConcurrentHashMap은 각 지역마다 다른 lock을 사용하기 때문인데, 다시 말해 region1은 region2나 region3과 비교할 때 다른 lcok을 사용한다
+이렇게 다른 lock을 사용하면 atomic 연산을 사용할 수 있다는 장점을 얻을 뿐만 아니라 더 나은 성과를 낼 수 있다
+그러므로 만약 임의의 thread가 region1에서 연산을 진행한다면, 다른 thread는 이 연산이 끝날 때까지 기다릴 필요 없이 다른 region인 region2, 3, 4에 대한 연산이 필요할 경우 바로 진행하는 것이 가능하다
+이게 ConcurrentHashMap이 주는 장점이다 
+
+
+
+
+
+이번 학습에선 ConcurrentHashMap의 또 다른 장점에 대해 알아보았다 추가로 atomic 연산에 대해서 HashMap을 다수의 지역으로 나누어 줌으로써
+각 지역이 각자의 lock을 갖는다 concurrency의 양을 증가시킬 수 있는 만큼 증가시키면서 말이다
