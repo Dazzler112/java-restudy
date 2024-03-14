@@ -1,0 +1,102 @@
+
+
+지난 단계에선 ConcurrentHashMap에 대해 살펴보았다 
+이번 단계에선 CopyOnWrite라는 알고리즘에 기반을 두는 concurrent collection들에 대해 알아보도록 하겠다
+
+ctrl+ shift + t를 누르고 CopyOnWrite에 대해 찾아보면, CopyOnWriteArrayList, CopyOnWriteArraySet을 찾을수 있을것이다
+CopyOnWrite는 무엇이고, CopyOnWriteArrayList와 CopyOnWriteArraySet으로는 어떤 연산이 가능할까?
+연산식이 관련된 이상, 차이는 사실 없다
+
+public class CopyOnWriteArrayList<E>
+    implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
+CopyOnWriteArrayList는 List 인터페이스를 실행한다 그러므로 무언가 새로운 연산의 도구를 제공하지는 않는다 
+ArrayList와 LinkedList에서 할 수 있는 것들은 CopyOnWriteArrayList에서도 같은 연산이 가능하다
+하지만 어떻게 실행이 되느냐에 관해서는 작은 차이가 존재한다
+
+ * A thread-safe variant of {@link java.util.ArrayList} in which all mutative
+ * operations ({@code add}, {@code set}, and so on) are implemented by
+ * making a fresh copy of the underlying array.
+여기서 보다시피 CopyOnWriteArrayList는 array list로 부터의 thread-safe변형이 보인다 
+다시 말해 thread-safe에 해당하며 모든 mutative operation, 즉 차이를 만들어내는 add 나 set과 같은 연산식들은 underlying array의 복사본을 만드는 과정에서 실행된다
+그래서 이게 곧 이름이 되는 것이다. CopyOnWrite말이다,
+CopyOnWrite는 너가 수정을 하면 array 전체를 복사하는 기능을 한다
+그러므로 ArrayList 아래에는 우리가 잘 알고 있는 보통의 array가 존재한다, 맞지? 그러므로, 간단한 array에서 어떤 것이라도 수정한다면
+전체 array에 대한 깔끔한 복사본이 만들어지며, 이 안에 요소들을 전부 복사해 준다,
+ * <p>This is ordinarily too costly, but may be <em>more</em> efficient
+여기 적혀있듯이 이는 많은 돈이 들어가는 작업이다 맞지? array 전체를 복사한다는 건 그다지 효율적인 작업은 아니기 때문이다
+하지만 다음과 같은 ArrayList에서 숫자들을 여러 번 읽는 경우, 
+ * than alternatives when traversal operations vastly outnumber mutations
+이와 같은 작업이 매우 효율적인 작업이 될 것이다 다시 말해 여러 번 이 자료를 읽으며 수정을 많이 거치지 않는다면 말이다
+만약 임의의 ArrayList에 대해서 10,000번 혹은 20,000개의 traverse cells가 있다면, 
+그리고 15번 정도의 삽입과 20번의 업데이트가 진행된다면, 이런 상황을 살펴보자면 업데이트의 횟수는 매우 매우 적고,
+자료가 삽입되는 횟수와 자료를 읽어내는 횟수는 매우 매우 높다 이런 상황의 경우 이는 매우 유용한 대안이 되는데,
+이유는 이러한 접근법을 사용하게 되면 read operation을 동기화 하거나 read operation에 대해 lock을 사용할 필요가 없어진다
+write operation이 동기화되었는지의 여부만 확인해 주면 성과면에서 매우 큰 도약이 생길 것이다
+
+간단한 예시를 만들어 보도록 하자 사실 ArrayList와 다를 것이 하나도 없다
+
+------------------------------------------------------------------------------------------------------
+
+
+🟢 CopyOnWriteArrayListRunner 클래스파일
+
+
+
+package concurrency;
+
+import java.util.*;
+import java.util.concurrent.*;
+
+public class CopyOnWriteArrayListRunner {
+	
+	//2: 예를 들어 여기서 add메소드를 동기화해주고, get메소드 또한 동기화해준다고 해보겠다 어떤 일이 벌어질까?
+	//어느 시점에서 이러한 동기화가 벌어지든 10,000개의 thread중 하나만이 add 혹은 get을 실행할 수 있게 되고, 이는 성과에 대해
+	//CopyOnWriteArrayList는 여기서 add 연산만을 동기화해주는 역할을 한다 get연산의 경우는 여기서 동기화하지 않는데 이유는 add 연산의 경우는 전체 array를 복사해서 실행하는 방법을 사용하기 때문이다
+	//이 array를 복사하는 과정에서 다른 thread들이 이전의 array 값을 계속 일어올 수 있는 것이다 이게 문제가 아니다 
+	//복사하는 순간, 예전의 array가 새로운 array로 교체된다 CopyOnWriteArrayList는 여기서 조금 더 일을 진행해서, 사실은 조금이 아니라 ArrayList에 변형이 생기면 훨씬 많은 작업을 처리하게 될 것이다
+	//여기서 장점이라고 하면 동시성이 확보된다는 점이다
+	//여기서 이해해야 하는 또 다른 요소는 너가 사용 시나리오에 따라 작업이 제대로 이루어지는지 확인하기 위한 새로운 알고리즘을 만들어 낼 수 있다 동시 실행이 제대로 되고 있는지 확인하기 위해서이다
+	//그러므로 여기 존재하는 연산식들을 바탕으로, read가 많고 write가 적다면, 혹은 write가 많고 read가 매우 적다면, lock을 생성할 수도 있고, 코드의 다른 부분을 동기화하거나, lock을 용도에 따라 사용하는 등 동시 실행을 잘 실행하기 위해 다양한 방식들이 가능하다
+	//CopyOnWriteArrayList는 implementations의 한 종류이다 CopyOnWriteArraySet이 교육자가 얘기하던 것이다 
+	//그러므로 CopyOnWriteArraySet과 CopyOnWriteArrayList는 CopyOnWrite에서의 implementaion에 해당한다
+	
+	//add - copy
+	//get
+	
+	public static void main(String[] args) {
+		
+		//1: 여기에 List<String> list = new CopyOnWriteArrayList<>() 라고 적어주겠다
+		List<String> list = new CopyOnWriteArrayList<>();
+		//그리고 여기에 몇 개의 String을 더 추가해 준다고 해 보겠다 Ant,Bat을 추가해 보겠다
+		//이 작업은 일반적인 ArrayList를 작업할 때와 전혀 다른 점이 없다 이 과정을 여러 번 반복해 주겠다
+		//여기서 몇 개의 thread가 값을 입력하고 있고, 이런 식으로 값을 입력하고 있는 thread는 몇 개가 채 되지 않는다고 해보겠다
+		//예를 들어, 세 개의 thread가 있고 //1-1: 이 주변을 반복하며 list.get()을 실행하는 thread는 10,000개라고 설정해 보겠다 
+		
+		//Threads - 3
+		list.add("Ant");
+		list.add("Bat");
+		list.add("Cat");
+		
+		//1-1: 지금 이 시점에 10,000 thread가 존재하고, 이 코드 주위를 계속 반복하고 있으며, 이에 대한 코드를 간단하게 반복문으로 적어보곘다
+		//for(String element:list)라 적어주고, 이 코드를 실행해주면
+		
+		//Threads - 10000
+		for(String element:list) {
+			System.out.println(element);
+		}
+		/* 실행결과 ==>
+		Ant
+		Bat
+		Cat
+		일반적으로 차이는 전혀 없다, 맞지?
+		Ant,Bat,Cat 잘 출력 되었다
+		하지만 여기서 list.add("Ant"); list.add("Bat"); list.add("Cat"); 이게 분리된 메소드이고,
+		이것 for문 또한 따로 분리된 메소드여서 세 개의 thread가 드물게 값을 삽입하고 있다고 해보겠다
+		아마 총 15~20개 정도를 삽입할 텐데, 이를 소비하여 출력하고자 하는 list자료에 대한 thread가 10,000개 존재한다 이러한 상황의 경우에는 모든 내용을 동기화해 주는 경우,
+		다시 말해 모든 메소드를 동시에 동기화해주게 된다 
+		//2: 메인메소드 위로..
+		*/
+	}
+}
+
+------------------------------------------------------------------------------------------------------
