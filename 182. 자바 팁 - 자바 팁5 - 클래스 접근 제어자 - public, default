@@ -1,0 +1,87 @@
+
+
+이번에는 접근 제어자에 대해 알아보겠다
+접근 제어자에는 다양한 종류가 있다 
+private, public, default 그리고 protected까지 있다 이것들은 무엇이고 어떻게 각 클래스나 변수, 메소드에 적용될까?
+이게 이번 tip과 다음 tip에서 배울 내용이다 이번 tip에선 클래스에 대한 접근 제어자에 집중해 보겠다
+
+
+-----------------------------------------------------------------------------------------------------------------
+
+
+
+🟢 ClassAccessModifiers 클래스파일
+
+
+
+package tipAndTricks.access.p1;
+
+//1: 일반적으로 허용된 접근 제어자들은 public, protected, default가 있는데, default의 경우 접근 제어자에 없으므로 괄호를 쳐 주도록 하겠다 그리고 마지막으로 private라는 것이 있다,
+//이 접근 제어자들은 Encapsulation,즉 캠슐화를 강요하기 위해서 사용된다 
+//이것들은 외부의 공격으로 부터 너를 딱히 보호해주거나 하지 않는다 
+//너의 클래스 밖에서 코드를 작성하는 사람들에게 너의 클래스 중 어떤 것들이 접근이 용이한지 결정하게 도와줄 뿐이다
+
+//3: public 삭제
+//public을 없애주니 ClassAccessModifiersRunnerInOtherPackage클래스 파일에 컴파일 오류가 생긴다 왜 컴파일 오류가 생기는 것일까? //3-1: ClassAccessModifiersRunnerInOtherPackage클래스파일로...
+
+//public, protected, (default), private
+public class ClassAccessModifiers {
+//만약 어떤 것이 public이라고 적는다면, 그러니까 public class ClassAccessModifiers라고 적어주면, 이 클래스는 어디든 사용이 가능함을 의미한다
+	
+	public static void main(String[] args) {
+		
+		//1-1:이 패키지에서만으로 제한된 것이 아닌것이다, 예를 들어 ClassAccessModifiers c= new ClassAccessModifiers()라고 적어주도록 하겠다
+		//이 클래스 자체 내에서는 ClassAccessModifiers의 예시를 만들어 내는 것이 가능하다
+		
+		ClassAccessModifiers c= new ClassAccessModifiers();
+		//2: 다른 패키지에서 이를 진행해도 같은 것이다 새 패키지를 만들어 보도록 하겠다(package tipAndTricks.access.p1; 복사후 package tipAndTricks.access.p2;로..)
+		//그리고 이에 대해서 여기서 이패키지를 복사했기 때문에 ClassAccessModifiers의 클래스도 생성되었다 그리고 나서 이름을 수정해 주도록 하겠다 ClassAccessModifiersRunnerInOtherPackage라고 하도록 하겠다 //ClassAccessModifiersRunnerInOtherPackage클래스 파일로..
+	}
+}
+
+
+----------------------------------------------------------------------
+
+
+
+🟢 ClassAccessModifiersRunnerInOtherPackage 클래스파일
+
+
+
+package tipAndTricks.access.p2;
+
+import tipAndTricks.access.p1.*;
+
+//public, protected, (default), private
+public class ClassAccessModifiersRunnerInOtherPackage {
+
+	//2: 이 클래스는 다른 패키지에 포함되어 있다 ClassAccessModifiers가 다른 패키지에 존재하고 있다
+	//이 클래스가 public에 해당한다면, ClassAccessModifier클래스를 다른 패키지에서 사용하는 것도 가능하다
+	//그러므로 여기에서도, 다른 패키지에 존재하는 클래스를 사용할 수있다 이 클래스가 p2에 포함되어 있고, 이건 p1에 포함되어 있다고 해도, 이 특정한 클래스를 사용할 수 있다
+	//이번에는 public을 없애 보도록 하겠다 //3: ClassAccessModifiers클래스파일로..
+	public static void main(String[] args) {
+		
+		ClassAccessModifiers c= new ClassAccessModifiers();
+		//3-1: - The type ClassAccessModifiers is not visible type이 보이질 않는다, 이유는 default는 접근 제어자 클래스가 생성된 패키지에서만 보이기 때문이다
+		//그러므로 같은 패키지 안에서 보인다 하지만 특정한 패키지 이외에선, 여기에서는 p2에 해당하는데, 이게 보이지 않는다 ( ClassAccessModifiers )
+		
+	}
+}
+
+
+-----------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+/*
+팁 및 정리)
+1. 이게 오늘의 tip 1번이다, 그러므로 public 클래스는 어디서든 보인다 
+그러므로 클래스를 public으로 선언해 주는 순간, 어떤 곳에서든 보이게 되는 것이다 하지만 p1에서 public을 삭제해 주는 순간 default class가 되어버리는데,
+이것은(default) 같은 패키지 안에서만 접근이 가능한 형태이다 그러므로 특정 패키지나 그 자식 패키지 안에서만 사용이 가능하다
+하지만 다른 장소들에서 접근이 불가능하다 이게 이 강의에서 전달하고자 하는 tip 1번이다
+
+2. 두번째 tip은 클래스에서 protected의 사용이 불가능하다는 점이다 즉 클래스에선 protected라고 하거나 private 혹은 default라고 적어주는 것이 불가능하다
+이게 기본적으로 keyword public의 결핍이고, 클래스에서 사용이 가능한 딱 두가지의 제어자이다
+*/
