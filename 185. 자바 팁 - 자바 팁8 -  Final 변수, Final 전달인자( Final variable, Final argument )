@@ -1,0 +1,85 @@
+
+
+지난 학습에선 final class 와 final method에 대해 알아보았다
+이번 학습에선 final variable과 final arguments에 대해 알아보겠다
+final variables 부터 시작해 보도록 하겠다
+
+
+----------------------------------------------------------------------------------------------------------
+
+
+🟢 FinalNonAccessModifierRunner2 클래스파일
+
+
+
+package tipAndTricks.access.p1;
+
+
+final class FinalClass{	
+
+}
+
+//2:public void doSomethingElse()생성하고 final int argument를 적어보도록 하겠다 괄호안에 final int arg라 적어주겠다
+//만약 평범한 argument로 fianl이 없다면, arg=6이라고 적어 값을 지정해 줄 수 있다 argument의 값은 수정이 가능하다, 맞지
+//다시 말해, argument의 값을 수정하는 데 있어 가장 중요한 것은 좋은 관행은 아니지만, 허용은 된다 하지만 이를 final로 만들어 준다면, 어떤 일이 일어날까?
+//arg=6;에 컴파일 오류가 생겼다 (final int arg) 이게 final이기 때문에 arg = 6;이게 허용될 수가 없는 것이다
+//임의의 argument가 final이 되면, 그 값은 수정할 수가 없다
+
+//그렇다면 final은 언제 사용해야 하는 것인가 의문이 생길 텐데 언제 final 변수에 사용해 주어야 할까??
+/*final variable / argument 사용 시점:
+언제 final을 argument에 사용해 주어야 할까?
+그 답은, 보편적이게도 모든 변수와 모든 argument에 사용을 추천한다 
+일반적으로 변수나 argument에 대해 값은 단 한번만 지정한다
+변수의 값을 계속 수정해 주는 것은 지양해야 한다
+이를 immutable programming, 즉 불변의 프로그래밍이라고 하고, 이와 같은 방법이 추천되는 이유는 코드에 대한 이해가 쉽기 때문이다
+그래서 코딩의 기본이나 기준에 대해 살펴보면 대부분 모든 변수가 final인 상황을 권장하고,
+final 변수에 사용하지 않을 경우 코딩의 기본 기준을 해치는 행동이라고 규정하기도 한다
+모든 변수를 final로 설정하는 것은 불가능하므로, 각 변수에 대한 값의 정의를 단 한번만 할 수 있도록 최대한 여러 변수가 final이 될 수 있도록 한다.
+*/
+class SomeClass {
+	final public void doSomething() {}
+	public void doSomethingElse(final int arg) {
+//		arg = 6;
+	}
+}	
+
+class ExtendingClass extends SomeClass {
+	public void doSomething() {}
+}
+
+public class FinalNonAccessModifierRunner2 {
+
+	public static void main(String[] args) {
+		//1: 여기 int i = 5 라는 값을 갖도록 설정해 보겠다 그리고 코드가 진행된 후에, i=7이라고 해보겠다
+		//이는 변수 안의 값은 바뀌는 것이 가능하기 때문에 이러한 조작이 허용되는것이다, 맞지?
+		//하지만 여기서 변수의 값이 불변하기를 바란다면, final을 사용하면 된다 즉, 이에 따라 variable final을 만들어 주면,
+//		final int i = 5;
+		
+		//1-1: 보다시피 이렇게 컴파일 오류가 생긴다 The final local variable i cannot be assigned. It must be blank and not using a compound assignment
+		//final variable을 부여하는 것이 불가능하다고 나온다
+		//그러므로, 어떤 것을 final에 넣어주게 되면, 값이 단 한 번만 부여될 수 있다
+		//final int i = 5; 여기서 적어주엇듯이 i=5;라고 적어주겠다
+		//이는 허용되었다, 가장 처음에 값을 부여해 주는게 가능하지만, 이후에 수정하는 것은 불가능하다
+		//값의 부여는 처음이자 마지막으로만 가능한 것이다 
+		/*정리 :
+		정리 하자면 fianl variable에는 맨 처음 값을 부여해주는 것이 가능한데, 그러고 나서는 아예 값을 수정해 주는 것이 불가능하다
+		*/
+		final int i;
+		i = 5;
+		
+//		i = 7;
+		
+		//그렇다면 final argument는 무엇일까? 살펴보도록 하자 //2: 위의 SomeClass클래스로...
+	}
+
+}
+
+
+----------------------------------------------------------------------------------------------------------
+
+
+
+
+이번 tip에서는 final argument와 final variable에 대해 알아보았다 
+final variable의 경우 그 값을 단 한번만 지정하는 것이 가능했고, 
+이 규칙은 final argument도 마찬가지였다 메소드 안에서의 final argument에 대한 값은 수정이 불가능하다
