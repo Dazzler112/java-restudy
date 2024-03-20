@@ -1,0 +1,125 @@
+
+
+이번 학습에선 최종 non-access-modifier에 대해 알아볼것이다 
+지난 학습 tip에선 접근제어자에 대해 알아보았다 public, private, protected, default 까지 말이다
+이와 별개로 non-access modifiers라고 불리는 것도 존재한다
+이것들은 final와 static이라고 한다 
+
+이 학습에선 final access modifier를 메소드와 클래스의 중심을 알아 보도록 하겠다
+클래스나 메소드에 'final'을 적어주면 어떤 일이 생길까?
+새로운 클래스를 생성해보도록 하자
+
+
+--------------------------------------------------------------------------------------------------------------
+
+
+🟢 FinalNonAccessModifierRunner 클래스파일
+
+
+
+package tipAndTricks.access.p1;
+
+import AbstractReceipe.*;
+
+//1: 클래스를 몇개 생성해 보도록 하겠다 final class FinalClass라 적어주겠다
+//여기서 class 앞에 final을 붙이면 어떻게 될까? 어떻게 될까?? 이 class를 한번 확장해 보도록하자 //1-1: SomeClass 생성
+
+
+final class FinalClass{	
+
+}
+
+//class final의 기능 :
+//1-1: class SomeClass extends FinalClass라 적어준다 컴파일 오류가 생겼다 The type SomeClass cannot subclass the final class FinalClass
+//type SomeClass가 FinalClass의 자식클래스가 될 수 없다고 한다 여기서 중요한 것은 class final을 불러내게 되면, 더 이상 클래스를 확장하는 것이 불가능하다
+//그 어떤 것도 특정 클래스에서 상속 받는것은 불가능하다 이게 final의 기능이다 //그렇다면 class final을 왜 만들고자 하는 것일까?? 좋은 질문이다 String class를 찾아보도록 하자
+//public final class String 보다 시피 String이 final이라는 것을 알 수 있다 그러므로 자바에서 String은 final class에 해당한다 
+//wrapper class의 integer를 찾아보겠다 public final class Integer extends Number 이 또한 final 클래스에 해당한다
+//이는 그 누구도 Stirng, Integer, Long 이나 wrapper class도 확장할 수 없을 것이라는 걸 의미한다
+
+//그렇다면 class final을 만드는 과정이 왜 중요할까?
+/* class final 중요성 :
+특정 클래스에 대해 확장을 허용하고 싶지 않다고 느낄 때, 
+누군가 내 클래스의 기능성을 확장하거나 클래스의 행동을 수정하고 싶지 않다면 말이다
+이때 중요한 것이 누군가 너의 클래스를 확장하려고 한다면 너의 메소드의 코드 일부를 수정하는 특권을 누리게 된다
+그리고 이를 특정한 상황에서는 너가 허용하지 않고 싶을 수 있다 String class를 살펴보면, HashCode로 사용된다 
+어떤 객체가 메모리의 어디쯤 저장되어 있는지 등을 결정하는 것과 관련이 있다 그래서 이는 꽤 민감한 클래스에 해당한다
+이에 대해 자바는 '아니, String의 확장은 허용하지 않을 것이고, 그래서 final이라고 분류할 수 있을거야'라고 하기로 결정한 것이다
+*/
+//그런데 class 뿐 아니라 메소드들도 final로서 선언될 수가 있다 새로운 클래스를 생성해 보자, //2: SomeClass 생성
+
+/*
+ * class SomeClass extends FinalClass {
+ * 
+ * }
+ */
+
+//2:여기에 존재하는 메소드를 작성하도록 하겠다 public void doSomething()이라 불러주도록 하겠다
+//여기서 우리가 정말 관심있는 부분은 'class에 final을 넣어주었을 때 어떤 일이 일어나는가'이다
+class SomeClass {
+	final public void doSomething() {}
+}
+
+//2-1: 그러므로 class ExtendingClass extends SomeClass라고 적어주도록 하겠다
+//보편적으로 여기서 할 수 있는게 무엇일까? 정의를 덧써 줄 수 있다 //하지만 final을 메소드 안에 넣는다면 어떤 일이 일어날까??
+//즉 ,SomeClass 안에서 doSomething() 이 메소드를 final로 만들어주려고 한다 //2-2: SomeClass안의 doSomething() 메소드에 final써주기...
+//보다시피 ExtendingClass의 메소드가 컴파일 오류가 생겼다 Cannot override the final method from SomeClass
+//SomeClass에서의 final 메소드를 덧쓰는 것은 불가능하다고 나와있다
+//즉, 쉽게말해, '아니야, doSomething() 메소드는 final에 해당해' 라고 이야기하고 있다 이는 코드를 수정할 수 없다는 것을 의미한다
+//final public void doSomething() {} 이 위에 코드를 덧쓰는 것은 절대 불가능하다 
+//그러므로 final 메소드는 덧쓰는 것이 어렵다 final class는 확장이 불가능한것이다 이런 방식으로 기억하면 된다
+
+//그렇다면 메소드를 왜 final로 만들고 싶은 것일까?
+/*final method를 사용하는 이유:
+예전에 'recipe'라는 것을 생성한 적이 있었다
+
+public class Recipe1 extends AbstractRecipe{
+
+public abstract class AbstractRecipe {
+	public void execute() {
+		getReady();  
+		doTheDish();
+		cleanup(); 
+	} 
+	abstract void getReady();
+	abstract void doTheDish();
+	abstract void cleanup();
+}
+
+AbstractRecipe라고 불리는 클래스를 생성하여 현존하고 있는 단게들에 대해 알아봤다
+
+		getReady();  
+		doTheDish();
+		cleanup();
+이를 제외한 모든 자손 클래스들은 모든 단계들을 시행하는 것이 가능했다, 하지만 논리 자체를 바꾸는 것은 불가능했다 이러한 상황의 경우,
+즉, 그 어떤 자손 클래스도 execute 메소드를 바꾸는 것을 원하지 않는다면, 자손클래스가 엄격하게 차례를 따르도록 할 수 있다
+getReady();이게 1번이 되고, doTheDish();이게 2번 그리고 cleanup();이게 3번이 되어야 한다
+그렇게 되면 final을 사용하는 것이 가능하다
+	final public void execute() {
+		getReady();  
+		doTheDish();
+		cleanup(); 
+	} 
+이렇게 해주는 순간, 자손 클래스 중 그 어떤 것도 실행 순서를 바꾸는 것은 불가능하다	
+항상 getReady(), doTheDish(), 그리고 cleanup()의 순서로 실행될 것이다
+*/
+class ExtendingClass extends SomeClass {
+	public void doSomething() {}
+}
+
+public class FinalNonAccessModifierRunner {
+
+	public static void main(String[] args) {
+
+		
+	}
+
+}
+
+--------------------------------------------------------------------------------------------------------------
+
+
+
+
+지금까지 final access modifier와 관련되어 중요한 것들을 알아보았다 
+final class는 확장되거나 덧쓰여 지는것이 불가능하다
