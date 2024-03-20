@@ -1,0 +1,149 @@
+
+
+지난 tip에선 ClassAccessModifiers에 대해 이야기해 보았다 
+클래스에 사용이 가능한 접근 제어자는 public과 default 뿐이라는 것도 알 수 있었다
+그리고 default 클래스는 특정 패키지 바깥에선 사용이 불가능했다
+그리고 protected와 private는 클래스에서 사용익 불가능하다는 점도 배웠다
+
+오늘은 메소드 접근 제어자에 대해 알아보겠다 
+메소드에서 나타날 수 있는 접근 제어자는 무엇이 있을까?
+다양한 접근 제어자에 대해 이해하기 위해 먼저 새로운 Class를 생성하겠다 
+
+MethodAccessRunner 클래스파일과 ExampleClass 클래스파일을 만들겠다
+
+
+-----------------------------------------------------------------------------------------------------------------
+
+
+🟢 ExampleClass 클래스파일
+
+
+
+
+package tipAndTricks.access.p1;
+
+public class ExampleClass {
+	//1: 다양한 종류의 메소드를 생성해 보겠다. public void publicMethod()를 생성해 주겠다, 여기에는 아무 작업도 해주지 않겠다
+	//여기서 확인해야할 사항은 이게 실행이 되는지 안되는지의 여부이다 
+	//어떤 자료를 protected 메소드로 처리해 주려면 어떻게 해야할까? 앞의 제어자에 protected라 적어주고, 이제 privateMethod()를 작성해 주겠다, 마지막으로 defaultMethod()를 생성해 보겠다
+	//정리하자면 이것들이 지금 우리가 함께 생성하고 있는 것들이다
+	public void publicMethod() {}
+	protected void protectedMethod () {}
+	private void privateMethod () {}
+	void defaultMethod () {}
+	
+	public static void main(String[] args) {
+		
+		//1-1: 여기에 ExampleClass의 예문을 만들어주겠다 ExampleClass exampleClass = new ExampleClass();라 적어주겠다
+		//그리고 exampleClass.()라고 적어주면, privateMethod(), protectedMethod(), publicMethod(), defaultMethod() 까지 불러낼 수 있다 
+		//그러므로 같은 클래스 안에서는 어떤 것이든지 접근이 가능하다 이것은 전혀 문제가 되지 않는다 //2: MethodAccessRunner 클래스파일로..
+		ExampleClass exampleClass = new ExampleClass();
+		exampleClass.privateMethod();
+		exampleClass.protectedMethod();
+		exampleClass.publicMethod();
+		exampleClass.defaultMethod();
+	}
+}
+
+------------------------------------------------------
+
+
+🟢 MethodAccessRunner 클래스파일
+
+
+
+package tipAndTricks.access.p1;
+
+public class MethodAccessRunner {
+
+	public static void main(String[] args) {
+		//2: 여기서 MethodAccess의 같은 코드를 복사해서 MethodAccessRunner에 넣어주도록 하겠다
+		//이것이 같은 패키지 안에 존재한다, 맞지? 이것들은 같은 패키지 안에 있어서, MethodAccessRunner가 같은 패키지이다
+		//보다시피 privateMethod();만 컴파일이 안되었다 그러므로 같은 패키지 안에서는 private를 제외하고 모든 것들에 접근이 가능하다
+		//그러므로 protected, public 그리고 default에 접근이 가능하다 하지만 private는 접근이 불가능하다
+		//MethodAccessRunner를 p2에 복사해 주도록 하자 //3: p2의 MethodAccessRunner클래스파일로..
+		
+		ExampleClass exampleClass = new ExampleClass();
+//		exampleClass.privateMethod();
+		exampleClass.protectedMethod();
+		exampleClass.publicMethod();
+		exampleClass.defaultMethod();
+	}
+
+}
+
+------------------------------------------------------
+
+
+🟢 p2패키지 MethodAccessRunner 클래스파일
+
+
+
+package tipAndTricks.access.p2;
+
+import tipAndTricks.access.p1.*;
+
+public class MethodAccessRunner {
+
+	public static void main(String[] args) {
+		//3: 보다시피 protected와 default도 컴파일 오류를 만들 수 있다는 사실을 확인 할 수 있다 
+		//이는 다른 패키지에서는 클래스에서 public 메소드만 접근이 가능하기 때문이다
+		//private에는 접근할 수 없고, protected도 접근할 수 없으며, default도 접근이 불가능하다 이 모든 항목들이 접근이 불가능하다
+		
+		ExampleClass exampleClass = new ExampleClass();
+//		exampleClass.privateMethod();
+//		exampleClass.protectedMethod();
+		exampleClass.publicMethod();
+//		exampleClass.defaultMethod();
+	}
+
+}
+
+
+-----------------------------------------------------------------------------------------------------------------
+
+
+
+지금까지 이 학습에선 preivateMethod(), protectedMethod(), publicMethod(), defautlMethod()의 예시를 살펴보고,
+같은 클래스 안에서 접근하는 방법에 대해 알아보았다, 같은 패키지와 다른 패키지 에서 말이다
+ExampleClass의 관점에서 한번 보도록 하자
+
+package tipAndTricks.access.p1;
+public class ExampleClass {
+
+	public void publicMethod() {}
+	protected void protectedMethod () {}
+	private void privateMethod () {}
+	void defaultMethod () {}
+	
+	public static void main(String[] args) {
+		
+		ExampleClass exampleClass = new ExampleClass();
+		exampleClass.privateMethod();
+		exampleClass.protectedMethod();
+		exampleClass.publicMethod();
+		exampleClass.defaultMethod();
+	}
+}
+
+임의의 메소드를 public으로 선언하면, 어느 곳에서도 접근이 가능하다 그러므로 ExampleClass의 접근이 가능한 곳에서는 publicMethod()접근 또한 가능하다,
+같거나 다른 패키지이든 어디든지 간에 접근하는 것이 가능하다 
+
+다음으로 protected의 경우에는 같은 패키지나 자식 패키지에 존재하는 것만 접근이 가능하다 그러므로 만약 다른 클래스가 ExampleClass를 상속하면 protectedMethod()를 여기서 사용하는 것이 가능하다
+
+private 메소드는 특정 클래스 안에서만 사용이 가능하다
+
+Default 메소드는 그 클래스와 패키지 안에서만 가능하다
+패키지 밖으로 나가려면 상속을 받았다고 하더라도 기본값으로 가능한 메소드가 없을것이다
+
+
+이것들에 대해 이해하는 것이 매우 중요한데, 이유는 클래스를 생성할 때 다른 클래스에서 어떤 것들에 접근을 가능하도록 할 것인지를 정해 주어야 한다
+그러므로 다음의 것들을 항상 염두에 두어야 한다 
+나의 자식 클래스가 어떤 것들에 접근이 가능하도록 해야할까? 이들은 protected로 만들어 주어야 한다 
+어떤 것에 대해 모든 클래스가 접근이 가능하도록 해야할까? ㅇㅋ 이것들은 public으로 선언해 주도록 할 것이다
+나머지는 전부 private로 만들어 주어야 한다 
+이것으로 너의 클래스가 잘 요약이 된건지를 확신할 수가 있다 
+여기서 확인해야할 중요한 것은 어떤 메소드에 대해 이야기 하던 간에 변수들에게 동등하게 applicate 된다
+그러나, 어떤 변수도 pulbic으로 만드는 것은 지양하는 것이 좋을것이다
+그 변수들이 최종안으로써 그 값이 바뀌지 않는다면 말이다 다른 변수들은 대부분의 시간동안 private 상태가 되어야 한다
+이 private 변수들에 대한 접근은 다양한 접근 단계에 따라 허용해 주어야 한다 protected 혹은 public으로 말이다
