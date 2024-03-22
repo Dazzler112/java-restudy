@@ -1,0 +1,89 @@
+
+
+지난 강의에선 static method와 static variables에 대해 조금 배워 보았다 
+이번 tip에선 static variables의 규칙들에 대해 알아보고, 언제 사용할 수 있는지 , 
+그리고 언제 사용하거나 허용하면 안되는지와 같ㅇ느 것들에 대해 알아보도록 하겠다 
+
+지난시간에 사용한 예시를 그대로 이어서 사용하도록 하겠다 
+
+
+------------------------------------------------------------------------------------------------------------
+
+
+🟢 StaticModifier3 클래스파일
+
+
+
+package tipAndTricks.access.nonaccess.p1;
+
+
+class Player {
+	private String name;
+	private static int count = 0;
+	
+	//1: 여기서 몇몇 getter와 setter를 이름 생성을 위해 만들어 주도록 하겠다, ㅇㅋ?
+	//alt + shift + s 를 누르고 'Generate Getters and Setters'를 눌러주자 
+	//그리고 이름을 getter와 setter를 만들어 보려 한다 여기서 getName()과 setName()은 instance method이다 맞지?
+	//getCount()는 static method에 해당한다 class 메소드이다
+	//private static int count = 0; 이것은 class variable인데, 모든 instances를 공유하였다 이름은 instance variable 혹은 member variable에 해당하는데, 이는 각 memger마다 특이점이 있기 때문이다
+	//static method 안에선 instance 변수에 접근이 불가능하다 그러므로 static method가 클래스 정도의 메소드가 되는 것이다
+	//class level method 안에선 instance data에 접근을 시도하는것 자체가 불가능하다 그러므로 System.out.println()을 적고 name을 적는 것은 불가능하다 허용하는 부분이 아니다 //1-1:getCount메소드로..
+	public Player(String name) {
+		super();
+		this.name = name;
+		count++;
+	}
+
+	public String getName() {
+		
+		//2-1: syso를 적고 괄호에 count라 적어주겠다, 이건 괜찮다 instance method 중에는 instance와 static variable에 접근이 가능하다
+		//static Method의 경우, static variable만 접근이 가능하다 이게 이학습에서 너가 가장 중요하게 받아들여 이해해야 하는 부분이다
+		//static method는 static variable과만 연관이 있고 static methods만 불러낼 수 있다 //3:getCount메소드로...
+		System.out.println(count);
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	static public int getCount() {
+		
+		//1-1: 보다시피 컴파일 오류가 생겼다 ( Cannot make a static reference to the non-static field name ) static reference를 non-static field의 이름으로 만들수 없다고 나온다
+		//즉, static method에선 non-static값에 접근하는 것이 불가능하다는 이야기다
+//		System.out.println(name);
+		
+		
+		//3: 여기서 member method를 부르는 것도 불가능 하다 그러므로 syso()를 적을 수 없다 syso(getName())을 적어보면 보다시피 컴파일오류 이건 불가능하다
+		//static methods만 여기에 불러낼 수 있다 특정한 물체에 대해 instance methods를 static method로 부터 불러내는 것이 불가능 하다
+		System.out.println(getName());
+		return count;
+	}
+	
+	//2: 그러나 non-static method와 instance method에선 접근이 가능하다 //2-1: getName메소드로..
+
+}
+
+public class StaticModifier3 {
+
+	public static void main(String[] args) {
+
+		Player player1 = new Player("Ronaldo");
+		
+//		System.out.println(Player.getCount());
+		System.out.println(player1.getCount());
+		
+		Player player2 = new Player("Federer");
+		
+		System.out.println(Player.getCount());
+//		System.out.println(player2.getCount());
+
+	}
+}
+
+------------------------------------------------------------------------------------------------------------
+
+
+
+
+몇개의 tip은 static method와 관련이 있다 
