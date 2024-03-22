@@ -1,0 +1,87 @@
+
+
+지난 강의에선 static variable에 대한 간단한 이해를 진행해 보았다
+왜 static variable이 필요한지 논의를 해보았는데, 다양한 instance들이 같은 클래스의 자료를 공유해야 하므로 꼭 필요하다
+우린 하나의 instance에 하나의 객체가 배정되는걸 원치 않는다 모든 객체에 대해 공유가 가능한 instance를 원하고,
+이러한 상황에서 static variable이 필요하다  
+
+이제 static method가 필요한 이유에 대해 논의를 해보도록 하자,ㅇㅋ?
+이를 구체적인 tip에서 살표보도록 하겠다 시작해 보겠다
+
+--------------------------------------------------------------------------------------------------------
+
+
+🟢 StaticModifier2 클래스파일
+
+
+
+package tipAndTricks.access.nonaccess.p1;
+
+
+class Player {
+	private String name;
+
+
+	private static int count = 0;
+	
+	public Player(String name) {
+		super();
+		this.name = name;
+		count++;
+	}
+
+	//2: static public int getCount()로 만들어주고, 여기 이 메소드는 static variable에만 접근하고 있다
+	//그러므로 정적이라고 불러주어도 좋다, 이제 코드를 실행해 컴파일이 정상적으로 되는지 살펴보겠다 //2-1: 실행..
+	static public int getCount() {
+		return count;
+	}
+
+}
+
+public class StaticModifier2 {
+
+	public static void main(String[] args) {
+	
+		//1: 이전에 player1.getCount()라고 적어주었다 생각해 보자 count는 player1과 관련이 있나, 아니면 player class와 관련이 있냐?
+		//그래서 player1은 player2와 count값이 다를까? 사실 그렇지 않다 이유는 player1과 player2는 같은 instance를 다른 player들과 함께 공유했기 때문이다 그들도 같은 count값을 얻었을 것이다
+		//이들에게 접근할 때, 왜 player1.getCount()와 player2.getCount()를 사용해 주어야 하는 걸까? 그냥 Player를 통해 접근할 수는 없을까? 그래서 player1.getCount()대신 Player.getCount()라 적어보도록 하겠다
+		//static method는 이런 것을 가능하게 한다 그러므로 여기 static을 적어서 //2: Player클래스의 getter메소드로..
+		Player player1 = new Player("Ronaldo");
+		
+//		System.out.println(Player.getCount());
+		System.out.println(player1.getCount());
+		
+		Player player2 = new Player("Federer");
+		
+		System.out.println(Player.getCount());
+//		System.out.println(player2.getCount());
+
+		/* 2-1: 실행결과 ==>
+		1
+		2
+		1과 2가 출력되었다, 즉 player의 값이 1번syso여기선 1이 출력되었고, 2번 syso서는 2로 출력이 되었다
+		*/
+		//static method는 instance를 이용해 부르는 것도 가능하다 여전히 callplayer1.getCount()와 player2.getCount()라고 부르는것도 가능하지만, 
+		//추천하지는 않는다 즉, static method를 불러내기 위해 instance를 사용하는 방법은 추천하지 않는다 
+		//그래서 이클립스로부터 메시지가 와서 The static method getCount() from the type Player should be accessed in a static way 'Static method는 정적인 방법으로 실현이 되어야 한다'라고 알려준 것이다
+		//그렇다면 왜 instance의 방법으로 접근하고 있나? 왜 instance를 사용하고 있는 걸까? 왜 Player를 부를 생각은 하지 않았나?
+		
+		//메소드를 부르기 위해 class이름을 사용한다는 것은( System.out.println(Player.getCount()); ) 이게 static method임을 알려준다
+		//이 특정 클래스에 대해 모든 instances 사이에서 공유된 내용이다 그러므로, 이 클래스에 대해 다수의 instance를 가지고 있다고 해도, count에 대해선 단 하나의 instance만 존재한다
+		//이 getCount() 메소드는 모든 것들 사이에 공유된다 
+	}
+}
+
+--------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+이 메소드에선 왜 static methodsㄹ가 필요한지 이해해 보는 시간을 갖아보았다 
+클래스의 리름을 직접적으로 사용하여 static method를 불러낼 수 있다는 사실을 이해하게 되었다
+또한 지금까지 이미 많은 static method를 불러왔다는 것이다 그리하여 Collections.sort()를 사용했다
+또한 Collection을 생성하기 위해 메소드를 몇개 사용하기도 했다 
+List.of(), Map.of()와 다수의 static methods를 사용했다 
+이게 우리가 최초로 스스로 static method를 만든 것이 된다 
