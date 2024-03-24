@@ -1,0 +1,108 @@
+
+
+이 학습에선 또 다른 tip에 대해 이야기해 보도록 하겠다
+Nested classes, Inner classes, 그리고 Static Nested Classes에 대한 내용이 될것이다
+이것들은 뭐고, 이것들 사이의 차이점은 무엇일까?
+
+
+--------------------------------------------------------------------------------------------------------------------
+
+
+🟢 StaticNestedClass 클래스파일
+
+
+package tipAndTricks.nestedclass;
+
+
+//1: class DefaultClass이라 적고, DefaultClass class를 이 아래 생성해 주도록 하겠다, 이게 클래스의 기본값이 된다
+//무언가 큰 의미를 갖는다기 보다 클래스의 기본값을 설정해주었다는 데 의미가 있다 이것은 default class가 있고 이는 패키지 안에서만 사용이 가능하다
+//이 내용은 class access modifiers에 대해 배울 때 다뤘던 내용이다 //1-1: 아래에 작성
+class DefaultClass {
+	
+}
+
+public class NestedClassRunner {
+	
+	//1-1 : 이쪽에 NestedClassRunner의 class 안에, 새로운 클래스를 몇 개 생성이 가능하다 몇개 만들어 보도록하자
+	//class InnerClass라고 적어주고, 여기 클래스를 만들어 주도록 하겠다, 또한 StaticNestedClass 라는 것도 만드는 것이 가능하다
+	//InnerClass와 StaticNestedClass의 차이가 무엇일까? static keyword라는 차이가 있다 이건 그저 default class에 해당하는 값일 뿐이다 
+	
+	//어떤 class 안에 또 다른 class가 안겨 있다면 이를 nested classes라고 부른다 nested classes에는 두 가지 종류가 있다 
+	/*nested classes 종류 :
+	1. 첫 번째는 inner class라고 불린다 
+	inner class는 nested class로, 이전에는 static이 없는 class에 해당한다 
+	StaticNestedClass는 다른 class 안에 들어가 이전부터 static keyword를 가지고 있다
+	여기까지가 명명범이었다 명명법에 의해 다른 class 안에 들어간 class를 의미하며, non-static nested class 는 inner class라 불린다
+	
+	2. static nested class라는 것도 있는데, 이는 무언가 특별한게 아닌 keyword static과 함께인 nested calss이다 
+	이게 'what'에 대한 답변이다 
+	*/
+	
+	//이번에는 이 두가지 사이에 어떤 차이점이 있는지 알아보도록 하겠다 InnerClass와 StaticNestedClass 사이에는 어떤 차이점이 있을까?//2: main메소드로 가서 생성..
+
+	//3: 즉, 여기 int i;가 있으면 여기 메소드를 갖을 수 있다 그러므로 public void method()라고 적어주고,
+	int i; //3:의 작성변수
+	//이 안의 값에 접근하는 것이 가능하다 그래서 i=5;라고 적어보도록 하겠다
+	//inner class를 생성하는 경우, 이 class에 대해 생성된 instance가 있다는 것을 알고 있으므로 int i; 에 접근이 가능하다, 하지만 StaticNestedClass에서 같은 작업을 하려고 한다면, 어떤 일이 생길 것 같니? //4: StaticNestedClass클래스로.....
+	class InnerClass{
+		public void method() {
+			i = 5;
+		}
+	}
+	
+	//4: 위의 public void method를 복사해서 StaticNestedClass안에 넣어보자..
+	//보다시피 오류가 생겼다 Cannot make a static reference to the non-static field i 'non-static field에 대해 static 참조를 사용하려 함' 이라 적혀있는데,
+	static class StaticNestedClass {
+		public void method() {
+			//이 부분은 주석으로 전환해 주도록 하겠다
+//			i = 5;
+		}
+	}
+	
+	
+	public static void main(String[] args) {
+		//2: InnerClass의 instance를 생성해 보겠다 ㅇㅋ?
+		//InnerClass innerClass = new InnerClass(); 라고 코드를 작성해 보도록 하겠다, 이 코드는 허용이 될까?
+		//보다시피 컴파일 오류가 생겼는데, 'NestedClassRunner가 가능하도록 하는 enclosing instance가 존재하지 않는다' 라고 한다
+//		InnerClass innerClass = new InnerClass();
+		
+		//2-1: 위의 코드를 주석처리하고 , StaticNestedClass staticNestedClass = new StaticNestedClass();라고 적어주도록 하겠다
+		//이번엔 허용이 됐나? , ㅇㅋ 허용이 됐다, 그러므로 StaticNestedClass와 이의 instance는 NestedClassRunner의 instance 없이도 생성이 가능하다
+		//containing class에 대해 instance를 생성하는 대신, static class에 대한 instance를 만드는 것이 가능하다
+		StaticNestedClass staticNestedClass = new StaticNestedClass();
+		
+		//2-2: inner class에 대해 instance는 어떻게 만들 수 있을까??
+		//inner class에 instance를 생성하기 위해선 이를 감싸고 있는( NestedClassRunner ) instance를 class로 부터 가져와야 한다
+		
+		//NestedClassRunner에서 instance를 생성해 줄 것이다, 그러고 나면 이런 것을 사용해 줄 수가 있다
+		//여기까지가 inner class를 생성하는 구문에 대한 내용이었다 
+		NestedClassRunner nestedClassRunner = new NestedClassRunner();
+		InnerClass innerClass = nestedClassRunner.new InnerClass();
+		//중요한 것은, inner class instance는 class를 감싸는 instance 없이는 존재할 수가 없다
+		//감싸주는 class instance가 존재할 경우에만, inner class의 instance를 만들어 줄 수가 있다
+		//그래서 사실 여기에서 값들에 접근하는게 가능하다 //3: InnerClass위로 작성..
+	}
+}
+
+--------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+/*
+정리)
+정리하면, nested classes는 다른 class 안에 들어가 있는 class를 말한다, 전체 클래스의 선언이 다른 클래스 안에서 이루어지는 것이다
+non-static nested class는 inner class라고 부르며, inner class는 enclosing class instance가 있어야만 존재할 수가 있다 
+그러므로 enclosing class instance는 inner class의 instance를 생성할 수 있어야 한다
+그리하여 inner class method에선 nested class안에서 선언된 변수들에게 접근이 가능하다
+
+한편 StaticNestedClass의 경우는 정적인 것에 해당한다 
+그러므로 enclosing class의 instance 없이도 존재가 가능하다
+StaticNestedClass에서 instance를 직접적으로 생성하는 것이 가능하고, 각각이 독립된 class라면 사용하는 것이 가능하다
+그러나 StaticNestedClass안에서 enclosing class의 member 변수에 접근하는 것이 불가능하다
+
+여기까지가 nested classes, static nested class, 그리고 inner class에 대한 간단한 요약이었다
+*/
