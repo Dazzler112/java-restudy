@@ -1,0 +1,216 @@
+
+
+코딩 예제 – 방향 열거형
+
+이번 문제에서는 동서남북 NORTH, SOUTH, EAST, WEST를 나타내는 Direction이라는 열거형이 제공되어 있습니다.
+이 문제의 목표는 주어진 Direction의 왼쪽과 오른쪽에 대해 각각 정확하게 Direction의 인스턴스를 리턴하는 left()와 right()메서드를 구현하는 것입니다.
+방향은 시계 방향으로 배열되어 있습니다.
+그러므로 NORTH의 “왼쪽”은 WEST이고 WEST 의 “왼쪽”은 SOUTH이며 SOUTH의 “왼쪽은” EAST, EAST의 “왼쪽”은 NORTH입니다.
+그와 비슷하게 NORTH의 “오른쪽”은 EAST이고 EAST의 “오른쪽”은 SOUTH이며 SOUTH의 “오른쪽”은 WEST이고 WEST의 “오른쪽”은 NORTH입니다.
+
+
+참고사항
+
+• switch문을 사용하여 많은 코드 블록 중에 실행할 코드 하나를 선택합니다. 변수나 식의 값을 다수의 케이스와 비교하는 다중경로 브랜치 구문입니다.
+
+• Java에서 키워드 this는 메서드나 생성자 안에서 사용하여 그 자신을 현재의 객체로 참조하는 데 사용합니다.
+
+
+다음은 기본 코드입니다
+
+
+public enum Direction {
+    NORTH("North"),
+    SOUTH("South"),
+    EAST("East"),
+    WEST("West");
+
+    private String name;
+
+    Direction(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Direction left() {
+        // You are to implement the logic that correctly gets the Direction on the "left"
+        // If we represent the directions in a circular format going clockwise
+        // then the direction to the "left" of NORTH is WEST, of WEST is SOUTH, of SOUTH is EAST, and of EAST is NORTH
+        switch (this) {
+            // Write your code here
+        }
+        return this;
+    }
+
+    public Direction right() {
+        // Similarly, you are to implement the logic that correctly gets the Direction on the "right"
+        // If we represent the directions in a circular format going clockwise
+        // then the direction to the "right" of NORTH is EAST, of EAST is SOUTH, of SOUTH is WEST, and of WEST is NORTH
+        switch (this) {
+            // Write your code here
+        }
+        return this;
+    }
+}
+
+해당 코드로 지문을 완성하시오
+
+
+
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+힌트)
+
+
+
+
+
+
+
+
+
+
+1. 여러분에게는 NORTH, SOUTH, EAST, WEST 방향이 포함된 열거형 Direction이 제공되어 있습니다.
+
+2. 열거형 Direction 안의 left()및right()메서드를 완성해야 합니다. 여러분은 현재 방향에서 왼쪽 또는 오른쪽으로 움직일 때 올바른 방향을 결정해야 합니다.
+
+3. 그 방향들이 시계방향으로 배열되어 있으므로 NORTH의 왼쪽은 WEST이고 WEST의 왼쪽은 SOUTH, SOUTH의 왼쪽은 EAST, EAST의 왼쪽은 NORTH임을 아시기 바랍니다. 이와 비슷하게, NORTH의 오른쪽은 EAST이고 EAST의 오른쪽은 SOUTH, SOUTH의 오른쪽은 WEST, WEST의 오른쪽은 NORTH입니다.
+
+4. switch문을 사용하여 this에서 전환하십시오. this는 열거형 Direction의 현재 인스턴스를 가리킵니다.
+
+5. 각각의 switch케이스에서 위의 논리를 기초로 올바른 Direction을 리턴합니다.
+
+
+
+----------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+해답)
+
+
+
+
+
+
+
+
+
+
+
+public enum Direction {
+    NORTH("North"),
+    SOUTH("South"),
+    EAST("East"),
+    WEST("West");
+
+    private String name;
+
+    Direction(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Direction left() {
+        
+        switch (this) {
+            //case 그리고 먼저 북을 처리하겠다 북인 NORTH는 여기에 있는 값인데 여기서 반환해야 하는 건 지문대로 서쪽인 WEST 이다 이게 끝이다
+            //변하지 않는 값의 목록이 있다는 건 아주 편리한 것이다 다른 case문도 비슷하게 간다
+            case NORTH : {
+                return WEST;
+            }
+            //북을 서로 바꿔주고 서라면 남을 반환하고
+            case WEST : {
+                return SOUTH;
+            }
+            //남이면 동을 반환한다
+            case SOUTH : {
+                return EAST;
+            }
+            //동의 좌측은 북이다
+            case EAST : {
+                return NORTH;
+            }
+            //북, 서, 남, 동 다시 북 서클같다 이게 끝이다 
+            //복사해서 아래에도 다음 메소드도 구현해야한다 지문대로 바꿔주면 되겠다
+        }
+        return this;
+    }
+
+    public Direction right() {
+        
+        switch (this) {
+            //북의 우측은 동
+            case NORTH : {
+                return EAST;
+            }
+            //동의 우측은 남
+            case EAST : {
+                return SOUTH;
+            }
+            //남의 우측은 서
+            case SOUTH : {
+                return WEST;
+            }
+            //서의 우측은 북
+            case WEST : {
+                return NORTH;
+            }
+            //다 잘 들어갔다
+        }
+        return this;
+    }
+}
+
+//열거형을 활용하고 열거형 안에 로직을 구현했다
+//방위는 총 네 개이고 열거형인 멤버 변수도 있고
+//열거형 생성자랑 getter 메소드도 있고 거기에 열거형 안에서 로직을 메소드로 구현했다
+//구현한 left 메소드는 열거형을 반환하고, 또 구현한 right메소드는 우측에 위치한 방위 열거형을 반환한다
+----------------------------------------------------------------------------------------------------------
