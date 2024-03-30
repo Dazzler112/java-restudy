@@ -1,0 +1,244 @@
+
+
+코딩 예제 – 요일 열거형
+
+여러분에게는 미완성된 Java 열거형 DaysOfWeek가 제공되어 있습니다.
+열거형 DaysOfWeek는 일주일의 요일 MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY를 나타냅니다. 각각의 요일에는 문자열로 표현된 이름이 있습니다.
+여러분의 과제는 다음의 메서드를 완성하는 것입니다.
+
+- getName(): 이 메서드는 요일 이름을 리턴합니다.
+- isWeekday(): 이 메서드는 만일 요일이 주중 요일(즉 월요일부터 금요일)이면 true를 리턴하고, 그렇지 않으면 false를 리턴합니다.
+- isHoliday(): 이 메서드는 요일이 휴일(즉 토요일 또는 일요일)이면 true를 리턴하고, 그렇지 않으면 false를 리턴합니다.
+
+
+자세한 예시
+
+예 1)
+가령 TUESDAY인 경우,
+- getName() 메서드의 출력값은 "Tuesday"여야 합니다.
+- 화요일은 주중이므로 isWeekday()메서드의 출력값은 true여야 합니다.
+- 화요일은 휴일이 아니므로 isHoliday()메서드의 출력값은 false여야 합니다.
+
+예 2)
+가령 SATURDAY인 경우,
+- getName()메서드의 출력값은 "Saturday"여야 합니다.
+- 토요일은 주중이 아니므로 isWeekday() 메서드의 출력값은 false여야 합니다.
+- 토요일은 휴일이므로 isHoliday() 메서드의 출력값은 true여야 합니다.
+
+
+다음은 기본 코드입니다.
+
+
+
+enum DaysOfWeek {
+    MONDAY("Monday"),
+    TUESDAY("Tuesday"),
+    WEDNESDAY("Wednesday"),
+    THURSDAY("Thursday"),
+    FRIDAY("Friday"),
+    SATURDAY("Saturday"),
+    SUNDAY("Sunday");
+
+    private String name;
+
+    DaysOfWeek(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        // Write your code here to return the name of the day
+    }
+
+    public boolean isWeekday() {
+        // Write your code here to check if this day is a weekday
+    }
+
+    public boolean isHoliday() {
+        // Write your code here to check if this day is a holiday
+    }
+}
+
+
+다음 코드를 바탕으로 지문을 완성하시오
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+힌트)
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+해답)
+
+
+
+
+
+
+
+
+
+
+
+
+1)
+enum DaysOfWeek {
+    MONDAY("Monday"),
+    TUESDAY("Tuesday"),
+    WEDNESDAY("Wednesday"),
+    THURSDAY("Thursday"),
+    FRIDAY("Friday"),
+    SATURDAY("Saturday"),
+    SUNDAY("Sunday");
+
+    private String name;
+    
+    DaysOfWeek(String name) {
+        this.name = name;
+    }
+    //간단한 작업이다 getName에서 반환해야 하는 건 this.name이고  
+
+    public String getName() {
+        
+    }
+    //isWeekday도 간단하다 if나 switch 문을 사용하면 되는데 조건은 간단하다
+    //if(this)가 월인지,화인지,수인지,목인지,금인지 보고 참이면 true를 반환한다 아니면 다른 방식이 있다 
+    //토요일이나 일요일이 아니면 주중이라고 고려하는 것이다 이렇게 해도 괜찮다 비교 연산자를 이용한다 
+    //this가 SATURDAY가 아니거나 this가 SUNDAY가 아니면 주중인 거지?,그치? 그래서 이걸 그대로 반환해 준다
+    //this가 토요일인지 아닌지, 일요일이 아닌지 비교한 요 코드 그래로를 
+    public boolean isWeekday() {
+       return this != SATURDAY && this != SUNDAY;
+    }
+    //isWeekday는 완료했고, isHoliday는 isWeekday가 false면 true겠지?
+    //return !isWeekday() 이렇게 해도 된다
+    public boolean isHoliday() {
+        return !isWeekday();
+    }
+}
+
+
+--------------------------------------------------------
+2)
+//이렇게 하는 대신 모든 조건을 확인하도록 로직을 짜도 된다, 
+
+    DaysOfWeek(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        // Write your code here to return the name of the day
+    }
+    //1-1: !isHoliday()를 반환하도록
+    public boolean isWeekday() {
+        return !isHoliday ()
+    }
+  
+    //1: this가 토요일인지 아니면 this가 일요일인지를 비교해서 공휴일 확인을 할 수도 있다
+    public boolean isHoliday() {
+        return this == SATURDAY || this == SUNDAY;
+    }
+}
+
+두 코드 중 이쪽이 훨씬 유지 보수 측면에서 좋은 것 같다
+명확하기 때문에  그래서 이 부분을 사용하는게 좋은거 같다
+
+
+--------------------------------------------------------
+3)
+이 경우들을 case로 두고 switch문을 이용할 수 있다
+    MONDAY("Monday"),
+    TUESDAY("Tuesday"),
+    WEDNESDAY("Wednesday"),
+    THURSDAY("Thursday"),
+    FRIDAY("Friday"),
+    SATURDAY("Saturday"),
+    SUNDAY("Sunday");
+이 값들을 case로 두고 주중이라면 true를 반환하게 하면 되고
+    SATURDAY("Saturday"),
+    SUNDAY("Sunday");
+isHoliday 메소드에선 이 두개를 case문으로 확인하고 true를 반환하면 된다
+이렇게 대신 할 수도 있는데 
+
+    DaysOfWeek(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+    
+    public boolean isWeekday() {
+        return !isHoliday ()
+    }
+  
+    //1: this를 switch로 보고 case로 SATURDAY ,SUNDAY return true를 해주고
+    //마지막으로는 default를 두고 false를 반환하는 거다 이렇게 해도 문제가 없다 이렇게 어떤 문제를 해결하는 데 방법은 다양하다
+    public boolean isHoliday() {
+        switch(this) {
+            case SATURDAY, SUNDAY : {
+                return ture;
+            }
+            default : {
+                return false;
+            }
+        }
+    }
+}
+------------------------------------------------------------------------------------------------------------------
