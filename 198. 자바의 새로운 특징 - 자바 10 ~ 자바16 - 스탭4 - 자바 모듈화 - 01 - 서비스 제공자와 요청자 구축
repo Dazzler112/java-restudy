@@ -54,14 +54,66 @@ public class BubbleSort {
 
 	public List<String> sort(List<String> names) {
 		
-    // 2: 그리고 이름을 원래대로 반환한다고 하겠다 지금은 아무것도 하지 않고 있지만 이름을 정렬하고 목록을 반환하기 위해 버블소트 클래스를 사용하는 정렬 유틸리티가 만들어진 것이다
+   		// 2: 그리고 이름을 원래대로 반환한다고 하겠다 지금은 아무것도 하지 않고 있지만 이름을 정렬하고 목록을 반환하기 위해 버블소트 클래스를 사용하는 정렬 유틸리티가 만들어진 것이다
 		//그리고 이 API를 사용할 사람에게 테스트할 게 있어야겠지? 니가 만든 정렬 유틸을 노출되는 API로 해보자 이러면 컨슈머가 알아야겠지? 그러므로 이걸 위한 클래스를 만들어주자
-    //이걸 쓰는 사람은 MySortingUtilConsumer라고 하겠다 com.in28minutes.consumer 패키지에 아웃풋한다 //
+    		//이걸 쓰는 사람은 MySortingUtilConsumer라고 하겠다 com.in28minutes.consumer 패키지에 아웃풋한다 //3: MySortingUtilConsumer클래스파일로..
+   		 return names;
 	}
 
 }
 
 -----------------------------------------------------------------
+
+
+⏺ MySortingUtilConsumer 클래스파일
+
+
+package com.in28minutes.consumer;
+
+public class MySortingUtilConsumer {
+
+    //3-3: 여기에 로그를 생성해준다 private static Logger logger = Logger.GetLogger(); 이 클래스에 GetLogger(MySortingUtilConsumer.) MySortingUtilConsumer 를 그리고 자동 import를 해준다 java.util.logging.logger를 사용할것이다 그리고 이쪽엔 .class.를 닫아주고 getName()으로 클래스 이름을 가져온다
+  	private static Logger logger = 
+            Logger.GetLogger(MySortingUtilConsumer.class.getName());    
+    //지금 여기에 하고 있는 것은 로거 객체를 만드는 것이다 그리고 여기엔 (  List<String> sorted = util.sort(List.of("Ranga", "Ravi", "Sathish", "Adam", "Eve")); ) 배열된 이름 리스트들이 있는데 이제 이것들을 가져오자 //3-4: 다시 메인메소드 안으로 가서 작성..
+
+
+    //3:보는 것이 이 클래스를 사용하는 consumer가 될 것이고 이걸 위해 메인 메소드를 만들어줘야겠지? 
+    public static void main(String[] args) {
+		//3-1: 메인 메소드 됐고, MySortingUtil의 인스턴스를 만들어주자 MySortingUtil,줄여서 util이라고 쓰겠다 = new MySortingUtil() //자동 import해서 MySortingUtil이 여기 생겼으니 이제 정렬을 할 수 있게 됐다 정렬을 한번 해보자
+		MySortingUtil util = new MySortingUtil();    
+
+    //3-2: util.sort()적고, 리스트를 만든다 List.of(""))를 적고 나니 여기에 뭔가가 있으면 좋겠다 java.util.list를 임포트하고 이름 몇개를 추가한다
+    //"Ranga", "Ravi", "Sathish", "Adam", "Eve". 뭐든 상관 없다 이제 뒤에 써있는 리스트로 반환됐을것이다 이제 ctrl+1을 눌러서 새로운 지역 변수에 해당 문장을 할당한다 (Assign statement to new local Variable 클릭)
+//		util.sort(List.of("Ranga", "Ravi", "Sathish", "Adam", "Eve"));
+                                                          |
+    //sorted라고 할 수 있겠다                              V
+    //이제 값들을 로깅하려고 한다 보통은 값을 출력할 때 시스템아웃을 사용하곤 한다 그러나 여기선 다른 모듈을 사용할 것이다
+    //로깅 모듈을 사용해보자 //3-3: 메인메소드 위로가서 작성..
+    List<String> sorted = 
+              util.sort(List.of("Ranga", "Ravi", "Sathish", "Adam", "Eve"));    
+
+    //3-4: 이제 이것들을 가져온다 logger.info()를 적어주고 그리고 배열된 내용물들을 출력하고 싶으니 안에 sorted.toString()을 적어준다
+    logger.info(sorted.toString());
+	  }
+}
+
+
+끝. 오늘 한 것은 간단한 배열 유틸리티만들기였다 
+그리고 consumer에서 불러오기를 해 봤고, 이렇게 배운 것들 덕에 나중에 정보를 로깅할 때 모듈화를 다루기가 더 쉬워질 것이다
+자바 어플리케이션으로 구동해서 거대한 결과가 나오나 확인해 보자
+------------------------------------------------------------------------------------------------------------
+                                                |  콘솔 결과
+                                                V
+---------------------------------------------------------------------------------------------
+4월 27, 2024 8:35:49 오후 com.in28minutes.consumer.MySortingUtilConsumer main
+정보: [Ranga, Ravi, Sathish, Adam, Eve]
+---------------------------------------------------------------------------------------------
+
+콘솔창에 출력된 것이 보이니? Ranga, Ravi, Sathish, Adam, Eve가 출력됐다 
+
+
+
 
 
 
